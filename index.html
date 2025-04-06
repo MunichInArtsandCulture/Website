@@ -184,64 +184,64 @@
           box-shadow: 0px 0px 13px rgba(0, 0, 0, 0.94); /* Schwarzer Drop Shadow */
         }
         .button-wrapper {
-            transform: scale(0.70);
             transform-origin: center;
             position: relative;
-            margin-bottom: 0px;
+            margin-bottom: 15px;
         }
-
-        .btn-events {
-             style="z-index: 1;
-             color:white; font-family: 'Inter',
-             sans-serif;
-             font-size: 26px;
-             font-weight: 400;
-             line-height: 0.5;
-             letter-spacing: 5%;
-        }
-
-        .btn-artspaces {
-            style="z-index: 1;
-            color:white;
+        .text-events {
+            z-index: 1;
+            color: white;
             font-family: 'Inter', sans-serif;
             font-size: 26px;
-            font-weight: 350;
-            line-height: 0.5;
-            letter-spacing: -13%;
-            margin-right: 5px;
-        }
-
-        .btn-artistwiki {
-            style="z-index: 1;
-            color:white; font-family: 'Inter', sans-serif;
-            font-size: 26px;
-            font-weight: 350;
-            line-height: 0.7;
-            letter-spacing: -13%;
-            margin-right: 5px;"
-        }
-
-        .btn-creativejobs {
-            style="z-index: 1;
-            color:white; font-family: 'Inter', sans-serif;
-            font-size: 25px;
-            font-weight: 350;
-            line-height: 0.7;
-            letter-spacing: -5%;
-            margin-right: 2px;
-        }
-
-        .btn-opencalls {
-            style="z-index: 1;
-            color:white;
-            font-family: 'Inter', sans-serif;
-            font-size: 23px;
             font-weight: 400;
             line-height: 0.5;
-            letter-spacing: -12%;
-            margin-right: 2px;
-            white-space: nowrap;";
-        }
+            letter-spacing: 0.05em;
+          }
+
+      .text-artspaces {
+        z-index: 1;
+        color: white;
+        font-family: 'Inter', sans-serif;
+        font-size: 26px;
+        font-weight: 350;
+        line-height: 0.5;
+        letter-spacing: -0.13em;
+        margin-right: 5px;
+      }
+
+      .text-artistwiki {
+        z-index: 1;
+        color: white;
+        font-family: 'Inter', sans-serif;
+        font-size: 26px;
+        font-weight: 350;
+        line-height: 0.7;
+        letter-spacing: -0.13em;
+        margin-right: 5px;
+      }
+
+.text-creativejobs {
+    z-index: 1;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 25px;
+    font-weight: 350;
+    line-height: 0.7;
+    letter-spacing: -0.05em;
+    margin-right: 2px;
+}
+
+.text-opencalls {
+    z-index: 1;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 23px;
+    font-weight: 400;
+    line-height: 0.5;
+    letter-spacing: -0.12em;
+    margin-right: 2px;
+    white-space: nowrap;
+}
         .sidebar button {
             position: absolute;
             width: 80px;
@@ -422,14 +422,14 @@
 
 
     .home-text {
-        position: absolute;
+        position: fixed;
         top: 30px;
         left: 0;
         right: 0;
         width: 100%;
         text-align: left;
         font-size: 80px;
-        opacity: 0.2;
+        opacity: 0.17;
         z-index: 0;
         margin: 0;
         flex-direction: column;
@@ -487,11 +487,40 @@
             <div class="sidebar-gradient-l2r"></div>
             <div class="sidebar-gradient-t2b"></div>
             <a href="#" class="home-button"><img src="logo.png" alt="Home"></a>
-            <div class="button-wrapper btn-events"><button><p>Events</p><span class="ball"></span></button></div>
-            <div class="button-wrapper btn-artspaces"><button><p>Art<br>Spaces</p><span class="ball"></span></button></div>
-            <div class="button-wrapper btn-artistwiki"><button><p>Artist<br>Wiki</p><span class="ball"></span></button></div>
-            <div class="button-wrapper btn-creativejobs"><button><p>Creative<br>Jobs</p><span class="ball"></span></button></div>
-            <div class="button-wrapper btn-opencalls"><button><p>Open‎ Calls</p><span class="ball"></span></button></div>
+            <div class="button-wrapper btn-events">
+  <button>
+    <p class="text-events">Events</p>
+    <span class="ball"></span>
+  </button>
+</div>
+
+<div class="button-wrapper btn-artspaces">
+  <button>
+    <p class="text-artspaces">Art<br>Spaces</p>
+    <span class="ball"></span>
+  </button>
+</div>
+
+<div class="button-wrapper btn-artistwiki">
+  <button>
+    <p class="text-artistwiki">Artist<br>Wiki</p>
+    <span class="ball"></span>
+  </button>
+</div>
+
+<div class="button-wrapper btn-creativejobs">
+  <button>
+    <p class="text-creativejobs">Creative<br>Jobs</p>
+    <span class="ball"></span>
+  </button>
+</div>
+
+<div class="button-wrapper btn-opencalls">
+  <button>
+    <p class="text-opencalls">Open&nbsp;Calls</p>
+    <span class="ball"></span>
+  </button>
+</div>
         </div>
         <div class="content">
             <div class="home-text">

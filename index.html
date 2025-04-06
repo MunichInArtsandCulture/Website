@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Munich in Arts and Culture</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="MIAAC_icon.svg">
+    <style>
+        html {
+          overflow: hidden;
+          height: 100%;
+        }
+        body {
+            justify-content: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(-45deg, #190113, #053814, #090107, #101326);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            min-height: 100vh;
+            height: 100%;
+            padding: 0;
+            overflow-x: hidden; /* Verhindert Scroll-Fehler */
+            scroll-behavior: smooth;
+        }
+        background {
+          overflow: hidden;
+          margin-top: -100px;
+        }
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        .container {
+            background: linear-gradient(to bottom, rgba(23, 23, 23, 0.9) 0%, rgba(7, 0, 5, 0.9) 19%, rgba(1, 0, 1, 0.9) 68%, rgba(22, 1, 30, 0.9) 100%);
+                    display: flex;
+                    max-width: 1200px;
+                    width: 100%;
+                    margin: 0 auto;
+                    padding: 0;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+                    align-items: flex-start;
+                    min-height: 100vh;
+                }
+        .paragraph {
+            max-width: 675px;
+            letter-spacing: -1%;
+            line-height: 1.4;
+            word-spacing: -1%;
+            font-family: 'Inter', sans-serif;
+            font-size: 20px;
+            font-weight: 250;
+        }
+        .page-title {
+            padding-top: 0px;
+            margin-top: 0px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 350;
+            font-size: 50px;
+        }
+        .social-links {
+            font-family: 'Inter', sans-serif;
+            font-weight: 350;
+            font-size: 22px;
+        }
+        a {
+            color: #B0AEFF; /* Setzt die Standard-Linkfarbe auf Neon-Grün */
+            text-decoration: none; /* Entfernt die Unterstreichung */
+          }
+        a:hover {
+            color: #FFFFFF; /* Ändert die Farbe beim Überfahren (Hover) auf Gold */
+            text-shadow: 0px 0px 20px rgba(45, 255, 22, 1); /* X, Y, Blur, Farbe */
+        }
+        .tg-link {
+            margin-right: 30px;
+        }
+        .sidebar {
+            position: fixed;
+            overflow: hidden;
+            width: 180px;
+            height: 100vh;
+            background: linear-gradient(to bottom, #000000 0%, #1B0014 85%, #190013 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            min-width: 110px;
+            border-right: 0.5px solid #18213B; /* Adjust thickness and color */
+        }
+        .sidebar-gradient-l2r {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right,
+              rgba(217, 217, 217, 0) 0%,
+              rgba(217, 217, 217, 0) 15%,
+              rgba(217, 217, 217, 0.02) 22%,
+              rgba(217, 217, 217, 0.06) 34%,
+              rgba(217, 217, 217, 0.16) 46%,
+              rgba(217, 217, 217, 0.25) 50%,
+              rgba(217, 217, 217, 0.16) 54%,
+              rgba(217, 217, 217, 0.06) 66%,
+              rgba(217, 217, 217, 0.02) 78%,
+              rgba(217, 217, 217, 0) 85%,
+              rgba(217, 217, 217, 0) 100%
+              );
+            filter: blur(12px); /* Wendet nur auf das Gradient-Div einen Blur an */
+            pointer-events: none; /* Damit es nichts blockiert */
+            z-index: 0; /* Damit es hinter allen anderen Inhalten bleibt */
+        }
+        .sidebar-gradient-t2b {
+          overflow: hidden;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(to bottom,
+            rgba(217, 217, 217, 0) 0%,
+            rgba(217, 217, 217, 0) 2%,
+            rgba(217, 217, 217, 0.10) 6%,
+            rgba(217, 217, 217, 0.23) 9%,
+            rgba(217, 217, 217, 0.28) 11%,
+            rgba(217, 217, 217, 0.12) 14%,
+            rgba(217, 217, 217, 0.01) 16%,
+            rgba(217, 217, 217, 0) 22%,
+            rgba(217, 217, 217, 0) 100%
+    );
+    filter: blur(28px); /* Optionaler Blur nur für diesen Gradient */
+    pointer-events: none; /* Keine Interaktion blockieren */
+    z-index: 0; /* Hält den Gradient im Hintergrund */
+}
+        .home-button {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 35px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+        .home-button img {
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+        }
+        .home-button:hover {
+            border-radius: 50%;
+            box-shadow: 0px 0px 30px rgba(158, 255, 136, 1); /* Grüner Leuchteffekt */
+            transition: box-shadow 0.1s ease-in-out; /* Sanfter Übergang */
+        }
+        .button-wrapper {
+          margin-bottom: 15px;
+          width: 80px; /* Exakt gleiche Größe wie die Buttons */
+          height: 80px;
+          min-width: 80px;
+          min-height: 80px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%; /* Runde Form */
+          overflow: hidden;
+          position: relative;
+          border: 1px solid rgba(255, 255, 255, 0.2); /* Dezente Outline */
+          box-shadow: 0px 0px 13px rgba(0, 0, 0, 0.94); /* Schwarzer Drop Shadow */
+        }
+        .sidebar button {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: none;
+            background: #73737333;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            overflow: hidden;
+            line-height: 1;
+            box-shadow: 0 0 15px rgb(0, 0, 0);
+        }
+        .sidebar button .ball {
+            opacity: 0.3;
+            filter: blur(3px);
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            border-radius: 50%;
+            position: absolute;
+            background: radial-gradient(circle at 50% 120%, #323232, #0a0a0a 80%, #323232 100%);
+        }
+        .sidebar button .ball:before {
+            content: "";
+            position: absolute;
+            background: radial-gradient(circle at 50% 120%, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            bottom: 2.5%;
+            left: 5%;
+            opacity: 0.6;
+            height: 100%;
+            width: 90%;
+            -webkit-filter: blur(5px);
+            z-index: 2;
+        }
+        .sidebar button .ball:after {
+            width: 100%;
+            height: 100%;
+            content: "";
+            position: absolute;
+            top: 23%;
+            left: 10%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.8), rgba(255,255,255,0.8) 14%, rgba(255,255,255,0) 24%);
+            transform: translateX(-25px) translateY(-50px) skewX(-20deg);
+            -webkit-filter: blur(10px);
+        }
+        .button-wrapper:hover {
+            box-shadow: 0px 0px 20px rgba(59, 255, 0, 0.8); /* Grüner Leuchteffekt */
+            transition: box-shadow 0.15s ease-in-out; /* Sanfter Übergang */
+            text-shadow: 0px 0px 10px #2DFF16; /* Neon-Grüner Glow */
+            transition: text-shadow 0.17s ease-in-out;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            color: white;
+            max-width: 1000px;
+            margin: 0;
+            display: flex;
+            align-items: flex-start;
+        }
+        .home-text {
+            height: 90vh;
+            color: white;
+            font-size: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-transform: lowercase;
+            display: flex;
+            flex-direction: column;
+            width: 150px;
+            text-align: center;
+            margin-left: 170px;
+            margin-right: 20px;
+            background: none;
+            font-family: 'Major Mono Display', monospace;
+            text-shadow: 0px 0px 12px #2DFF16; /* Offset X, Offset Y, Blur, Farbe */
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        strong {
+          font-weight: 460;
+        }
+
+
+        @media only screen and (max-width: 768px) {
+
+    body, html {
+        overflow-x: hidden;
+    }
+
+    .container {
+        flex-direction: column;
+        padding-top: 180px; /* room for half-circle nav */
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100vw;
+        height: 150px;
+        border-bottom-left-radius: 300px;
+        border-bottom-right-radius: 300px;
+        border-top: none;
+        border-right: none;
+        box-shadow: 0px -5px 17px rgba(121, 255, 82, 0.87);
+        z-index: 1000;
+        overflow: hidden;
+        padding-top: 3px;
+        padding-bottom: 10px;
+    }
+
+    .sidebar-gradient-l2r,
+    .sidebar-gradient-t2b {
+        display: none;
+    }
+
+    .home-button {
+      width: 80px;
+      height: 80px;
+    }
+
+    .home-button img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .button-wrapper {
+        transform: scale(0.70);
+        transform-origin: center;
+        position: relative;
+        margin-bottom: 0px;
+    }
+
+    .btn-events {
+        position: absolute;
+        bottom: 75px;
+        left: 6.5%;
+    }
+
+    .btn-artspaces {
+        position: absolute;
+        bottom: 20px;
+        left: 19.5%;
+    }
+
+    .btn-artistwiki {
+        position: absolute;
+        bottom: 20px;
+        right: 19.5%;
+    }
+
+    .btn-creativejobs {
+        position: absolute;
+        bottom: 75px;
+        right: 6.5%;
+    }
+
+    .btn-opencalls {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%) scale(0.70);
+    }
+
+
+    .home-text {
+        position: absolute;
+        top: 30px;
+        left: 0;
+        right: 0;
+        width: 100%;
+        text-align: left;
+        font-size: 80px;
+        opacity: 0.2;
+        z-index: 0;
+        margin: 0;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .home-text span {
+        margin: 0 5px;
+    }
+
+    .content {
+        margin: 0;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 15px;
+        z-index: 1;
+    }
+
+    .main-content {
+        padding: 10px 15px;
+        width: 100%;
+    }
+
+    .title-box {
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+
+    .page-title {
+        font-size: 26px;
+        text-align: center;
+    }
+
+    .paragraph {
+        font-size: 17px;
+        text-align: left;
+        line-height: 1.6;
+        font-weight: 210;
+    }
+
+    .social-links {
+        text-align: center;
+        margin-top: 20px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-gradient-l2r"></div>
+            <div class="sidebar-gradient-t2b"></div>
+            <a href="#" class="home-button"><img src="logo.png" alt="Home"></a>
+            <div class="button-wrapper btn-events"><button><p style="z-index: 1; color:white; font-family: 'Inter', sans-serif; font-size: 26px; font-weight: 400; line-height: 0.5; letter-spacing: 5%;">Events</p><span class="ball"></span></button></div>
+            <div class="button-wrapper btn-artspaces"><button><p style="z-index: 1; color:white; font-family: 'Inter', sans-serif; font-size: 26px; font-weight: 350; line-height: 0.5; letter-spacing: -13%; margin-right: 5px;">Art<br>Spaces</p><span class="ball"></span></button></div>
+            <div class="button-wrapper btn-artistwiki"><button><p style="z-index: 1; color:white; font-family: 'Inter', sans-serif; font-size: 26px; font-weight: 350; line-height: 0.7; letter-spacing: -13%; margin-right: 5px;">Artist<br>Wiki</p><span class="ball"></span></button></div>
+            <div class="button-wrapper btn-creativejobs"><button><p style="z-index: 1; color:white; font-family: 'Inter', sans-serif; font-size: 25px; font-weight: 350; line-height: 0.7; letter-spacing: -5%; margin-right: 2px;">Creative<br>Jobs</p><span class="ball"></span></button></div>
+            <div class="button-wrapper btn-opencalls"><button><p style="z-index: 1; color:white; font-family: 'Inter', sans-serif; font-size: 23px; font-weight: 400; line-height: 0.5; letter-spacing: -12%; margin-right: 2px; white-space: nowrap;">Open‎ Calls</p><span class="ball"></span></button></div>
+        </div>
+        <div class="content">
+            <div class="home-text">
+                <span>h</span>
+                <span>o</span>
+                <span>m</span>
+                <span>e</span>
+            </div>
+            <div class="main-content">
+                <div class="title-box">
+                    <h1 class="page-title">Munich in Arts and Culture</h1>
+                    <p class="paragraph">
+                      Munich in Arts and Culture is a <strong>platform showcasing Munich's creative scene</strong>. It highlights events, artists, and <strong>cultural happenings</strong> across music, art, performance, and club culture, with a focus on <strong>alternative</strong> and <strong>experimental</strong> movements.
+                      <br>
+                      <br>
+                      By <strong>collaborating with local artists</strong>, the platform regularly showcases their work, increasing their visibility and audience reach.
+                      <br>
+                      <br>
+                      Additionally, it shares <strong>AI-assisted job listings</strong> in the creative and cultural sectors, along with information on <strong>available studio spaces</strong>, venues, and other valuable resources.
+                      <br>
+                      <br>
+                      To continue fostering cultural engagement, networking, and accessibility for artists in Munich, the project is seeking financial support.
+</p>
+                </div>
+                <div class="social-links">
+                    <a href="https://t.me/munichinartsandculture" target="_blank" class="tg-link">Telegram</a>
+                    <a href="https://www.instagram.com/munichartsandculture/" target="_blank">Instagram</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

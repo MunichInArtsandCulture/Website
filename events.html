@@ -348,35 +348,47 @@
         }
 
         .date-selector {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 2rem;
-  }
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          margin-bottom: 2rem;
 
-      .date-selector button,
-      .date-selector input[type="date"] {
+          position: relative;
+          z-index: 10;
+        }
+
+        .date-selector button,
+        .date-selector input[type="date"] {
           font-family: 'Inter', sans-serif;
           font-size: 16px;
           padding: 0.9em 1.2em;
           border: 1px solid #d1afcd45; /* dünner weißer Rahmen */
-          border-radius: 2px;
+          border-radius: 4px;
           background: linear-gradient(150deg, #8d8d8d3b, #0C0109); /* Verlauf */
-          color: white; /* weiße Schrift */
+          color: white;
           cursor: pointer;
           outline: none;
           transition: all 0.2s ease;
-  }
+          min-width: 80px;
+          min-height: 40px;
+          box-sizing: border-box;
+        }
 
-  .date-selector input[type="date"] {
-    color-scheme: dark; /* dunkles Kalender-Popup */
-  }
+        .date-selector input[type="date"] {
+          color-scheme: dark;
+          appearance: none;
+          -webkit-appearance: none;
+          background-color: #0C0109;
+          border: 1px solid #d1afcd45;
+          color: white;
+          padding: 0.9em 1.2em;
+          border-radius: 4px;
+        }
 
-  /* Optional: Hover-Effekt */
-  .date-selector button:hover,
-  .date-selector input[type="date"]:hover {
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
-    }
+        .date-selector button:hover,
+        .date-selector input[type="date"]:hover {
+          box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+        }
 
     #event-container {
       max-width: 675px;
@@ -416,7 +428,7 @@
         border-right: none;
         box-shadow: 0px -5px 17px rgba(121, 255, 82, 0.87);
         z-index: 1000;
-        overflow: hidden;
+        overflow: visible;
         padding-top: 3px;
         padding-bottom: 10px;
     }

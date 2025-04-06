@@ -19,7 +19,7 @@
         body {
             justify-content: center;
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(-45deg, #190113, #053814, #090107, #101326);
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
@@ -180,6 +180,7 @@
           min-width: 80px;
           min-height: 80px;
           display: flex;
+          align-items: center;
           justify-content: center;
           border-radius: 50%; /* Runde Form */
           overflow: hidden;
@@ -305,6 +306,11 @@
             transition: text-shadow 0.17s ease-in-out;
         }
 
+        .button-wrapper.active {
+            box-shadow: 0px 0px 20px rgba(59, 255, 0, 0.8);
+            text-shadow: 0px 0px 10px #2DFF16;
+          }
+
         .content {
             flex-grow: 1;
             padding: 20px;
@@ -338,14 +344,58 @@
         }
 
         strong {
-          font-weight: 460;
+            font-weight: 460;
         }
+
+        .date-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 2rem;
+  }
+
+      .date-selector button,
+      .date-selector input[type="date"] {
+          font-family: 'Inter', sans-serif;
+          font-size: 16px;
+          padding: 0.9em 1.2em;
+          border: 1px solid #d1afcd45; /* dünner weißer Rahmen */
+          border-radius: 2px;
+          background: linear-gradient(150deg, #8d8d8d3b, #0C0109); /* Verlauf */
+          color: white; /* weiße Schrift */
+          cursor: pointer;
+          outline: none;
+          transition: all 0.2s ease;
+  }
+
+  .date-selector input[type="date"] {
+    color-scheme: dark; /* dunkles Kalender-Popup */
+  }
+
+  /* Optional: Hover-Effekt */
+  .date-selector button:hover,
+  .date-selector input[type="date"]:hover {
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+    }
+
+    #event-container {
+      max-width: 675px;
+      margin: 0 auto;
+    }
+
+    .title-box {
+        max-width: 600px;
+    }
 
 
         @media only screen and (max-width: 768px) {
 
     body, html {
         overflow-x: hidden;
+    }
+
+    h2 {
+      font-family: 'Inter', sans-serif;
     }
 
     .container {
@@ -481,6 +531,21 @@
         font-size: 18px;
         margin-top: 20px;
     }
+
+    .date-selector button,
+    .date-selector input[type="date"] {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        padding: 0.5em 0.8em;
+        border: 1px solid #d1afcd45; /* dünner weißer Rahmen */
+        border-radius: 2px;
+        background: linear-gradient(150deg, #8d8d8d3b, #0C0109); /* Verlauf */
+        color: white; /* weiße Schrift */
+        cursor: pointer;
+        outline: none;
+        transition: all 0.2s ease;
+      }
+
 }
 
     </style>
@@ -490,15 +555,12 @@
         <div class="sidebar">
             <div class="sidebar-gradient-l2r"></div>
             <div class="sidebar-gradient-t2b"></div>
-            <a href="#" class="home-button active"><img src="logo.png" alt="Home"></a>
-            <div class="button-wrapper btn-events">
-
-<a href="events.html" class="button-wrapper btn-events">
+            <a href="index.html" class="home-button"><img src="logo.png" alt="Home"></a>
+            <div class="button-wrapper btn-events active">
   <button>
     <p class="text-events">Events</p>
     <span class="ball"></span>
-    </button>
-  </a>
+  </button>
 </div>
 
 <div class="button-wrapper btn-artspaces">
@@ -531,26 +593,24 @@
         </div>
         <div class="content">
             <div class="home-text">
-                <span>h</span>
-                <span>o</span>
-                <span>m</span>
                 <span>e</span>
+                <span>v</span>
+                <span>e</span>
+                <span>n</span>
+                <span>t</span>
+                <span>s</span>
             </div>
             <div class="main-content">
                 <div class="title-box">
-                    <h1 class="page-title">Munich in Arts and Culture</h1>
-                    <p class="paragraph">
-                      Munich in Arts and Culture is a <strong>platform showcasing Munich's creative scene</strong>. It highlights events, artists, and <strong>cultural happenings</strong> across music, art, performance, and club culture, with a focus on <strong>alternative</strong> and <strong>experimental</strong> movements.
-                      <br>
-                      <br>
-                      By <strong>collaborating with local artists</strong>, the platform regularly showcases their work, increasing their visibility and audience reach.
-                      <br>
-                      <br>
-                      Additionally, it shares <strong>AI-assisted job listings</strong> in the creative and cultural sectors, along with information on <strong>available studio spaces</strong>, venues, and other valuable resources.
-                      <br>
-                      <br>
-                      To continue fostering cultural engagement, networking, and accessibility for artists in Munich, the project is seeking financial support.
-</p>
+                  <div class="date-selector" style="margin-bottom: 0px; display: flex; gap: 3px; align-items: center; margin-bottom: 2rem;">
+                    <button type="button" id="today-btn">Today</button>
+                    <button type="button" id="tomorrow-btn">Tomorrow</button>
+                    <input type="date" id="date-picker">
+                  </div>
+
+<!-- Event Feed Output -->
+      <div id="event-feed" style="font-family: sans-serif; padding: 0px;"></div>
+
                 </div>
                 <div class="social-links">
                     <a href="https://t.me/munichinartsandculture" target="_blank" class="tg-link">Telegram</a>
@@ -560,4 +620,102 @@
         </div>
     </div>
 </body>
+
+<script>
+const apiUrl = "https://script.google.com/macros/s/AKfycbxO0dXiimcDzRpscpbXY84AgB2EgbV1xezSgRQHV6oyYqkTcIvDJ7V3ABGRABSXebJQ/exec";
+const eventContainer = document.getElementById("event-feed");
+const todayBtn = document.getElementById("today-btn");
+const tomorrowBtn = document.getElementById("tomorrow-btn");
+const datePicker = document.getElementById("date-picker");
+
+function formatDateForComparison(date) {
+  const d = new Date(date);
+  return d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" }) + ".";
+}
+
+function loadEventsForDate(dateString) {
+  fetch(apiUrl)
+    .then(res => res.json())
+    .then(events => {
+      const filtered = events.filter(e => {
+        if (!e.Datum) return false;
+        const normalizedA = e.Datum.toString().replace(/\D/g, '');
+        const normalizedB = dateString.toString().replace(/\D/g, '');
+        return normalizedA === normalizedB;
+});
+
+      renderEvents(filtered, dateString);
+    })
+    .catch(err => {
+      eventContainer.innerHTML = `<p>Fehler beim Laden der Events 😢 (${err.message})</p>`;
+      console.error("Fetch Error:", err);
+    });
+}
+
+function renderEvents(events, dateLabel) {
+  // Punkt(e) entfernen und Tag + Monat extrahieren
+  const cleaned = dateLabel.replace(/\.$/, ''); // "07.04." → "07.04"
+  const [day, month] = cleaned.split('.'); // → ["07", "04"]
+
+  // aktuelles Jahr anhängen
+  const year = new Date().getFullYear();
+
+  // korrektes ISO-Format für Date erzeugen
+  const isoDateStr = `${year}-${month}-${day}`; // → "2025-04-07"
+  const dateObj = new Date(isoDateStr);
+
+  // englischen Wochentag holen
+  const weekday = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+
+  // Ausgabe rendern
+  eventContainer.innerHTML = `<h2 style="margin-top:2rem;">📅 ${day}.${month}. <span style="font-weight: normal;">${weekday}</span></h2>`;
+
+  if (events.length === 0) {
+    eventContainer.innerHTML += `<p>Keine Events gefunden.</p>`;
+    return;
+  }
+
+  events.forEach(event => {
+    const html = `
+      <div style="margin: 1.2rem 0; padding: 1rem; border-left: 4px solid #2dff16; background: #111; color: white; border-radius: 8px;">
+        <h3 style="font-size: 1.3em; margin-bottom: 0.3em;">${event.Titel}</h3>
+        <p><em>${event.Beschreibung}</em></p>
+        <p>${event.Uhrzeit}</p>
+        <p>${event.Ort}</p>
+        <p>${event.Preis}</p>
+        ${event.Links ? `<p>🔗 <a href="${event.Links.split(" | ")[0]}" target="_blank" style="color:#2dff16;">Mehr Info</a></p>` : ''}
+      </div>
+    `;
+    eventContainer.innerHTML += html;
+  });
+}
+
+todayBtn.addEventListener("click", () => {
+  const today = formatDateForComparison(new Date());
+  loadEventsForDate(today);
+});
+
+tomorrowBtn.addEventListener("click", () => {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const dateStr = formatDateForComparison(tomorrow);
+  loadEventsForDate(dateStr);
+});
+
+datePicker.addEventListener("change", () => {
+  const selected = datePicker.value;
+  if (selected) {
+    const formatted = formatDateForComparison(new Date(selected));
+    loadEventsForDate(formatted);
+  }
+});
+
+// Beim Laden der Seite automatisch heutige Events anzeigen
+window.addEventListener("load", () => {
+  const today = formatDateForComparison(new Date());
+  loadEventsForDate(today);
+});
+</script>
+
+
 </html>

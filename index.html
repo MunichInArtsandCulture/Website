@@ -10,8 +10,11 @@
     <link rel="icon" type="image/svg+xml" href="MIAAC_icon.svg">
     <style>
         html {
-          overflow: hidden;
-          height: 100%;
+          margin: 0;
+          padding: 0;
+          overflow-x: hidden;
+          scroll-behavior: smooth;
+          height: auto;
         }
         body {
             justify-content: center;
@@ -179,6 +182,65 @@
           position: relative;
           border: 1px solid rgba(255, 255, 255, 0.2); /* Dezente Outline */
           box-shadow: 0px 0px 13px rgba(0, 0, 0, 0.94); /* Schwarzer Drop Shadow */
+        }
+        .button-wrapper {
+            transform: scale(0.70);
+            transform-origin: center;
+            position: relative;
+            margin-bottom: 0px;
+        }
+
+        .btn-events {
+             style="z-index: 1;
+             color:white; font-family: 'Inter',
+             sans-serif;
+             font-size: 26px;
+             font-weight: 400;
+             line-height: 0.5;
+             letter-spacing: 5%;
+        }
+
+        .btn-artspaces {
+            style="z-index: 1;
+            color:white;
+            font-family: 'Inter', sans-serif;
+            font-size: 26px;
+            font-weight: 350;
+            line-height: 0.5;
+            letter-spacing: -13%;
+            margin-right: 5px;
+        }
+
+        .btn-artistwiki {
+            style="z-index: 1;
+            color:white; font-family: 'Inter', sans-serif;
+            font-size: 26px;
+            font-weight: 350;
+            line-height: 0.7;
+            letter-spacing: -13%;
+            margin-right: 5px;"
+        }
+
+        .btn-creativejobs {
+            style="z-index: 1;
+            color:white; font-family: 'Inter', sans-serif;
+            font-size: 25px;
+            font-weight: 350;
+            line-height: 0.7;
+            letter-spacing: -5%;
+            margin-right: 2px;
+        }
+
+        .btn-opencalls {
+            style="z-index: 1;
+            color:white;
+            font-family: 'Inter', sans-serif;
+            font-size: 23px;
+            font-weight: 400;
+            line-height: 0.5;
+            letter-spacing: -12%;
+            margin-right: 2px;
+            white-space: nowrap;";
         }
         .sidebar button {
             position: absolute;
@@ -392,14 +454,15 @@
     }
 
     .title-box {
-        margin-left: 7px;
-        margin-right: 7px;
-        margin-bottom: 7px;
+        margin-left: 8px;
+        margin-right: 8px;
+        margin-bottom: 8px;
     }
 
     .page-title {
-        font-size: 25.5px;
+        font-size: 25px;
         text-align: center;
+        letter-spacing: -1px;
     }
 
     .paragraph {
@@ -411,6 +474,7 @@
 
     .social-links {
         text-align: center;
+        font-size: 18px;
         margin-top: 20px;
     }
 }
@@ -423,11 +487,11 @@
             <div class="sidebar-gradient-l2r"></div>
             <div class="sidebar-gradient-t2b"></div>
             <a href="#" class="home-button"><img src="logo.png" alt="Home"></a>
-            <div class="button-wrapper btn-events"><button><p style="z-index: 1; color:white; font-family: 'Inter', sans-serif; font-size: 26px; font-weight: 400; line-height: 0.5; letter-spacing: 5%;">Events</p><span class="ball"></span></button></div>
-            <div class="button-wrapper btn-artspaces"><button><p style="z-index: 1; color:white; font-family: 'Inter', sans-serif; font-size: 26px; font-weight: 350; line-height: 0.5; letter-spacing: -13%; margin-right: 5px;">Art<br>Spaces</p><span class="ball"></span></button></div>
-            <div class="button-wrapper btn-artistwiki"><button><p style="z-index: 1; color:white; font-family: 'Inter', sans-serif; font-size: 26px; font-weight: 350; line-height: 0.7; letter-spacing: -13%; margin-right: 5px;">Artist<br>Wiki</p><span class="ball"></span></button></div>
-            <div class="button-wrapper btn-creativejobs"><button><p style="z-index: 1; color:white; font-family: 'Inter', sans-serif; font-size: 25px; font-weight: 350; line-height: 0.7; letter-spacing: -5%; margin-right: 2px;">Creative<br>Jobs</p><span class="ball"></span></button></div>
-            <div class="button-wrapper btn-opencalls"><button><p style="z-index: 1; color:white; font-family: 'Inter', sans-serif; font-size: 23px; font-weight: 400; line-height: 0.5; letter-spacing: -12%; margin-right: 2px; white-space: nowrap;">Open‎ Calls</p><span class="ball"></span></button></div>
+            <div class="button-wrapper btn-events"><button><p>Events</p><span class="ball"></span></button></div>
+            <div class="button-wrapper btn-artspaces"><button><p>Art<br>Spaces</p><span class="ball"></span></button></div>
+            <div class="button-wrapper btn-artistwiki"><button><p>Artist<br>Wiki</p><span class="ball"></span></button></div>
+            <div class="button-wrapper btn-creativejobs"><button><p>Creative<br>Jobs</p><span class="ball"></span></button></div>
+            <div class="button-wrapper btn-opencalls"><button><p>Open‎ Calls</p><span class="ball"></span></button></div>
         </div>
         <div class="content">
             <div class="home-text">

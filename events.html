@@ -683,7 +683,7 @@ function renderEvents(events, dateLabel) {
   eventContainer.innerHTML = `<h2 style="margin-top:2rem;">📅 ${day}.${month}. <span style="font-weight: normal;">${weekday}</span></h2>`;
 
   if (events.length === 0) {
-    eventContainer.innerHTML += `<p>Keine Events gefunden.</p>`;
+    eventContainer.innerHTML += `<p>No events found :(</p>`;
     return;
   }
 

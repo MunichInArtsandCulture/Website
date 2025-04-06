@@ -689,13 +689,13 @@ function renderEvents(events, dateLabel) {
 
   events.forEach(event => {
     const html = `
-      <div style="margin: 1.2rem 0; padding: 1rem; border-left: 4px solid #2dff16; background: #111; color: white; border-radius: 8px;">
+      <div style="margin: 1.2rem 0; padding: 1rem; border-left: 4px solid #2dff1680; background: #111; color: white; border-radius: 8px;">
         <h3 style="font-size: 1.3em; margin-bottom: 0.3em;">${event.Titel}</h3>
         <p><em>${event.Beschreibung}</em></p>
         <p>${event.Uhrzeit}</p>
         <p>${event.Ort}</p>
         <p>${event.Preis}</p>
-        ${event.Links ? `<p>🔗 <a href="${event.Links.split(" | ")[0]}" target="_blank" style="color:#2dff16;">Mehr Info</a></p>` : ''}
+        ${event.Links ? `<p>🔗 <a href="${event.Links.split(" | ")[0]}" target="_blank" style="color:#2dff16;">More info</a></p>` : ''}
       </div>
     `;
     eventContainer.innerHTML += html;

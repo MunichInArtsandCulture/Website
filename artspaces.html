@@ -19,7 +19,7 @@
         body {
             justify-content: center;
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(-45deg, #190113, #053814, #090107, #101326);
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
@@ -28,11 +28,7 @@
             padding: 0;
             overflow-x: hidden; /* Verhindert Scroll-Fehler */
             scroll-behavior: smooth;
-            transition: opacity 0.4s ease;
         }
-        body.fade-out {
-            opacity: 0;
-          }
         background {
           overflow: hidden;
           margin-top: -100px;
@@ -310,6 +306,11 @@
             transition: text-shadow 0.17s ease-in-out;
         }
 
+        .button-wrapper.active {
+            box-shadow: 0px 0px 20px rgb(138, 255, 103);
+            text-shadow: 0px 0px 10px #2DFF16;
+          }
+
         .content {
             flex-grow: 1;
             padding: 20px;
@@ -336,6 +337,7 @@
             background: none;
             font-family: 'Major Mono Display', monospace;
             text-shadow: 0px 0px 12px #2DFF16; /* Offset X, Offset Y, Blur, Farbe */
+            gap: 12px;
         }
         .main-content {
             flex-grow: 1;
@@ -343,14 +345,74 @@
         }
 
         strong {
-          font-weight: 460;
+            font-weight: 460;
         }
+
+        .date-selector {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          margin-bottom: 2rem;
+
+          position: relative;
+          z-index: 10;
+        }
+
+        .date-selector button,
+        .date-selector input[type="date"] {
+          font-family: 'Inter', sans-serif;
+          font-size: 16px;
+          padding: 0.9em 1.2em;
+          border: 1px solid #d1afcd45; /* dünner weißer Rahmen */
+          border-radius: 4px;
+          background: linear-gradient(150deg, #8d8d8d3b, #0C0109); /* Verlauf */
+          color: white;
+          cursor: pointer;
+          outline: none;
+          transition: all 0.2s ease;
+          min-width: 80px;
+          min-height: 40px;
+          box-sizing: border-box;
+        }
+
+        .date-selector input[type="date"] {
+          color-scheme: dark;
+          appearance: none;
+          -webkit-appearance: none;
+          background-color: #0C0109;
+          border: 1px solid #d1afcd45;
+          color: white;
+          padding: 0.9em 1.2em;
+          border-radius: 4px;
+        }
+
+        .date-selector button:hover,
+        .date-selector input[type="date"]:hover {
+          box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+        }
+
+    #event-container {
+      max-width: 675px;
+      margin: 0 auto;
+    }
+
+    .title-box {
+        max-width: 580px;
+    }
+
+    .date-placeholder {
+      display: none;
+      }
 
 
         @media only screen and (max-width: 768px) {
 
     body, html {
         overflow-x: hidden;
+    }
+
+    h2 {
+      font-family: 'Inter', sans-serif;
     }
 
     .container {
@@ -371,7 +433,7 @@
         border-right: none;
         box-shadow: 0px -5px 17px rgba(121, 255, 82, 0.87);
         z-index: 1000;
-        overflow: hidden;
+        overflow: visible;
         padding-top: 3px;
         padding-bottom: 10px;
     }
@@ -435,7 +497,7 @@
         top: 30px;
         left: 0;
         right: 0;
-        width: 100%;
+        width: 10%;
         text-align: left;
         font-size: 80px;
         opacity: 0.17;
@@ -443,7 +505,6 @@
         margin: 0;
         flex-direction: column;
         justify-content: center;
-        width: 20%;
     }
 
     .home-text span {
@@ -482,21 +543,96 @@
         font-weight: 210;
     }
 
+    .date-picker-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .date-placeholder {
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.5);
+      pointer-events: none;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      z-index: 1;
+      display: block;
+    }
+
+.date-picker-wrapper input[type="date"] {
+  position: relative;
+  z-index: 2;
+  background-color: transparent;
+}
+
     .social-links {
         text-align: center;
         font-size: 18px;
         margin-top: 20px;
     }
+
+    .date-selector button,
+    .date-selector input[type="date"] {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        padding: 0.5em 0.8em;
+        border: 1px solid #d1afcd45; /* dünner weißer Rahmen */
+        border-radius: 2px;
+        background: linear-gradient(150deg, #8d8d8d3b, #0C0109); /* Verlauf */
+        color: white; /* weiße Schrift */
+        cursor: pointer;
+        outline: none;
+        transition: all 0.2s ease;
+      }
+
 }
 
-    </style>
+.category-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  padding: 0.9em 1.2em;
+  border: 1px solid #d1afcd45;
+  border-radius: 4px;
+  background: linear-gradient(150deg, #8d8d8d3b, #0C0109);
+  color: white;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.category-btn:hover {
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.category-btn.active {
+  box-shadow: 0px 0px 20px rgb(138, 255, 103);
+  text-shadow: 0px 0px 10px #2DFF16;
+}
+
+@media (max-width: 390px) {
+  .hyphenated {
+    word-break: break-word;
+    hyphens: auto;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+  }
+
+  .category-btn {
+    min-width: 100px;
+  }
+}
+
+</style>
 </head>
 <body>
     <div class="container">
         <div class="sidebar">
             <div class="sidebar-gradient-l2r"></div>
             <div class="sidebar-gradient-t2b"></div>
-            <a href="#" class="home-button active"><img src="logo.png" alt="Home"></a>
+            <a href="index.html" class="home-button"><img src="logo.png" alt="Home"></a>
 
 <a href="events.html" class="button-wrapper btn-events">
   <button>
@@ -505,12 +641,12 @@
     </button>
   </a>
 
-<a href="artspaces.html" class="button-wrapper btn-artspaces">
+<div class="button-wrapper btn-artspaces active">
   <button>
     <p class="text-artspaces">Art<br>Spaces</p>
     <span class="ball"></span>
-    </button>
-  </a>
+  </button>
+</div>
 
 <div class="button-wrapper btn-artistwiki">
   <button>
@@ -535,26 +671,30 @@
         </div>
         <div class="content">
             <div class="home-text">
-                <span>h</span>
-                <span>o</span>
-                <span>m</span>
-                <span>e</span>
+                <span>a</span>
+                <span style="display: block; margin-top: -55px;">r</span>
+                <span style="display: block; margin-top: -55px;">t</span>
+                <span style="display: block; margin-top: -55px;"><br></span>
+                <span style="display: block; margin-top: -55px;">s</span>
+                <span style="display: block; margin-top: -55px;">p</span>
+                <span style="display: block; margin-top: -55px;">a</span>
+                <span style="display: block; margin-top: -55px;">c</span>
+                <span style="display: block; margin-top: -55px;">e</span>
+                <span style="display: block; margin-top: -55px;">s</span>
             </div>
             <div class="main-content">
                 <div class="title-box">
-                    <h1 class="page-title">Munich in Arts and Culture</h1>
-                    <p class="paragraph">
-                      Munich in Arts and Culture is a <strong>platform showcasing Munich's creative scene</strong>. It highlights events, artists, and <strong>cultural happenings</strong> across music, art, performance, and club culture, with a focus on <strong>alternative</strong> and <strong>experimental</strong> movements.
-                      <br>
-                      <br>
-                      By <strong>collaborating with local artists</strong>, the platform regularly showcases their work, increasing their visibility and audience reach.
-                      <br>
-                      <br>
-                      Additionally, it shares <strong>AI-assisted job listings</strong> in the creative and cultural sectors, along with information on <strong>available studio spaces</strong>, venues, and other valuable resources.
-                      <br>
-                      <br>
-                      To continue fostering cultural engagement, networking, and accessibility for artists in Munich, the project is seeking financial support.
-</p>
+                  <div class="date-selector" style="margin-bottom: 2rem;">
+                    <button class="category-btn active" data-category="residencies">
+                        <span class="hyphenated">Resi&shy;dencies</span>
+                    </button>
+                    <button class="category-btn" data-category="studios">Art Studios</button>
+                    <button class="category-btn" data-category="locations">Event Locations</button>
+                  </div>
+
+<!-- Event Feed Output -->
+      <div id="event-feed" style="font-family: sans-serif; padding: 0px;"></div>
+
                 </div>
                 <div class="social-links">
                     <a href="https://t.me/munichinartsandculture" target="_blank" class="tg-link">Telegram</a>
@@ -564,15 +704,165 @@
         </div>
     </div>
 </body>
+
 <script>
-document.querySelectorAll('a.transition-link').forEach(link => {
-  link.addEventListener('click', function (e) {
-    e.preventDefault();
-    document.body.classList.add('fade-out');
-    setTimeout(() => {
-      window.location.href = this.href;
-    }, 400);
+const eventContainer = document.getElementById("event-feed");
+
+const content = {
+  residencies: [
+    {
+      title: "Artist in Residence",
+      desc: "As the City of Munich’s artist-in-residence program we offer artists, curators, and scientists from all over the world space, time, and financial support – so they have a place to stay, work, make presentations, reflect, and participate in discussions.",
+      link: "https://www.artistinresidence-munich.de/"
+    },
+    {
+      title: "Halle 6",
+      desc: "Since July 2023, HALLE 6 has offered guest studios and housing for international artists in Munich. Supported by the City of Munich and other institutions, it promotes artistic exchange through residencies, symposia, and the Artist at Risk program. Booking is semiannual.",
+      link: "https://www.halle6.net/residenz"
+    },
+    {
+      title: "Kunstverein München",
+      desc: "The Writers Residency supports authors, critics, and artists whose work centers on writing. In partnership with Kunstverein München, it offers housing, a stipend, and public readings to foster exchange, reflection, and fiction beyond traditional exhibition spaces. The focus is time and space to write.",
+      link: "https://www.kunstverein-muenchen.de/de/programm/writers-residency"
+    },
+    {
+      title: "Schafhof",
+      desc: "As part of the European Art Fellowship, Schafhof hosts artists from across Europe for one to three months. In exchange, artists from Upper Bavaria stay abroad. The program fosters European exchange and enriches regional cultural life.",
+      link: "https://www.schafhof-kunstforum.de/Residenzprogramm/"
+    }
+  ],
+  studios: [
+    {
+      title: "Atelierhaus Baumstraße",
+      desc: "Around 50 artists from fields like visual arts, architecture, stage design, and jewelry work at Atelierhaus Baumstraße. Spaces are awarded every five years by jury selection. Located in Glockenbachviertel, the house opens annually for public studio visits.",
+      link: "https://www.atelierhaus-baumstrasse.com/"
+    },
+    {
+      title: "BBK - Atelierbörse",
+      desc: "This page lists current studio offers. You can also publish your own offer or request. Ads are deleted after 3 months. Munich’s Cultural Department supports artists with subsidized studios and rent grants every three years.",
+      link: "https://bbk-muc-obb.de/aktuelles/atelierboerse/"
+    },
+    {
+      title: "Eventlocation.com",
+      desc: "eventlocations.com is an international platform for marketing event spaces and finding the perfect venue. Unlike others, it’s commission-free, allowing direct contact between hosts and organizers. It’s operated by Elbgoods GmbH, which also runs related platforms like eventcatering.com and eventbook.com.",
+      link: "https://www.eventlocations.com/de/munchen-atelier"
+    },
+    {
+      title: "Gabriele Space",
+      desc: "GABRIELE SPACE is an IMAL project offering free studios, workshops, and exhibition space for young artists in Munich. It supports artistic production, skill-sharing, and community exchange through non-commercial, participatory use of vacant buildings. The focus lies on empowerment, experimentation, and neighborhood engagement.",
+      link: "https://www.gabriele-space.de/gabi3/uber-uns/"
+    },
+    {
+      title: "H.ALLE",
+      desc: "The H.ALLE for ALL offers open workshops every Saturday from 14:00–18:00. Activities include a repair workshop with shared tools, rotating artistic workshops (e.g. printmaking, ceramics, upcycling), and an open studio space for collaborative or independent creative work. Some workshops are family-friendly.",
+      link: "https://imalrepaircafe.wordpress.com/samstag/"
+    },
+    {
+      title: "HALLE 6 ",
+      desc: "HALLE 6 offers temporary workspaces for artists needing room for large-scale projects, rehearsals, or stage design. Available spaces include a multifunctional workshop and three studios with ground-level access, heating, Wi-Fi, and optional equipment. Spaces are flexible and can be adapted to individual project needs.",
+      link: "https://www.halle6.net/studio-vermietung"
+    },
+    {
+      title: "Haus2 e.V.",
+      desc: "Haus2 e.V. is a collaborative initiative at KreativLabor, offering spaces (24–42 m²) for art, culture, and cultural education. Rooms are allocated through a jury process, with rents currently at commercial rates. The long-term goal is to create more affordable conditions for cultural workers.",
+      link: "http://haus2.net/raumvergabe/"
+    },
+    {
+      title: "ImmoScout24",
+      desc: "Bru, you know what that is.",
+      link: "https://www.immobilienscout24.de/gewerbe-flaechen/de/bayern/muenchen/atelier-mieten/"
+    },
+    {
+      title: "Isar Atelier",
+      desc: "Rent your own studio space and join the Isar Atelier community in Munich’s Dreimühlenviertel. The 100 m² space includes two studios, a cozy kitchen, and bathroom. One flexible spot in the shared 40 m² room is currently available. Warm, well-equipped, and close to the Isar.",
+      link: "https://www.farbraum-muenchen.de/dein-atelierplatz-1/"
+    },
+    {
+      title: "Kleinanzeigenr",
+      desc: "Kleinanzeigen with the appropriate filters to find places within the city limits of Munich.",
+      link: "https://www.kleinanzeigen.de/s-immobilien/muenchen/anzeige:angebote/preis::750/atelier-/k0c195l6411r14"
+    },
+    {
+      title: "KUNSTLABOR 2",
+      desc: "KUNSTLABOR 2, in partnership with super+, offers 40 studios for creatives on a 1,300 m² floor in Munich’s Dachauerstraße 90. Located above exhibition spaces, the studios support cross-genre collaboration and host Open Studios twice a year. Sizes range from 13–60 m².",
+      link: "https://kunstlabor.org/kunst/atelier-mieten-muenchen/"
+    },
+    {
+      title: "Leonrod-Haus",
+      desc: "Since 2011, the Leonrod-Haus für Kunst und Film has united various art forms under one roof at Leonrodplatz. In 2024, artists founded an official association to promote artistic visibility. Open Studios will take place during the Kreativquartier Festival.",
+      link: "https://www.leonrod-haus.de/kontakt/"
+    },
+    {
+      title: "Otto-Steidle-Ateliers",
+      desc: "The Otto-Steidle-Ateliers, located beneath the pedestrian bridge on Ganghoferstraße, offer 30 m² studio spaces on five-year terms. Founded in 2006, the project is supported by FONDARA, the City of Munich, and includes scholarships from local foundations. Named after architect Otto Steidle.",
+      link: "https://akademieverein.de/steidle-ateliers/"
+    },
+    {
+      title: "PLATFORM",
+      desc: "The PLATFORM studios are located in a former industrial building in Munich-South, near Aidenbachstraße U-Bahn. On a 2,000 m² floor, 23 bright studios host 40 professional artists, selected through an application process. Managed by Münchner Arbeit gGmbH.",
+      link: "https://www.platform-muenchen.de/ateliers/"
+    },
+    {
+      title: "quoka",
+      desc: "QUOKA is a free online classifieds platform for buying and selling locally or nationwide. Users can find everything from second-hand items to nearly new goods, and post their own ads easily and for free.",
+      link: "https://www.quoka.de/anzeigen/immobilienmarkt/vermietungen/vermietung-ateliers-uebungsraeume/bayern/muenchen/?utm_source=chatgpt.com"
+    },
+    {
+      title: "Stadt München",
+      desc: "The City of Munich provides spaces for artists to create and present their work through its cultural funding programs.",
+      link: "https://stadt.muenchen.de/infos/raeume-fuer-kultur.html"
+    }
+  ],
+  locations: [
+    {
+      title: "Abraxas Musical Akademie",
+      desc: "Hourly studio rentals are available for private lessons ...",
+      link: "https://abraxas-musical-akademie.de/service#saalvermietung"
+    },
+    {
+      title: "Einsatz Club",
+      desc: "Welcome to our musical universe – a space for multicultural music events ...",
+      link: "https://www.einsatz.club/"
+    }
+  ]
+};
+
+function renderCategory(category) {
+  eventContainer.innerHTML = ""; // Reset
+
+  const entries = content[category] || [];
+
+  if (entries.length === 0) {
+    eventContainer.innerHTML = `<p>No content found.</p>`;
+    return;
+  }
+
+  entries.forEach(entry => {
+    const html = `
+      <div style="margin: 1.2rem 0; padding: 1rem; border-left: 4px solid #2dff1680; background: #111; color: white; border-radius: 8px;">
+        <h3 style="font-size: 1.3em; margin-bottom: 0.3em;">${entry.title}</h3>
+        <p><em>${entry.desc}</em></p>
+        ${entry.link ? `<p>🔗 <a href="${entry.link}" target="_blank" style="color:#2dff16;">More info</a></p>` : ''}
+      </div>
+    `;
+    eventContainer.innerHTML += html;
+  });
+}
+
+document.querySelectorAll(".category-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".category-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderCategory(btn.dataset.category);
   });
 });
+
+// Standardmäßig "residencies" laden
+window.addEventListener("load", () => {
+  renderCategory("residencies");
+});
+
 </script>
+
+
 </html>

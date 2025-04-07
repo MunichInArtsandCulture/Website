@@ -399,6 +399,10 @@
         max-width: 600px;
     }
 
+    .date-placeholder {
+      display: none;
+      }
+
 
         @media only screen and (max-width: 768px) {
 
@@ -553,6 +557,7 @@
       font-size: 14px;
       font-family: 'Inter', sans-serif;
       z-index: 1;
+      display: block;
     }
 
 .date-picker-wrapper input[type="date"] {
@@ -742,9 +747,14 @@ tomorrowBtn.addEventListener("click", () => {
 
 datePicker.addEventListener("change", () => {
   const selected = datePicker.value;
+  const placeholder = document.getElementById("date-placeholder");
+
   if (selected) {
+    placeholder.style.display = "none";
     const formatted = formatDateForComparison(new Date(selected));
     loadEventsForDate(formatted);
+  } else {
+    placeholder.style.display = "block";
   }
 });
 
@@ -753,6 +763,14 @@ window.addEventListener("load", () => {
   const today = formatDateForComparison(new Date());
   loadEventsForDate(today);
 });
+
+window.addEventListener("load", () => {
+  const placeholder = document.getElementById("date-placeholder");
+  if (datePicker.value) {
+    placeholder.style.display = "none";
+  }
+});
+
 </script>
 
 

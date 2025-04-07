@@ -492,7 +492,7 @@
         top: 30px;
         left: 0;
         right: 0;
-        width: 100%;
+        width: 10%;
         text-align: left;
         font-size: 80px;
         opacity: 0.17;
@@ -537,6 +537,29 @@
         line-height: 1.6;
         font-weight: 210;
     }
+
+    .date-picker-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .date-placeholder {
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.5);
+      pointer-events: none;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      z-index: 1;
+    }
+
+.date-picker-wrapper input[type="date"] {
+  position: relative;
+  z-index: 2;
+  background-color: transparent;
+}
 
     .social-links {
         text-align: center;
@@ -617,7 +640,10 @@
                   <div class="date-selector" style="margin-bottom: 0px; display: flex; gap: 3px; align-items: center; margin-bottom: 2rem;">
                     <button type="button" id="today-btn">Today</button>
                     <button type="button" id="tomorrow-btn">Tomorrow</button>
-                    <input type="date" id="date-picker">
+                      <div class="date-picker-wrapper">
+                          <input type="date" id="date-picker">
+                          <span class="date-placeholder" id="date-placeholder">Pick date</span>
+                        </div>
                   </div>
 
 <!-- Event Feed Output -->

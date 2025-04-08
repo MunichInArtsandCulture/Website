@@ -76,6 +76,10 @@
             font-weight: 350;
             font-size: 22px;
         }
+        #social-links.hidden {
+            opacity: 0;
+            pointer-events: none;
+          }
         a {
             color: #B0AEFF; /* Setzt die Standard-Linkfarbe auf Neon-Grün */
             text-decoration: none; /* Entfernt die Unterstreichung */
@@ -403,8 +407,48 @@
       display: none;
       }
 
+      .loader {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(
+          165deg, rgba(255, 255, 255, 0) 0%,
+          rgba(220, 220, 220, 0) 40%,
+          rgba(170, 170, 170, 0.25) 98%,
+          rgb(10, 10, 10) 100%
+        );
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
 
-        @media only screen and (max-width: 768px) {
+        .loader:before {
+          position: absolute;
+          content: "";
+          width: 100%;
+          height: 100%;
+          border-radius: 100%;
+          border-bottom: 0 solid #ffffff05;
+          box-shadow: 0 -10px 20px 20px #07430140 inset,
+            0 -5px 15px 10px #bbff9a4f inset, 0 -2px 5px #ffffff80 inset,
+            0 -3px 2px #ffffffba inset, 0 2px 0px #fff, 0 2px 3px #fff,
+            0 5px 5px #6bff568f, 0 10px 15px #60ff5261, 0 10px 20px 20px #08300040;
+          filter: blur(0px);
+          animation: 2s rotate linear infinite;
+        }
+
+        @keyframes rotate {
+          100% { transform: rotate(360deg) }
+        }
+
+
+      @keyframes rotate {
+        100% { transform: rotate(360deg) }
+      }
+
+
+    @media only screen and (max-width: 768px) {
 
     body, html {
         overflow-x: hidden;
@@ -527,6 +571,7 @@
         margin-left: 8px;
         margin-right: 8px;
         margin-bottom: 8px;
+        width: 90vw;
     }
 
     .page-title {
@@ -591,6 +636,12 @@
     </style>
 </head>
 <body>
+
+  <div id="loading-spinner" style="display:none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+    <span style="font-size: 18px; color: white; margin-bottom: 20px;"></span>
+    <span class="loader"></span>
+  </div>
+
     <div class="container">
         <div class="sidebar">
             <div class="sidebar-gradient-l2r"></div>
@@ -656,7 +707,7 @@
       <div id="event-feed" style="font-family: sans-serif; padding: 0px;"></div>
 
                 </div>
-                <div class="social-links">
+                <div class="social-links" id="social-links">
                     <a href="https://t.me/munichinartsandculture" target="_blank" class="tg-link">Telegram</a>
                     <a href="https://www.instagram.com/munichartsandculture/" target="_blank">Instagram</a>
                 </div>
@@ -678,23 +729,35 @@ function formatDateForComparison(date) {
 }
 
 function loadEventsForDate(dateString) {
+  const spinner = document.getElementById("loading-spinner");
+  const socialLinks = document.getElementById("social-links"); // <- hinzugefügt
+  spinner.style.display = "flex";
+  eventContainer.innerHTML = "";
+
+  socialLinks.style.display = "none"; // <- Social links ausblenden
+
   fetch(apiUrl)
     .then(res => res.json())
     .then(events => {
+      spinner.style.display = "none"; // Spinner ausblenden
+      socialLinks.style.display = "block"; // <--- HIER!
+
       const filtered = events.filter(e => {
         if (!e.Datum) return false;
         const normalizedA = e.Datum.toString().replace(/\D/g, '');
         const normalizedB = dateString.toString().replace(/\D/g, '');
         return normalizedA === normalizedB;
-});
+      });
 
       renderEvents(filtered, dateString);
     })
     .catch(err => {
+      spinner.style.display = "none"; // Spinner auch bei Fehler ausblenden
       eventContainer.innerHTML = `<p>Fehler beim Laden der Events 😢 (${err.message})</p>`;
       console.error("Fetch Error:", err);
     });
 }
+
 
 function renderEvents(events, dateLabel) {
   // Punkt(e) entfernen und Tag + Monat extrahieren
@@ -712,7 +775,7 @@ function renderEvents(events, dateLabel) {
   const weekday = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
 
   // Ausgabe rendern
-  eventContainer.innerHTML = `<h2 style="margin-top:2rem;">📅 ${day}.${month}. <span style="font-weight: normal;">${weekday}</span></h2>`;
+  eventContainer.innerHTML = `<h2 style="margin-top:2rem;"> ${day}.${month}. <span style="font-weight: normal;">${weekday}</span></h2>`;
 
   if (events.length === 0) {
     eventContainer.innerHTML += `<p>No events found :(</p>`;

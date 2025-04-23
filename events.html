@@ -447,6 +447,60 @@
         100% { transform: rotate(360deg) }
       }
 
+      .event-card .event-description {
+        font-weight: 300;
+        font-size: 0.95em; /* etwa 1px kleiner als standard */
+        line-height: 1.6;
+        margin-top: 0.3em;
+        margin-bottom: 0.8em;
+        font-family: 'Inter', sans-serif;
+        font-style: normal;
+        color: rgba(255, 255, 255, 0.8); /* 95% Deckkraft */
+      }
+
+      .event-card {
+        background: linear-gradient(to bottom, #181818d1, #2C1C27E5);
+        background-blend-mode: normal;
+        opacity: 0.99;
+        color: white;
+        border-left: 11px solid #57CF7DE0;
+        border-radius: 8px;
+        padding-top: 0.4rem;
+        padding-bottom: 0.9rem;
+        padding-left: 0.8rem;
+        padding-right: 0.9rem;
+        margin: 1.2rem 0;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .event-card h3 {
+        font-weight: 500;
+        font-size: 1.4em;
+        margin-bottom: 0.5em;
+      }
+
+      .event-card p {
+        font-weight: 300;
+        line-height: 1.5;
+        margin: 0.3em 0;
+        font-size: 1em;
+      }
+
+      .event-card p:nth-of-type(1) {
+        font-weight: 300;
+        line-height: 1.6;
+        margin-top: 0.3em;
+        margin-bottom: 0.8em;
+      }
+
+      .event-card a {
+        color: white;
+        text-decoration: none;
+      }
+
+      .event-card a:hover {
+        text-decoration: underline;
+      }
 
     @media only screen and (max-width: 768px) {
 
@@ -633,13 +687,15 @@
 
 }
 
+
+
     </style>
 </head>
 <body>
 
-  <div id="loading-spinner" style="display:none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column;">
-    <span style="font-size: 18px; color: white; margin-bottom: 20px;"></span>
-    <span class="loader"></span>
+  <div id="loading-spinner" style="display:none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; pointer-events: none;">
+    <span style="font-size: 18px; color: white; margin-bottom: 20px; pointer-events: auto;"></span>
+    <span class="loader" style="pointer-events: auto;"></span>
   </div>
 
     <div class="container">
@@ -784,13 +840,12 @@ function renderEvents(events, dateLabel) {
 
   events.forEach(event => {
     const html = `
-      <div style="margin: 1.2rem 0; padding: 1rem; border-left: 4px solid #2dff1680; background: #111; color: white; border-radius: 8px;">
-        <h3 style="font-size: 1.3em; margin-bottom: 0.3em;">${event.Titel}</h3>
-        <p><em>${event.Beschreibung}</em></p>
+      <div class="event-card">
+        <h3><a href="${event.Links ? event.Links.split(" | ")[0] : '#'}" target="_blank">${event.Titel}</a></h3>
+        <p class="event-description">${event.Beschreibung}</p>
         <p>${event.Uhrzeit}</p>
         <p>${event.Ort}</p>
         <p>${event.Preis}</p>
-        ${event.Links ? `<p>🔗 <a href="${event.Links.split(" | ")[0]}" target="_blank" style="color:#2dff16;">More info</a></p>` : ''}
       </div>
     `;
     eventContainer.innerHTML += html;

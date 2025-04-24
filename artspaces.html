@@ -186,7 +186,7 @@
           overflow: hidden;
           position: relative;
           border: 1px solid rgba(255, 255, 255, 0.2); /* Dezente Outline */
-          box-shadow: 0px 0px 13px rgba(0, 0, 0, 0.94); /* Schwarzer Drop Shadow */
+          box-shadow: 0px 0px 13px rgba(0, 0, 0, 0.6); /* Schwarzer Drop Shadow */
         }
         .button-wrapper {
             transform-origin: center;
@@ -421,21 +421,19 @@
     }
 
     .sidebar {
-        position: fixed;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100vw;
-        height: 150px;
-        border-bottom-left-radius: 300px;
-        border-bottom-right-radius: 300px;
-        border-top: none;
-        border-right: none;
-        box-shadow: 0px -5px 17px rgba(121, 255, 82, 0.87);
-        z-index: 1000;
-        overflow: visible;
-        padding-top: 3px;
-        padding-bottom: 10px;
+      position: fixed;
+      top: -163px; /* Hälfte der Höhe = 326px / 2 */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100vw;
+      height: 318px;
+      background: linear-gradient(to bottom, #070707 50%, #1B0014 90%, #190013 100%);
+      border-radius: 0 0 100% 100%;
+      z-index: 1000;
+      padding-top: 0px;
+      padding-bottom: 10px;
+      overflow: hidden;
+      box-shadow: 0px -5px 17px rgba(121, 255, 82, 0.87);
     }
 
     .sidebar-gradient-l2r,
@@ -443,9 +441,26 @@
         display: none;
     }
 
+    .sidebar-highlight-ellipse {
+        position: absolute;
+        top: 7px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 103vw;
+        height: 299px;
+        border: 14px solid rgba(177, 177, 177, 0.48);
+        border-radius: 50%;
+        filter: blur(15px);
+        opacity: 1;
+        pointer-events: none;
+        z-index: 0; /* bleibt hinter den Buttons */
+      }
+
+
     .home-button {
       width: 80px;
       height: 80px;
+      margin-top: 169px;
     }
 
     .home-button img {
@@ -646,6 +661,7 @@
         <div class="sidebar">
             <div class="sidebar-gradient-l2r"></div>
             <div class="sidebar-gradient-t2b"></div>
+            <div class="sidebar-highlight-ellipse"></div>
             <a href="index.html" class="home-button"><img src="logo.png" alt="Home"></a>
 
 <a href="events.html" class="button-wrapper btn-events">
@@ -726,7 +742,7 @@ const content = {
   residencies: [
     {
       title: "Artist in Residence",
-      desc: "As the City of Munich’s artist-in-residence program we offer artists, curators, and scientists from all over the world space, time, and financial support – so they have a place to stay, work, make presentations, reflect, and participate in discussions.",
+      desc: "As part of the City of Munich’s artist-in-residence initiative, artists, curators, and researchers from around the world are offered accommodation, workspace, financial support, and the opportunity to create, present their work, reflect, and engage in critical exchange.",
       link: "https://www.artistinresidence-munich.de/"
     },
     {

@@ -190,7 +190,7 @@
           overflow: hidden;
           position: relative;
           border: 1px solid rgba(255, 255, 255, 0.2); /* Dezente Outline */
-          box-shadow: 0px 0px 13px rgba(0, 0, 0, 0.94); /* Schwarzer Drop Shadow */
+          box-shadow: 0px 0px 13px rgba(0, 0, 0, 0.6); /* Schwarzer Drop Shadow */
         }
         .button-wrapper {
             transform-origin: center;
@@ -347,7 +347,7 @@
         }
 
 
-        @media only screen and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
 
     body, html {
         overflow-x: hidden;
@@ -359,31 +359,46 @@
     }
 
     .sidebar {
-        position: fixed;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100vw;
-        height: 150px;
-        border-bottom-left-radius: 300px;
-        border-bottom-right-radius: 300px;
-        border-top: none;
-        border-right: none;
-        box-shadow: 0px -5px 17px rgba(121, 255, 82, 0.87);
-        z-index: 1000;
-        overflow: hidden;
-        padding-top: 3px;
-        padding-bottom: 10px;
+      position: fixed;
+      top: -163px; /* Hälfte der Höhe = 326px / 2 */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100vw;
+      height: 318px;
+      background: linear-gradient(to bottom, #070707 50%, #1B0014 90%, #190013 100%);
+      border-radius: 0 0 100% 100%;
+      z-index: 1000;
+      padding-top: 0px;
+      padding-bottom: 10px;
+      overflow: hidden;
+      box-shadow: 0px -5px 17px rgba(121, 255, 82, 0.87);
     }
+
 
     .sidebar-gradient-l2r,
     .sidebar-gradient-t2b {
         display: none;
     }
 
+    .sidebar-highlight-ellipse {
+        position: absolute;
+        top: 7px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 103vw;
+        height: 299px;
+        border: 14px solid rgba(177, 177, 177, 0.48);
+        border-radius: 50%;
+        filter: blur(15px);
+        opacity: 1;
+        pointer-events: none;
+        z-index: 0; /* bleibt hinter den Buttons */
+      }
+
     .home-button {
       width: 80px;
       height: 80px;
+      margin-top: 169px;
     }
 
     .home-button img {
@@ -510,6 +525,7 @@
         <div class="sidebar">
             <div class="sidebar-gradient-l2r"></div>
             <div class="sidebar-gradient-t2b"></div>
+            <div class="sidebar-highlight-ellipse"></div>
             <a href="#" class="home-button active"><img src="logo.png" alt="Home"></a>
 
 <a href="events.html" class="button-wrapper btn-events">

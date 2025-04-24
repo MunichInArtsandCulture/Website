@@ -77,7 +77,7 @@
             font-size: 22px;
         }
         a {
-            color: #B0AEFF; /* Setzt die Standard-Linkfarbe auf Neon-Grün */
+            color: white;
             text-decoration: none; /* Entfernt die Unterstreichung */
           }
         a:hover {
@@ -404,6 +404,42 @@
       display: none;
       }
 
+
+    .event-card .event-description {
+      font-weight: 300;
+      font-size: 0.95em;
+      line-height: 1.6;
+      margin-top: 0.3em;
+      margin-bottom: 0.8em;
+      font-family: 'Inter', sans-serif;
+      font-style: normal;
+      color: rgba(255, 255, 255, 0.8); /* 95% Deckkraft */
+    }
+
+    .event-card {
+      background: linear-gradient(to bottom, #141414d1, #271923E5);
+      background-blend-mode: normal;
+      opacity: 0.99;
+      color: white;
+      border-left: 11px solid #57CF7DE0;
+      border-radius: 8px;
+      padding: 0.4rem 0.9rem 0.9rem 0.8rem;
+      margin: 1.2rem 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .event-card h3 {
+      font-weight: 500;
+      font-size: 1.3em;
+      margin-bottom: 0.5em;
+    }
+
+    .event-card p {
+      font-weight: 300;
+      line-height: 1.5;
+      margin: 0.3em 0;
+      font-size: 1em;
+    }
 
         @media only screen and (max-width: 768px) {
 
@@ -846,13 +882,138 @@ const content = {
   locations: [
     {
       title: "Abraxas Musical Akademie",
-      desc: "Hourly studio rentals are available for private lessons ...",
+      desc: "Offers hourly rentals of five studios for private lessons, courses, auditions, and rehearsals. Ideal for dance, singing, or acting, with spaces ranging from 72 m² to 170 m², equipped with mirrored walls.",
       link: "https://abraxas-musical-akademie.de/service#saalvermietung"
     },
     {
+      title: "Atelierhaus Baumstraße",
+      desc: "Located in a former factory, this 100 m² venue is ideal for seminars, dance, and creative workshops. Available for nonprofits, course leaders, and local groups. Equipped with a kitchenette. Private celebrations are not permitted.",
+      link: "https://www.glockenbachwerkstatt.de/raeume-mieten/atelierhaus-baumstrasse/"
+    },
+    {
       title: "Einsatz Club",
-      desc: "Welcome to our musical universe – a space for multicultural music events ...",
+      desc: "Versatile event space with two rooms and outdoor area, available for private parties, concerts, and workshops. Rental packages range from hourly to full-day options, with flexible pricing based on group size and event type.",
       link: "https://www.einsatz.club/"
+    },
+    {
+      title: "Einstein Kultur",
+      desc: "Einstein Kultur offers four fully equipped halls in central Munich, suitable for theater, concerts, workshops, and private events. Spaces accommodate up to 200 guests, available for rent from September to July with flexible arrangements and professional support.",
+      link: "https://www.einsteinkultur.de/hallen/"
+    },
+    {
+      title: "Fat Cat",
+      desc: "Fat Cat offers a range of flexible spaces for concerts, readings, theater, and workshops. Venues include concert halls, seminar rooms, and a multipurpose space for up to 70 people. Booking inquiries via email.",
+      link: "https://fatcat-muc.de/venues/"
+    },
+    {
+      title: "Feierwerk",
+      desc: "Feierwerk provides rental spaces at several locations across Munich, including Hansastraße, Funkstation, Südpolstation, and Trafixx. Suitable for events from private parties to corporate functions, with optional in-house catering and rehearsal rooms available.",
+      link: "https://www.feierwerk.de/vermietung-catering"
+    },
+    {
+      title: "Forum 2",
+      desc: "Forum 2 offers a unique former cinema venue in Munich’s Olympiadorf. Ideal for film screenings, concerts, and community events. Includes a 6×8 m stage, 88-seat hall, and gallery. Booking inquiries via email.",
+      link: "https://www.kultur-forum2.de/vermietung/"
+    },
+    {
+      title: "GABRIELE SPACE",
+      desc: "GABRIELE SPACE offers free studios, workshops, and exhibition spaces for young artists in Munich. Locations are available temporarily through creative reuse of vacant buildings. Spaces support collaborative work, events, and public exhibitions.",
+      link: "https://www.gabriele-space.de/gabi3/uber-uns/"
+    },
+    {
+      title: "Giesinger Bahnhof",
+      desc: "Centrally located venue offering flexible rooms for concerts, workshops, readings, and meetings. Equipped with stage, sound, video tech, and more. Catering is exclusively handled by the in-house Gleiswirtschaft restaurant. Booking via email or online form.",
+      link: "https://giesinger-bahnhof.de/raum/"
+    },
+    {
+      title: "Glockenbachwerkstatt Bürgerhaus",
+      desc: "The Bürgerhaus provides centrally located rooms for cultural and volunteer events. Available Mondays and Tuesdays, 17:30–22:30, ideal for courses, meetings, and group activities. On-site food and drinks available at the Stadtteiltreff.",
+      link: "https://www.glockenbachwerkstatt.de/raeume-mieten/"
+    },
+    {
+      title: "Halle 6",
+      desc: "HALLE 6 provides flexible studios and workspaces for artists and cultural workers. Spaces are available for workshops, rehearsals, large-format art, and events. Equipment, technical staff, and custom setups are available on request. Booking by email.",
+      link: "https://www.halle6.net/studio-vermietung"
+    },
+    {
+      title: "IMAL Musiktheater",
+      desc: "IMAL Musiktheater offers a versatile stage for rehearsals, performances, and teaching. Artists can rent the space for short- or mid-term cultural projects. Booking inquiries via email are welcome for tailored use of the venue.",
+      link: "https://imal-musiktheater.de/r-ume"
+    },
+    {
+      title: "KÖŞK",
+      desc: "KÖŞK is a 130 m² project-based art space run by Kreisjugendring München-Stadt. It offers temporary use for creative initiatives. Project proposals must be submitted by email for review and potential scheduling.",
+      link: "https://www.koesk-muenchen.de/kontakt/"
+    },
+    {
+      title: "Kulturhaus Milbertshofen",
+      desc: "Kulturhaus Milbertshofen offers rooms for cultural projects, rehearsals, and meetings. Bookings must be submitted via the online form. Private events are only allowed in side rooms. Offers include music spaces, a main hall, and technical support.",
+      link: "https://kulturhaus-milbertshofen.de/raeume-3/"
+    },
+    {
+      title: "Kulturzentrum Trudering",
+      desc: "Kulturzentrum Trudering invites visual artists to exhibit works for four-week periods. The venue provides exhibition support, PR, and installation assistance. Submissions with artwork samples can be emailed for consideration.",
+      link: "https://www.kulturzentrum-trudering.de/kunst/ausstellungen-2/"
+    },
+    {
+      title: "lieberscholli",
+      desc: "Located in a repurposed paper factory, lieberscholli offers 600-capacity indoor and outdoor spaces for concerts, parties, and art events. Daily rentals include staff, cleaning, sound, and DJ equipment. Bookings via Eventlocations platform.",
+      link: "https://www.eventlocations.com/de/venues/alte-papierfabrik-lieberscholli-space-for-art-club-and-culture-munich"
+    },
+    {
+      title: "LIVE.EVIL",
+      desc: "LIVE.EVIL is a 300-person live club with a bar, lounge, and stage. Also features a 300 m² terrace and 150-seat restaurant for events. Equipped with full AV tech and customizable rental options.",
+      link: "https://www.eventlocations.com/de/venues/liveevil-munich"
+    },
+    {
+      title: "Mucca",
+      desc: "Mucca provides over 15 versatile rooms for artistic and cultural use, including studios, rehearsal spaces, music rooms, and the 150-capacity MUCCA Halle. Ideal for community-driven projects and creative group formats.",
+      link: "https://www.mucca.org/rooms/"
+    },
+    {
+      title: "Muffatwerk",
+      desc: "Muffatwerk offers multiple spaces, including Muffathalle (642 m²), Ampere (340 m²), and studios for dance, theater, or workshops. Equipped with AV tech and ideal for concerts, readings, and multimedia events.",
+      link: "https://www.muffatwerk.de/de/veranstalter_service/raume"
+    },
+    {
+      title: "Pasinger Fabrik",
+      desc: "Offers studios and event spaces for rehearsals, readings, and workshops. Studio 1 (120 m²) and Studio 2 (77.5 m²) are rentable. Event halls are available in rare cases due to internal programming.",
+      link: "https://pasinger-fabrik.de/anmietung-von-raeumen/"
+    },
+    {
+      title: "Pelkovenschlössl",
+      desc: "This historic venue in Moosach offers barrier-free rooms for private events, theater, seminars, and readings. A separate hall and garden space at Hacklhaus is also rentable for up to 45 guests.",
+      link: "https://www.pelkovenschloessl.de/feiern/"
+    },
+    {
+      title: "Rossi's Glück",
+      desc: "Located in Bahnwärter Atelierpark, this double-container venue with bar and outdoor area accommodates up to 80 guests. Offers full-service event packages and catering options for private gatherings.",
+      link: "https://www.rossisglueck.org/"
+    },
+    {
+      title: "Seidlvilla",
+      desc: "Located in Werksviertel-Mitte, this venue includes whiteBOX (272 m²), Gastatelier (163 m²), and Flüsterkneipe (210 m²) for rehearsals, exhibitions, and workshops. Rooms offer industrial charm and flexible setups.",
+      link: "https://www.seidlvilla.de/raeume"
+    },
+    {
+      title: "Stadtteilkultur 2411",
+      desc: "Located in Werksviertel-Mitte, this venue includes whiteBOX (272 m²), Gastatelier (163 m²), and Flüsterkneipe (210 m²) for rehearsals, exhibitions, and workshops. Rooms offer industrial charm and flexible setups.",
+      link: "https://www.stadtteilkultur2411.de/"
+    },
+    {
+      title: "Werksviertel-Mitte Kunst",
+      desc: "Located in Werksviertel-Mitte, this venue includes whiteBOX (272 m²), Gastatelier (163 m²), and Flüsterkneipe (210 m²) for rehearsals, exhibitions, and workshops. Rooms offer industrial charm and flexible setups.",
+      link: "https://werksviertel-kunst.de/raeume-und-vermietung/"
+    },
+    {
+      title: "YOU Eventlocation",
+      desc: "Club-style venue with 150 m² indoor & 30 m² outdoor space, ideal for birthdays, concerts & corporate events. Includes bar, stage, DJ booth, light/sound system, and various rental packages.",
+      link: "https://www.you-muc.de/"
+    },
+    {
+      title: "ZIRKA Studios",
+      desc: "Creative venue with four units for production, events, or workshops. Located at Kreativquartier.",
+      link: "https://www.eventlocations.com/de/venues/zirka-studios-munchen"
     }
   ]
 };
@@ -869,10 +1030,9 @@ function renderCategory(category) {
 
   entries.forEach(entry => {
     const html = `
-      <div style="margin: 1.2rem 0; padding: 1rem; border-left: 4px solid #2dff1680; background: #111; color: white; border-radius: 8px;">
-        <h3 style="font-size: 1.3em; margin-bottom: 0.3em;">${entry.title}</h3>
-        <p><em>${entry.desc}</em></p>
-        ${entry.link ? `<p>🔗 <a href="${entry.link}" target="_blank" style="color:#2dff16;">More info</a></p>` : ''}
+      <div class="event-card">
+        <h3><a href="${entry.link}" target="_blank">${entry.title}</a></h3>
+        <p class="event-description">${entry.desc}</p>
       </div>
     `;
     eventContainer.innerHTML += html;

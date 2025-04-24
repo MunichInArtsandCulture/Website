@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Events | Munich in Arts and Culture</title>
+    <title>Jobs | Munich in Arts and Culture</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap" rel="stylesheet">
@@ -71,10 +71,18 @@
             font-weight: 350;
             font-size: 50px;
         }
-        .social-links {
+        .no-jobs {
             font-family: 'Inter', sans-serif;
-            font-weight: 350;
-            font-size: 22px;
+            font-size: 16px;
+            color: #aaa;
+            margin-top: 2em;
+            text-align: center;
+          }
+        .social-links {
+          visibility: hidden;
+          opacity: 0;
+          transition: opacity 0.4s ease;
+          font-weight: 350;
         }
         #social-links.hidden {
             opacity: 0;
@@ -351,48 +359,6 @@
             font-weight: 460;
         }
 
-        .date-selector {
-          display: flex;
-          gap: 10px;
-          align-items: center;
-          margin-bottom: 2rem;
-
-          position: relative;
-          z-index: 10;
-        }
-
-        .date-selector button,
-        .date-selector input[type="date"] {
-          font-family: 'Inter', sans-serif;
-          font-size: 16px;
-          padding: 0.9em 1.2em;
-          border: 1px solid #d1afcd45; /* dünner weißer Rahmen */
-          border-radius: 4px;
-          background: linear-gradient(150deg, #8d8d8d3b, #0C0109); /* Verlauf */
-          color: white;
-          cursor: pointer;
-          outline: none;
-          transition: all 0.2s ease;
-          min-width: 80px;
-          min-height: 40px;
-          box-sizing: border-box;
-        }
-
-        .date-selector input[type="date"] {
-          color-scheme: dark;
-          appearance: none;
-          -webkit-appearance: none;
-          background-color: #0C0109;
-          border: 1px solid #d1afcd45;
-          color: white;
-          padding: 0.9em 1.2em;
-          border-radius: 4px;
-        }
-
-        .date-selector button:hover,
-        .date-selector input[type="date"]:hover {
-          box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
-        }
 
     #event-container {
       max-width: 675px;
@@ -447,59 +413,73 @@
         100% { transform: rotate(360deg) }
       }
 
-      .event-card .event-description {
-        font-weight: 300;
-        font-size: 0.95em; /* etwa 1px kleiner als standard */
-        line-height: 1.6;
-        margin-top: 0.3em;
-        margin-bottom: 0.8em;
+      .custom-dropdown {
+        position: relative;
+        display: inline-block;
         font-family: 'Inter', sans-serif;
-        font-style: normal;
-        color: rgba(255, 255, 255, 0.8); /* 95% Deckkraft */
+        z-index: 999;
       }
 
-      .event-card {
-        background: linear-gradient(to bottom, #141414d1, #271923E5);
-        background-blend-mode: normal;
-        opacity: 0.99;
+      #dropdown-button {
+        background: linear-gradient(150deg, #8d8d8d3b, #0C0109);
+        border: 1px solid #d1afcd45;
+        border-radius: 4px;
         color: white;
-        border-left: 11px solid #57CF7DE0;
-        border-radius: 8px;
-        padding-top: 0.4rem;
-        padding-bottom: 0.9rem;
-        padding-left: 0.8rem;
-        padding-right: 0.9rem;
-        margin: 1.2rem 0;
+        padding: 0.9em 1.2em;
+        font-size: 16px;
+        cursor: pointer;
+        min-width: 300px;
+        text-align: left;
+      }
+
+      #dropdown-button:hover {
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+      }
+
+      #dropdown-options {
+        position: absolute;
+        background: #0C0109;
+        border: 1px solid #d1afcd45;
+        border-radius: 4px;
+        margin-top: 5px;
+        list-style: none;
+        padding: 0;
+        max-height: 250px;
+        overflow-y: auto;
+        width: 100%;
+        display: block;
+      }
+
+      #dropdown-options.hidden {
+        display: none;
+      }
+
+      #dropdown-options li {
+        padding: 10px;
+        color: white;
+        font-size: 15px;
+        cursor: pointer;
+      }
+
+      #dropdown-options li:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      /* Hovereffekt wie Buttons */
+      #categorySelect:hover {
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+      }
+
+      /* Label */
+      .filter label {
         font-family: 'Inter', sans-serif;
-      }
-
-      .event-card h3 {
-        font-weight: 500;
-        font-size: 1.3em;
-        margin-bottom: 0.5em;
-      }
-
-      .event-card p {
-        font-weight: 300;
-        line-height: 1.5;
-        margin: 0.3em 0;
-        font-size: 1em;
-      }
-
-      .event-card p:nth-of-type(1) {
-        font-weight: 300;
-        line-height: 1.6;
-        margin-top: 0.3em;
-        margin-bottom: 0.8em;
-      }
-
-      .event-card a {
         color: white;
-        text-decoration: none;
-      }
-
-      .event-card a:hover {
-        text-decoration: underline;
+        font-size: 21px;
+        margin-right: 10px;
       }
 
     @media only screen and (max-width: 768px) {
@@ -553,11 +533,11 @@
         z-index: 0; /* bleibt hinter den Buttons */
       }
 
-      .home-button {
-        width: 80px;
-        height: 80px;
-        margin-top: 169px;
-      }
+    .home-button {
+      width: 80px;
+      height: 80px;
+      margin-top: 169px;
+    }
 
     .home-button img {
       width: 100%;
@@ -683,25 +663,8 @@
         text-align: center;
         font-size: 18px;
         margin-top: 20px;
+        margin-left: -23px;
     }
-
-    .date-selector button,
-    .date-selector input[type="date"] {
-        font-family: 'Inter', sans-serif;
-        font-size: 14px;
-        padding: 0.5em 0.8em;
-        border: 1px solid #d1afcd45; /* dünner weißer Rahmen */
-        border-radius: 2px;
-        background: linear-gradient(150deg, #8d8d8d3b, #0C0109); /* Verlauf */
-        color: white; /* weiße Schrift */
-        cursor: pointer;
-        outline: none;
-        transition: all 0.2s ease;
-      }
-
-      .social-links {
-        margin-left: -53px;
-      }
 
 }
 
@@ -719,6 +682,7 @@
   }
 }
 
+
     </style>
 </head>
 <body>
@@ -732,15 +696,15 @@
         <div class="sidebar">
             <div class="sidebar-gradient-l2r"></div>
             <div class="sidebar-gradient-t2b"></div>
-            <div class="sidebar-highlight-ellipse"></div>
+              <div class="sidebar-highlight-ellipse"></div>
             <a href="index.html" class="home-button"><img src="logo.png" alt="Home"></a>
 
-<div class="button-wrapper btn-events active">
+<a href="events.html" class="button-wrapper btn-events">
   <button>
     <p class="text-events">Events</p>
     <span class="ball"></span>
   </button>
-</div>
+</a>
 
 <a href="artspaces.html" class="button-wrapper btn-artspaces">
   <button>
@@ -756,12 +720,12 @@
   </button>
 </div>
 
-<a href="jobs.html" class="button-wrapper btn-creativejobs">
+<div class="button-wrapper btn-creativejobs active">
   <button>
     <p class="text-creativejobs">Creative<br>Jobs</p>
     <span class="ball"></span>
   </button>
-</a>
+</div>
 
 <div class="button-wrapper btn-opencalls">
   <button>
@@ -772,23 +736,42 @@
         </div>
         <div class="content">
             <div class="home-text">
-                <span>e</span>
-                <span>v</span>
-                <span>e</span>
-                <span>n</span>
-                <span>t</span>
-                <span>s</span>
+                <span style="display: block;">c</span>
+                <span style="display: block; margin-top: -55px;">r</span>
+                <span style="display: block; margin-top: -55px;">e</span>
+                <span style="display: block; margin-top: -55px;">a</span>
+                <span style="display: block; margin-top: -55px;">t</span>
+                <span style="display: block; margin-top: -55px;">i</span>
+                <span style="display: block; margin-top: -55px;">v</span>
+                <span style="display: block; margin-top: -55px;">e</span>
+                <span style="display: block; margin-top: -55px;"> <br> </span>
+                <span style="display: block; margin-top: -55px;">j</span>
+                <span style="display: block; margin-top: -55px;">o</span>
+                <span style="display: block; margin-top: -55px;">b</span>
+                <span style="display: block; margin-top: -55px;">s</span>
             </div>
             <div class="main-content">
                 <div class="title-box">
-                  <div class="date-selector" style="margin-bottom: 0px; display: flex; gap: 3px; align-items: center; margin-bottom: 2rem;">
-                    <button type="button" id="today-btn">Today</button>
-                    <button type="button" id="tomorrow-btn">Tomorrow</button>
-                      <div class="date-picker-wrapper">
-                          <input type="date" id="date-picker">
-                          <span class="date-placeholder" id="date-placeholder">Pick date</span>
-                        </div>
+                  <div class="filter">
+                    <label for="categorySelect">Select category:</label>
+                    <div class="custom-dropdown">
+                      <button id="dropdown-button">Select category</button>
+                        <ul id="dropdown-options" class="hidden">
+                          <li data-value="Art, Artist Support and Event Management">Art, Artist Support and Event Management</li>
+                          <li data-value="Musicians and Singers">Musicians and Singers</li>
+                          <li data-value="Education, Pedagogical and Social">Education, Pedagogical and Social</li>
+                          <li data-value="Stage and Event Technology">Stage and Event Technology</li>
+                          <li data-value="Costume, Makeup and Fashion">Costume, Makeup and Fashion</li>
+                          <li data-value="Acting, Theater and Directing">Acting, Theater and Directing</li>
+                          <li data-value="Legal and Financial">Legal and Financial</li>
+                          <li data-value="Communication, PR and Press">Communication, PR and Press</li>
+                          <li data-value="IT and Digital">IT and Digital</li>
+                          <li data-value="Customer Service, Catering and Cash Register">Customer Service, Catering and Cash Register</li>
+                          <li data-value="Other">Other</li>
+                        </ul>
+                    </div>
                   </div>
+
 
 <!-- Event Feed Output -->
       <div id="event-feed" style="font-family: sans-serif; padding: 0px;"></div>
@@ -804,122 +787,121 @@
 </body>
 
 <script>
-const apiUrl = "https://script.google.com/macros/s/AKfycbxO0dXiimcDzRpscpbXY84AgB2EgbV1xezSgRQHV6oyYqkTcIvDJ7V3ABGRABSXebJQ/exec";
-const eventContainer = document.getElementById("event-feed");
-const todayBtn = document.getElementById("today-btn");
-const tomorrowBtn = document.getElementById("tomorrow-btn");
-const datePicker = document.getElementById("date-picker");
 
-function formatDateForComparison(date) {
-  const d = new Date(date);
-  return d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" }) + ".";
-}
+let globalJobs = [];
 
-function loadEventsForDate(dateString) {
-  const spinner = document.getElementById("loading-spinner");
-  const socialLinks = document.getElementById("social-links"); // <- hinzugefügt
-  spinner.style.display = "flex";
-  eventContainer.innerHTML = "";
+  const SHEET_ID = '1FyTxWL-DBvkOBy0_O_e18P19H1mHrf4VIWhMgivX92UR';
+  const SHEET_RANGE = 'Tabelle1!A:D'; // A: Category, B: Title, C: Employer, D: Link
 
-  socialLinks.style.display = "none"; // <- Social links ausblenden
+  const loader = document.getElementById("loading-spinner");
+  const jobContainer = document.getElementById("event-feed");
 
-  fetch(apiUrl)
-    .then(res => res.json())
-    .then(events => {
-      spinner.style.display = "none"; // Spinner ausblenden
-      socialLinks.style.display = "block"; // <--- HIER!
+  // Google Sheets URL
+  const API_URL = "https://script.google.com/macros/s/AKfycbyKnfmzqe_o7PiiAlTeciaImwOmOqrRBeHLV1SL_jvl-fPIBiwuLkIhGlDW0ZymcPArtQ/exec";
 
-      const filtered = events.filter(e => {
-        if (!e.Datum) return false;
-        const normalizedA = e.Datum.toString().replace(/\D/g, '');
-        const normalizedB = dateString.toString().replace(/\D/g, '');
-        return normalizedA === normalizedB;
-      });
+  // Lade Daten aus Google Sheet
 
-      renderEvents(filtered, dateString);
-    })
-    .catch(err => {
-      spinner.style.display = "none"; // Spinner auch bei Fehler ausblenden
-      eventContainer.innerHTML = `<p>Fehler beim Laden der Events 😢 (${err.message})</p>`;
-      console.error("Fetch Error:", err);
+async function fetchJobs() {
+  try {
+    const response = await fetch(API_URL);
+    const data = await response.json();
+    globalJobs = data;
+
+    if (!data || data.length === 0) {
+      loader.innerText = "No data found.";
+      return;
+    }
+
+    // Feste Kategorienliste – alphabetisch sortiert
+    const categoryList = [
+      "Art, Artist Support and Event Management",
+      "Musicians and Singers",
+      "Education, Pedagogical and Social",
+      "Stage and Event Technology",
+      "Costume, Makeup and Fashion",
+      "Acting, Theater and Directing",
+      "Legal and Financial",
+      "Communication, PR and Press",
+      "IT and Digital",
+      "Customer Service, Catering and Cash Register",
+      "Other"
+    ];
+
+    // Dropdown-Optionen einfügen
+    dropdownOptions.innerHTML = categoryList.map(cat =>
+      `<li data-value="${cat}">${cat}</li>`
+    ).join("");
+
+    // Default-Kategorie anzeigen
+    const defaultCategory = "Art, Artist Support and Event Management";
+    dropdownButton.innerText = defaultCategory;
+    renderJobs(globalJobs, defaultCategory);
+
+      loader.style.display = "none";
+      jobContainer.style.display = "block";
+
+      const socials = document.querySelector(".social-links");
+      if (socials) {
+        socials.style.visibility = "visible";
+        socials.style.opacity = "1";
+      }
+
+
+
+    } catch (err) {
+      loader.innerText = "Error loading jobs.";
+      console.error(err);
+    }
+  }
+
+  function renderJobs(entries, category) {
+    jobContainer.innerHTML = "";
+
+    const filtered = entries.filter(entry => entry.category === category);
+
+    if (filtered.length === 0) {
+      jobContainer.innerHTML = `<p class="no-jobs">No jobs available in this category.</p>`;
+      return;
+    }
+
+    filtered.forEach(job => {
+      const div = document.createElement("div");
+      div.className = "job-entry";
+      div.innerHTML = `
+        <h3>${job.title}</h3>
+        <p><strong>${job.employer}</strong></p>
+        <a href="${job.link}" target="_blank">more info</a>
+        <hr>
+      `;
+      jobContainer.appendChild(div);
     });
-}
-
-
-function renderEvents(events, dateLabel) {
-  // Punkt(e) entfernen und Tag + Monat extrahieren
-  const cleaned = dateLabel.replace(/\.$/, ''); // "07.04." → "07.04"
-  const [day, month] = cleaned.split('.'); // → ["07", "04"]
-
-  // aktuelles Jahr anhängen
-  const year = new Date().getFullYear();
-
-  // korrektes ISO-Format für Date erzeugen
-  const isoDateStr = `${year}-${month}-${day}`; // → "2025-04-07"
-  const dateObj = new Date(isoDateStr);
-
-  // englischen Wochentag holen
-  const weekday = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
-
-  // Ausgabe rendern
-  eventContainer.innerHTML = `<h2 style="margin-top:2rem;"> ${day}.${month}. <span style="font-weight: normal;">${weekday}</span></h2>`;
-
-  if (events.length === 0) {
-    eventContainer.innerHTML += `<p>No events found :(</p>`;
-    return;
   }
 
-  events.forEach(event => {
-    const html = `
-      <div class="event-card">
-        <h3><a href="${event.Links ? event.Links.split(" | ")[0] : '#'}" target="_blank">${event.Titel}</a></h3>
-        <p class="event-description">${event.Beschreibung}</p>
-        <p>${event.Uhrzeit}</p>
-        <p>${event.Ort}</p>
-        <p>${event.Preis}</p>
-      </div>
-    `;
-    eventContainer.innerHTML += html;
+  // Starte beim Laden
+  window.addEventListener("DOMContentLoaded", fetchJobs);
+
+  const dropdownButton = document.getElementById("dropdown-button");
+  const dropdownOptions = document.getElementById("dropdown-options");
+
+  dropdownButton.addEventListener("click", () => {
+    dropdownOptions.classList.toggle("hidden");
   });
-}
 
-todayBtn.addEventListener("click", () => {
-  const today = formatDateForComparison(new Date());
-  loadEventsForDate(today);
-});
-
-tomorrowBtn.addEventListener("click", () => {
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const dateStr = formatDateForComparison(tomorrow);
-  loadEventsForDate(dateStr);
-});
-
-datePicker.addEventListener("change", () => {
-  const selected = datePicker.value;
-  const placeholder = document.getElementById("date-placeholder");
-
-  if (selected) {
-    placeholder.style.display = "none";
-    const formatted = formatDateForComparison(new Date(selected));
-    loadEventsForDate(formatted);
-  } else {
-    placeholder.style.display = "block";
+  document.addEventListener("click", (e) => {
+    const li = e.target.closest("#dropdown-options li");
+    if (li) {
+      const selectedValue = li.dataset.value;
+      dropdownButton.innerText = selectedValue;
+      dropdownOptions.classList.add("hidden");
+      renderJobs(globalJobs, selectedValue);
   }
-});
 
-// Beim Laden der Seite automatisch heutige Events anzeigen
-window.addEventListener("load", () => {
-  const today = formatDateForComparison(new Date());
-  loadEventsForDate(today);
-});
+    // Dropdown außerhalb klicken = schließen
+    if (!dropdownButton.contains(e.target) && !dropdownOptions.contains(e.target)) {
+      dropdownOptions.classList.add("hidden");
+    }
+  });
 
-window.addEventListener("load", () => {
-  const placeholder = document.getElementById("date-placeholder");
-  if (datePicker.value) {
-    placeholder.style.display = "none";
-  }
-});
 
 </script>
 

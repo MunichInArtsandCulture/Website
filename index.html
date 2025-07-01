@@ -336,7 +336,7 @@
             max-height: 566px;
         }
         .home-text {
-            height: 87vh;
+            height: 83vh;
             color: white;
             font-size: 100px;
             justify-content: space-between;
@@ -355,6 +355,9 @@
             max-height: 598px;
             overflow: auto;
             padding: 7px;
+            overflow-y: auto;
+              mask-image: linear-gradient(to bottom, transparent 0px, black 30px, black calc(100% - 30px), transparent 100%);
+              -webkit-mask-image: linear-gradient(to bottom, transparent 0px, black 30px, black calc(100% - 30px), transparent 100%);
         }
 
         strong {
@@ -640,18 +643,21 @@
         align-items: center;
         padding: 0 15px;
         z-index: 1;
+        align-self: center;
     }
 
     .main-content {
-        padding: 10px 15px;
-        width: 100%;
+      padding-top: 150px;
+      width: 100%;
+      margin-top: -150px; /* oder -180px, je nach Höhe deiner .sidebar */
+      position: relative;
+      z-index: 0;
     }
 
     .title-box {
         margin-left: 8px;
         margin-right: 8px;
         margin-bottom: 8px;
-        width: 90vw;
     }
 
     .page-title {

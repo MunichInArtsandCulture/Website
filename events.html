@@ -510,6 +510,10 @@
         text-decoration: underline;
       }
 
+       #date-picker {
+        min-width: 175px;
+        }
+
     @media only screen and (max-width: 768px) {
 
     body, html {
@@ -671,6 +675,10 @@
       display: inline-block;
     }
 
+    #date-picker {
+        min-width: 75px;
+        }
+
     .date-placeholder {
       position: absolute;
       top: 50%;
@@ -796,7 +804,7 @@
                     <button type="button" id="today-btn">Today</button>
                     <button type="button" id="tomorrow-btn">Tomorrow</button>
                       <div class="date-picker-wrapper">
-                          <input type="date" id="date-picker" style="width: 175px;">
+                          <input type="date" id="date-picker">
                           <span class="date-placeholder" id="date-placeholder">Pick date</span>
                         </div>
                   </div>

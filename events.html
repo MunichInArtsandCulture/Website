@@ -18,7 +18,7 @@
         }
         body {
             justify-content: center;
-            margin: 0;
+            margin: 0px;
             font-family: 'Inter', sans-serif;
             background: linear-gradient(-45deg, #190113, #053814, #090107, #101326);
             background-size: 400% 400%;
@@ -28,6 +28,7 @@
             padding: 0;
             overflow-x: hidden; /* Verhindert Scroll-Fehler */
             scroll-behavior: smooth;
+            display: flex;
         }
         background {
           overflow: hidden;
@@ -45,15 +46,20 @@
             }
         }
         .container {
-            background: linear-gradient(to bottom, rgba(23, 23, 23, 0.9) 0%, rgba(7, 0, 5, 0.9) 19%, rgba(1, 0, 1, 0.9) 68%, rgba(22, 1, 30, 0.9) 100%);
+            background: linear-gradient(rgba(30, 30, 30, 0.9) 0%,rgba(7,0,5,0.9) 19%,rgba(1,0,1,0.9) 68%,rgba(22,1,30,0.9) 100%);
                     display: flex;
-                    max-width: 1200px;
-                    width: 100%;
-                    margin: 0 auto;
-                    padding: 0;
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+                    max-width: 1000px;
+                    width: 1000px;
+                    margin: auto;
+                    padding: 0px;
+                    box-shadow: rgba(0,0,0,0.2) 0px 0px 10px;
                     align-items: flex-start;
-                    min-height: 100vh;
+                    max-height: 630px;
+                    border-radius: 75px;
+                    border-style: outset;
+                    border-color: rgb(50,46,54);
+                    position: relative;
+                    overflow: hidden;
                 }
         .paragraph {
             max-width: 675px;
@@ -75,6 +81,7 @@
             font-family: 'Inter', sans-serif;
             font-weight: 350;
             font-size: 22px;
+            margin-bottom: 32px;
         }
         #social-links.hidden {
             opacity: 0;
@@ -92,24 +99,24 @@
             margin-right: 30px;
         }
         .sidebar {
-            position: fixed;
+            position: unset;
             overflow: hidden;
-            width: 180px;
+            flex-shrink: 0;
+            width: 150px;
+            flex-shrink: 0;
             height: 100vh;
-            background: linear-gradient(to bottom, #000000 0%, #1B0014 85%, #190013 100%);
+            background: linear-gradient(rgb(0,0,0) 0%,rgb(27,0,20) 85%,rgb(25,0,19) 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 20px;
-            padding-bottom: 20px;
             min-width: 110px;
-            border-right: 0.5px solid #18213B; /* Adjust thickness and color */
+            border-right: 0.5px solid rgb(24,33,59); /* Adjust thickness and color */
         }
         .sidebar-gradient-l2r {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
+            top: 0px;
+            left: 0px;
+            width: 150px;
             height: 100%;
             background: linear-gradient(to right,
               rgba(217, 217, 217, 0) 0%,
@@ -124,7 +131,7 @@
               rgba(217, 217, 217, 0) 85%,
               rgba(217, 217, 217, 0) 100%
               );
-            filter: blur(12px); /* Wendet nur auf das Gradient-Div einen Blur an */
+            filter: blur(16px); /* Wendet nur auf das Gradient-Div einen Blur an */
             pointer-events: none; /* Damit es nichts blockiert */
             z-index: 0; /* Damit es hinter allen anderen Inhalten bleibt */
         }
@@ -133,7 +140,7 @@
           position: absolute;
           top: 0;
           left: 0;
-          width: 100%;
+          width: 150px;
           height: 100%;
           background: linear-gradient(to bottom,
             rgba(217, 217, 217, 0) 0%,
@@ -151,16 +158,17 @@
     z-index: 0; /* Hält den Gradient im Hintergrund */
 }
         .home-button {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 35px;
-            border: none;
+            margin-left: 32px;
+            margin-right: 32px;
+            border: medium;
             background: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 2;
+            margin-top: 18px;
+            margin-bottom: 16px;
         }
         .home-button img {
             width: 110px;
@@ -313,38 +321,39 @@
         .button-wrapper.active {
             box-shadow: 0px 0px 20px rgb(138, 255, 103);
             text-shadow: 0px 0px 10px #2DFF16;
+            transition: box-shadow 0.1s ease-in-out;
           }
 
         .content {
             flex-grow: 1;
-            padding: 20px;
+            padding: 25px;
             color: white;
-            max-width: 1000px;
-            margin: 0;
+            max-width: 858px;
             display: flex;
             align-items: flex-start;
+            gap: 32px;
+            max-height: 566px;
         }
         .home-text {
             height: 85vh;
             color: white;
             font-size: 100px;
-            display: flex;
-            flex-direction: column;
             justify-content: space-between;
             text-transform: lowercase;
             display: flex;
             flex-direction: column;
-            width: 150px;
             text-align: center;
-            margin-left: 170px;
-            margin-right: 20px;
             background: none;
             font-family: 'Major Mono Display', monospace;
             text-shadow: 0px 0px 12px #2DFF16; /* Offset X, Offset Y, Blur, Farbe */
+            width: 80px;
         }
         .main-content {
             flex-grow: 1;
-            padding: 20px;
+            width: 673px;
+            max-height: 598px;
+            overflow: auto;
+            padding: 7px;
         }
 
         strong {
@@ -366,9 +375,9 @@
           font-family: 'Inter', sans-serif;
           font-size: 16px;
           padding: 0.9em 1.2em;
-          border: 1px solid #d1afcd45; /* dünner weißer Rahmen */
-          border-radius: 4px;
-          background: linear-gradient(150deg, #8d8d8d3b, #0C0109); /* Verlauf */
+          border: 1px outset rgba(209,175,205,0.27);
+          border-radius: 100px;
+          background: linear-gradient(-30deg,rgba(80,76,76,0.23),rgb(14,13,14));
           color: white;
           cursor: pointer;
           outline: none;
@@ -382,11 +391,11 @@
           color-scheme: dark;
           appearance: none;
           -webkit-appearance: none;
-          background-color: #0C0109;
+          background: linear-gradient(-30deg,rgba(80,76,76,0.23),rgb(14,13,14));
           border: 1px solid #d1afcd45;
           color: white;
           padding: 0.9em 1.2em;
-          border-radius: 4px;
+          border-radius: 100px;
         }
 
         .date-selector button:hover,
@@ -400,7 +409,6 @@
     }
 
     .title-box {
-        max-width: 600px;
     }
 
     .date-placeholder {
@@ -515,6 +523,9 @@
     .container {
         flex-direction: column;
         padding-top: 180px; /* room for half-circle nav */
+        margin: 0;
+        border-style: none;
+        border-radius: 0px;
     }
 
     .sidebar {
@@ -772,7 +783,7 @@
         </div>
         <div class="content">
             <div class="home-text">
-                <span>e</span>
+                <span style="margin-top:-20px">e</span>
                 <span>v</span>
                 <span>e</span>
                 <span>n</span>
@@ -781,11 +792,11 @@
             </div>
             <div class="main-content">
                 <div class="title-box">
-                  <div class="date-selector" style="margin-bottom: 0px; display: flex; gap: 3px; align-items: center; margin-bottom: 2rem;">
+                  <div class="date-selector" style="margin-bottom: 0px; display: flex; gap: 6px; align-items: center; margin-bottom: 2rem;">
                     <button type="button" id="today-btn">Today</button>
                     <button type="button" id="tomorrow-btn">Tomorrow</button>
                       <div class="date-picker-wrapper">
-                          <input type="date" id="date-picker">
+                          <input type="date" id="date-picker" style="width: 175px;">
                           <span class="date-placeholder" id="date-placeholder">Pick date</span>
                         </div>
                   </div>
@@ -865,7 +876,8 @@ function renderEvents(events, dateLabel) {
   eventContainer.innerHTML = `<h2 style="margin-top:2rem;"> ${day}.${month}. <span style="font-weight: normal;">${weekday}</span></h2>`;
 
   if (events.length === 0) {
-    eventContainer.innerHTML += `<p>No events found :(</p>`;
+    eventContainer.innerHTML += `<p style="line-height: 30px;">No events found :( <br> You can check the <a href="https://docs.google.com/document/d/1xT5Ovg8pouKkpwHXKdU45J9vlyqEYD__ZGuKZErmhTU/" target="_blank" rel="noopener noreferrer">database</a> just in case.
+</p>`;
     return;
   }
 
@@ -883,16 +895,28 @@ function renderEvents(events, dateLabel) {
   });
 }
 
+function getAdjustedToday() {
+  const now = new Date();
+  const adjusted = new Date(now);
+  if (now.getHours() < 4) {
+    adjusted.setDate(now.getDate() - 1);
+  }
+  return adjusted;
+}
+
 todayBtn.addEventListener("click", () => {
-  const today = formatDateForComparison(new Date());
-  loadEventsForDate(today);
+  const today = getAdjustedToday();
+  const todayFormatted = formatDateForComparison(today);
+  datePicker.value = today.toLocaleDateString('sv-SE'); // 🆕 Datepicker aktualisieren
+  loadEventsForDate(todayFormatted);
 });
 
 tomorrowBtn.addEventListener("click", () => {
-  const tomorrow = new Date();
+  const tomorrow = getAdjustedToday();
   tomorrow.setDate(tomorrow.getDate() + 1);
-  const dateStr = formatDateForComparison(tomorrow);
-  loadEventsForDate(dateStr);
+  const formatted = formatDateForComparison(tomorrow);
+  datePicker.value = tomorrow.toLocaleDateString('sv-SE'); // 🆕 Datepicker aktualisieren
+  loadEventsForDate(formatted);
 });
 
 datePicker.addEventListener("change", () => {
@@ -910,8 +934,10 @@ datePicker.addEventListener("change", () => {
 
 // Beim Laden der Seite automatisch heutige Events anzeigen
 window.addEventListener("load", () => {
-  const today = formatDateForComparison(new Date());
-  loadEventsForDate(today);
+  const today = getAdjustedToday();
+  const formatted = formatDateForComparison(today);
+  datePicker.value = today.toLocaleDateString('sv-SE'); // 🆕 Datepicker setzen
+  loadEventsForDate(formatted);
 });
 
 window.addEventListener("load", () => {

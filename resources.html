@@ -917,6 +917,12 @@ function renderEntries(category) {
       `;
     eventFeed.appendChild(div);
   });
+
+        // Set default category to "Sound systems"
+window.addEventListener("DOMContentLoaded", () => {
+  dropdownButton.innerText = "Sound systems";
+  renderEntries("Sound systems");
+});
 }
 </script></body>
 </html>

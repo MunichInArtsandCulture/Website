@@ -105,12 +105,6 @@ export default function Events() {
 
   return (
     <div className="title-box">
-      {loading && (
-        <div className="loading-spinner-overlay">
-          <span className="loader"></span>
-        </div>
-      )}
-
       <div className="date-selector" style={{ marginBottom: '0px', display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '2rem' }}>
         <button type="button" onClick={handleToday}>Today</button>
         <button type="button" onClick={handleTomorrow}>Tomorrow</button>
@@ -128,7 +122,13 @@ export default function Events() {
         </div>
       </div>
 
-      <div id="event-feed" style={{ fontFamily: 'sans-serif', padding: '0px' }}>
+      <div id="event-feed" style={{ fontFamily: 'sans-serif', padding: '0px', position: 'relative', minHeight: loading ? '300px' : undefined }}>
+        {loading && (
+          <div style={{ position: 'relative', width: '100%', height: '300px' }}>
+            <span className="loader"></span>
+          </div>
+        )}
+
         {error && <p>Fehler beim Laden der Events 😢 ({error})</p>}
 
         {!loading && !error && dateString && (

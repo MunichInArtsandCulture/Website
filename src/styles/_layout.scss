@@ -1,0 +1,43 @@
+
+
+.mobile-sidebar {
+  position: absolute;
+  top: 71px;
+  left: 0;
+  width: 100%;
+  background: white;
+  box-shadow: 1px 1px 14px #63636363;
+  z-index: 1000;
+  flex-direction: column;
+  transform: translateY(-150%);
+  transition: transform 0.3s ease-in-out;
+  
+  &.open {
+    transform: translateY(0);
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    li {
+      text-align: center;
+      border-bottom: 1px solid #eee;
+
+      a {
+        display: block;
+        padding: 15px;
+        color: #333;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-family: Arial, sans-serif;
+      }
+
+      &.current a {
+        background: black;
+        color: white;
+      }
+    }
+  }
+}

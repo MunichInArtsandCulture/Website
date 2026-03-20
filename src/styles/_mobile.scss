@@ -1,23 +1,12 @@
-
-/* 918px Breakpoint */
-@media only screen and (max-width : 918px) {
+@use 'variables' as *;
+/* $mobile Breakpoint */
+@media only screen and (max-width : $mobile) {
   
   html {
     -webkit-text-size-adjust: none;
   }
 
-  #mobile-navigation {
-    background: none;
-    display: block;
-    height: 50px;
-    margin: 0;
-    padding: 0;
-    position: absolute;
-    right: 0;
-    top: 20px;
-    width: 50px;
-    z-index: 1001;
-  }
+  
 
   #header ul#navigation {
     background: white;
@@ -318,16 +307,10 @@
 }
 
 /* Mobile Navigation Logic */
-#mobile-navigation {
-  display: none;
-}
 
-@media only screen and (max-width : 918px) {
-  #mobile-navigation {
-    display: flex !important;
-  }
 
-  #header ul#navigation.mobile-open {
-    display: block !important;
-  }
+@media only screen and (max-width : $mobile) {
+  
+
+  
 }

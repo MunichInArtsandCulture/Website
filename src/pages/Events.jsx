@@ -10,9 +10,10 @@ function formatDateForComparison(date) {
 
 function getAdjustedToday() {
   const now = new Date()
-  const adjusted = new Date(now)
-  if (now.getHours() < 4) {
-    adjusted.setDate(now.getDate() - 1)
+  const cetString = now.toLocaleString("en-US", { timeZone: "Europe/Berlin" })
+  const adjusted = new Date(cetString)
+  if (adjusted.getHours() < 3) {
+    adjusted.setDate(adjusted.getDate() - 1)
   }
   return adjusted
 }
@@ -107,11 +108,20 @@ export default function Events() {
 
   const { day, month, weekday } = getDateDisplay()
 
+  const todayIso = getAdjustedToday().toLocaleDateString('sv-SE')
+  
+  const tomorrow = getAdjustedToday()
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  const tomorrowIso = tomorrow.toLocaleDateString('sv-SE')
+
+  const isTodayActive = datePickerValue === todayIso
+  const isTomorrowActive = datePickerValue === tomorrowIso
+
   return (
     <>
       <div className="date-selector" style={{ marginBottom: '0px', display: 'flex', gap: '6px', alignItems: 'center', paddingBottom: '2rem' }}>
-        <button type="button" onClick={handleToday}>Today</button>
-        <button type="button" onClick={handleTomorrow}>Tomorrow</button>
+        <button type="button" className={isTodayActive ? 'active' : ''} onClick={handleToday}>Today</button>
+        <button type="button" className={isTomorrowActive ? 'active' : ''} onClick={handleTomorrow}>Tomorrow</button>
         <div className="date-picker-wrapper">
           <input
             type="date"

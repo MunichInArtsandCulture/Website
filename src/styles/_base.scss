@@ -559,7 +559,9 @@ p a:hover {
 
 .date-selector button:hover,
 .date-selector input[type="date"]:hover,
-#dropdown-button:hover {
+#dropdown-button:hover,
+.date-selector button.active,
+.date-selector input[type="date"].active {
   background: #b6d8cf;
 }
 

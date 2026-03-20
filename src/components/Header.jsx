@@ -22,11 +22,15 @@ export default function Header() {
             cursor: 'pointer' 
           }}
         >
-          <span 
-            className="iconify" 
-            data-icon={mobileMenuOpen ? "carbon:close" : "carbon:menu"}
-            style={{ fontSize: '30px', color: '#363636' }}
-          ></span>
+          {mobileMenuOpen ? (
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 6L6 18M6 6L18 18" stroke="#363636" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          ) : (
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 6H20M4 12H20M4 18H20" stroke="#363636" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
         </span>
 
         {/* Desktop Navigation */}

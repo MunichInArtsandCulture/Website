@@ -17,6 +17,11 @@ function getAdjustedToday() {
   return adjusted
 }
 
+function stripEmojis(str) {
+  if (typeof str !== 'string') return str;
+  return str.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1FA00}-\u{1FAFF}\u{1F1E6}-\u{1F1FF}\u{2300}-\u{23FF}\u{2B50}]/gu, '').replace(/\uFE0F/g, '').trim();
+}
+
 export default function Events() {
   const { getCached, setCached } = useApiCache()
   const [allEvents, setAllEvents] = useState(getCached(API_URL) || null)
@@ -151,23 +156,23 @@ export default function Events() {
                   <li key={i}>
                     <h3>
                       <a href={event.Links ? event.Links.split(" | ")[0] : '#'} target="_blank" rel="noopener noreferrer">
-                        {event.Titel}
+                        {stripEmojis(event.Titel)}
                       </a>
                     </h3>
                     <p className="event-description">
-                      {event.Beschreibung}
+                      {stripEmojis(event.Beschreibung)}
                     </p>
                     <div className="eventdetails">
                       <div className="item_time">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" style={{marginInline: 'auto', verticalAlign: 'middle', marginRight: '5px'}} viewBox="0 0 24 24"><path fill="currentColor" d="M12 23C5.925 23 1 18.075 1 12S5.925 1 12 1s11 4.925 11 11s-4.925 11-11 11m1-17.5h-2v6.914l4 4L16.414 15L13 11.586z"/></svg> 
-                        {event.Uhrzeit || 'N/A'}
+                        {stripEmojis(event.Uhrzeit) || 'N/A'}
                       </div>
                       <div className="item_loc">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" style={{verticalAlign: 'middle', marginRight: '5px'}} viewBox="0 0 24 24"><path fill="currentColor" d="M19 9A7 7 0 1 0 5 9c0 1.387.409 2.677 1.105 3.765h-.008L12 22l5.903-9.235h-.007A6.97 6.97 0 0 0 19 9m-7 3a3 3 0 1 1 0-6a3 3 0 0 1 0 6"/></svg> 
-                        {event.Ort || 'N/A'}
+                        {stripEmojis(event.Ort) || 'N/A'}
                       </div>
                       <div className="item_price">
-                        {event.Preis || 'N/A'}
+                        {stripEmojis(event.Preis) || 'N/A'}
                       </div>
                     </div>
                   </li>

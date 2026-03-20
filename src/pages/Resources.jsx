@@ -100,17 +100,13 @@ export default function Resources() {
       </div>
 
       <div id="event-feed" style={{ marginBottom: '30px' }}>
-        {entries.map((entry, i) => (
-          <div className="job-entry" key={i}>
-            <h3><a href={entry.link} target="_blank" rel="noopener noreferrer">{entry.title}</a></h3>
-            <hr />
-          </div>
-        ))}
-      </div>
-
-      <div className="social-links" id="social-links">
-        <a href="https://t.me/munichinartsandculture" target="_blank" rel="noopener noreferrer" className="tg-link">Telegram</a>
-        <a href="https://www.instagram.com/munichartsandculture/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <ul className="blog">
+          {entries.map((entry, i) => (
+            <li key={i}>
+              <h3><a href={entry.link} target="_blank" rel="noopener noreferrer">{entry.title}</a></h3>
+            </li>
+          ))}
+        </ul>
       </div>
     </>
   )

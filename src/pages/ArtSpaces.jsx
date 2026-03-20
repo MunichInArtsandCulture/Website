@@ -62,45 +62,44 @@ export default function ArtSpaces() {
   const entries = content[activeCategory] || []
 
   return (
-    <div className="title-box">
-      <div className="date-selector" style={{ marginBottom: '2rem' }}>
-        <button
-          className={`category-btn${activeCategory === 'residencies' ? ' active' : ''}`}
-          onClick={() => setActiveCategory('residencies')}
-        >
-          <span className="hyphenated">Resi&shy;dencies</span>
-        </button>
-        <button
-          className={`category-btn${activeCategory === 'studios' ? ' active' : ''}`}
-          onClick={() => setActiveCategory('studios')}
-        >
-          Art Studios
-        </button>
-        <button
-          className={`category-btn${activeCategory === 'locations' ? ' active' : ''}`}
-          onClick={() => setActiveCategory('locations')}
-        >
-          Event Locations
-        </button>
+    <>
+      <div className="title-box">
+        <div className="date-selector" style={{ marginBottom: '2rem' }}>
+          <button
+            className={`category-btn${activeCategory === 'residencies' ? ' active' : ''}`}
+            onClick={() => setActiveCategory('residencies')}
+          >
+            <span className="hyphenated">Resi&shy;dencies</span>
+          </button>
+          <button
+            className={`category-btn${activeCategory === 'studios' ? ' active' : ''}`}
+            onClick={() => setActiveCategory('studios')}
+          >
+            Art Studios
+          </button>
+          <button
+            className={`category-btn${activeCategory === 'locations' ? ' active' : ''}`}
+            onClick={() => setActiveCategory('locations')}
+          >
+            Event Locations
+          </button>
+        </div>
       </div>
 
       <div id="event-feed" style={{ fontFamily: 'sans-serif', padding: '0px' }}>
-        {entries.length === 0 ? (
-          <p>No content found.</p>
-        ) : (
-          entries.map((entry, i) => (
-            <div className="event-card" key={i}>
-              <h3><a href={entry.link} target="_blank" rel="noopener noreferrer">{entry.title}</a></h3>
-              <p className="event-description">{entry.desc}</p>
-            </div>
-          ))
-        )}
+        <ul className="blog">
+          {entries.length === 0 ? (
+            <li><p>No content found.</p></li>
+          ) : (
+            entries.map((entry, i) => (
+              <li key={i}>
+                <h3><a href={entry.link} target="_blank" rel="noopener noreferrer">{entry.title}</a></h3>
+                <p className="event-description">{entry.desc}</p>
+              </li>
+            ))
+          )}
+        </ul>
       </div>
-
-      <div className="social-links">
-        <a href="https://t.me/munichinartsandculture" target="_blank" rel="noopener noreferrer" className="tg-link">Telegram</a>
-        <a href="https://www.instagram.com/munichartsandculture/" target="_blank" rel="noopener noreferrer">Instagram</a>
-      </div>
-    </div>
+    </>
   )
 }

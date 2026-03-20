@@ -26,7 +26,6 @@ export default function Events() {
   const [datePickerValue, setDatePickerValue] = useState('')
   const datePickerRef = useRef(null)
 
-  // Set initial date
   useEffect(() => {
     const today = getAdjustedToday()
     const formatted = formatDateForComparison(today)
@@ -34,7 +33,6 @@ export default function Events() {
     setDatePickerValue(today.toLocaleDateString('sv-SE'))
   }, [])
 
-  // Fetch events (uses cache if available)
   useEffect(() => {
     const cached = getCached(API_URL)
     if (cached) {
@@ -81,7 +79,6 @@ export default function Events() {
     }
   }
 
-  // Filter events for selected date
   const filteredEvents = allEvents ? allEvents.filter(e => {
     if (!e.Datum) return false
     const normalizedA = e.Datum.toString().replace(/\D/g, '')
@@ -89,7 +86,6 @@ export default function Events() {
     return normalizedA === normalizedB
   }) : []
 
-  // Parse date label for display
   const getDateDisplay = () => {
     if (!dateString) return { day: '', month: '', weekday: '' }
     const cleaned = dateString.replace(/\.$/, '')
@@ -97,15 +93,18 @@ export default function Events() {
     const year = new Date().getFullYear()
     const isoDateStr = `${year}-${month}-${day}`
     const dateObj = new Date(isoDateStr)
-    const weekday = dateObj.toLocaleDateString('en-US', { weekday: 'long' })
+    let weekday = ''
+    if (!isNaN(dateObj)) {
+      weekday = dateObj.toLocaleDateString('en-US', { weekday: 'long' })
+    }
     return { day, month, weekday }
   }
 
   const { day, month, weekday } = getDateDisplay()
 
   return (
-    <div className="title-box">
-      <div className="date-selector" style={{ marginBottom: '0px', display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '2rem' }}>
+    <>
+      <div className="date-selector" style={{ marginBottom: '0px', display: 'flex', gap: '6px', alignItems: 'center', paddingBottom: '2rem' }}>
         <button type="button" onClick={handleToday}>Today</button>
         <button type="button" onClick={handleTomorrow}>Tomorrow</button>
         <div className="date-picker-wrapper">
@@ -122,7 +121,7 @@ export default function Events() {
         </div>
       </div>
 
-      <div id="event-feed" style={{ fontFamily: 'sans-serif', padding: '0px', position: 'relative', minHeight: loading ? '300px' : undefined }}>
+      <div id="event-feed" style={{ position: 'relative', minHeight: loading ? '300px' : undefined }}>
         {loading && (
           <div style={{ position: 'relative', width: '100%', height: '300px' }}>
             <span className="loader"></span>
@@ -133,8 +132,8 @@ export default function Events() {
 
         {!loading && !error && dateString && (
           <>
-            <h2 style={{ marginTop: '2rem' }}>
-              {day}.{month}. <span style={{ fontWeight: 'normal' }}>{weekday}</span>
+            <h2>
+              {day}.{month}. {weekday}
             </h2>
 
             {filteredEvents.length === 0 ? (
@@ -147,30 +146,37 @@ export default function Events() {
                 just in case.
               </p>
             ) : (
-              filteredEvents.map((event, i) => (
-                <div className="event-card" key={i}>
-                  <h3>
-                    <a href={event.Links ? event.Links.split(" | ")[0] : '#'} target="_blank" rel="noopener noreferrer">
-                      {event.Titel}
-                    </a>
-                  </h3>
-                  <p className="event-description">{event.Beschreibung}</p>
-                  <p>{event.Uhrzeit}</p>
-                  <p>{event.Ort}</p>
-                  <p>{event.Preis}</p>
-                </div>
-              ))
+              <ul className="blog">
+                {filteredEvents.map((event, i) => (
+                  <li key={i}>
+                    <h3>
+                      <a href={event.Links ? event.Links.split(" | ")[0] : '#'} target="_blank" rel="noopener noreferrer">
+                        {event.Titel}
+                      </a>
+                    </h3>
+                    <p className="event-description">
+                      {event.Beschreibung}
+                    </p>
+                    <div className="eventdetails">
+                      <div className="item_time">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" style={{marginInline: 'auto', verticalAlign: 'middle', marginRight: '5px'}} viewBox="0 0 24 24"><path fill="currentColor" d="M12 23C5.925 23 1 18.075 1 12S5.925 1 12 1s11 4.925 11 11s-4.925 11-11 11m1-17.5h-2v6.914l4 4L16.414 15L13 11.586z"/></svg> 
+                        {event.Uhrzeit || 'N/A'}
+                      </div>
+                      <div className="item_loc">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" style={{verticalAlign: 'middle', marginRight: '5px'}} viewBox="0 0 24 24"><path fill="currentColor" d="M19 9A7 7 0 1 0 5 9c0 1.387.409 2.677 1.105 3.765h-.008L12 22l5.903-9.235h-.007A6.97 6.97 0 0 0 19 9m-7 3a3 3 0 1 1 0-6a3 3 0 0 1 0 6"/></svg> 
+                        {event.Ort || 'N/A'}
+                      </div>
+                      <div className="item_price">
+                        {event.Preis || 'N/A'}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             )}
           </>
         )}
       </div>
-
-      {!loading && (
-        <div className="social-links" id="social-links">
-          <a href="https://t.me/munichinartsandculture" target="_blank" rel="noopener noreferrer" className="tg-link">Telegram</a>
-          <a href="https://www.instagram.com/munichartsandculture/" target="_blank" rel="noopener noreferrer">Instagram</a>
-        </div>
-      )}
-    </div>
+    </>
   )
 }

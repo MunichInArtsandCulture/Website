@@ -65,36 +65,38 @@ export default function Jobs() {
   const filteredJobs = allJobs ? allJobs.filter(job => job.category === selectedCategory) : []
 
   return (
-    <div className="title-box">
-      {loading && (
-        <div className="loading-spinner-overlay">
-          <span className="loader"></span>
-        </div>
-      )}
+    <>
+      <div className="title-box">
+        {loading && (
+          <div className="loading-spinner-overlay">
+            <span className="loader"></span>
+          </div>
+        )}
 
-      <div className="filter">
-        <label htmlFor="categorySelect">Select category:</label>
-        <div className="custom-dropdown" ref={dropdownRef}>
-          <button
-            id="dropdown-button"
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-          >
-            {selectedCategory}
-          </button>
-          <ul id="dropdown-options" className={dropdownOpen ? '' : 'hidden'}>
-            {CATEGORY_LIST.map(cat => (
-              <li
-                key={cat}
-                data-value={cat}
-                onClick={() => {
-                  setSelectedCategory(cat)
-                  setDropdownOpen(false)
-                }}
-              >
-                {cat}
-              </li>
-            ))}
-          </ul>
+        <div className="filter">
+          <label htmlFor="categorySelect">Select category:</label>
+          <div className="custom-dropdown" ref={dropdownRef}>
+            <button
+              id="dropdown-button"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            >
+              {selectedCategory}
+            </button>
+            <ul id="dropdown-options" className={dropdownOpen ? '' : 'hidden'}>
+              {CATEGORY_LIST.map(cat => (
+                <li
+                  key={cat}
+                  data-value={cat}
+                  onClick={() => {
+                    setSelectedCategory(cat)
+                    setDropdownOpen(false)
+                  }}
+                >
+                  {cat}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -102,27 +104,20 @@ export default function Jobs() {
         {error && <p>Error loading jobs.</p>}
 
         {!loading && !error && (
-          filteredJobs.length === 0 ? (
-            <p className="no-jobs">No jobs available in this category.</p>
-          ) : (
-            filteredJobs.map((job, i) => (
-              <div className="job-entry" key={i}>
-                <h3>{job.title}</h3>
-                <p><strong>{job.employer}</strong></p>
-                <a href={job.link} target="_blank" rel="noopener noreferrer">more info</a>
-                <hr />
-              </div>
-            ))
-          )
+          <ul className="blog">
+            {filteredJobs.length === 0 ? (
+              <li><p className="no-jobs">No jobs available in this category.</p></li>
+            ) : (
+              filteredJobs.map((job, i) => (
+                <li key={i}>
+                  <h3><a href={job.link} target="_blank" rel="noopener noreferrer">{job.title}</a></h3>
+                  <p className="event-description"><strong>{job.employer}</strong></p>
+                </li>
+              ))
+            )}
+          </ul>
         )}
       </div>
-
-      {!loading && (
-        <div className="social-links" id="social-links">
-          <a href="https://t.me/munichinartsandculture" target="_blank" rel="noopener noreferrer" className="tg-link">Telegram</a>
-          <a href="https://www.instagram.com/munichartsandculture/" target="_blank" rel="noopener noreferrer">Instagram</a>
-        </div>
-      )}
-    </div>
+    </>
   )
 }

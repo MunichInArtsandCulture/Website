@@ -2,7 +2,9 @@ export default function Home() {
   return (
     <>
       <div id="tagline">
-        <h1>About</h1>
+        <p style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <a href="https://ko-fi.com/munichinartsandculture" target="_blank" rel="noopener noreferrer" style={{ color: '#7b415f', fontSize: '40px', textDecoration: 'none', fontWeight: 260 }}>Support the project</a>
+        </p>
         <p>
           Munich in Arts and Culture (MIAAC) is an <strong>independent platform</strong> showcasing Munich’s <strong>creative scene</strong>, including <strong>events, art, jobs, spaces, and resources</strong>, with a focus on alternative culture.
         </p>

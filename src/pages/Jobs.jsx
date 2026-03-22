@@ -67,12 +67,6 @@ export default function Jobs() {
   return (
     <>
       <div className="title-box">
-        {loading && (
-          <div className="loading-spinner-overlay">
-            <span className="loader"></span>
-          </div>
-        )}
-
         <div className="filter">
           <label htmlFor="categorySelect">Select category:</label>
           <div className="custom-dropdown" ref={dropdownRef}>
@@ -100,7 +94,13 @@ export default function Jobs() {
         </div>
       </div>
 
-      <div id="event-feed" style={{ fontFamily: 'sans-serif', padding: '0px' }}>
+      <div id="event-feed" style={{ fontFamily: 'sans-serif', padding: '0px', minHeight: loading ? '300px' : undefined }}>
+        {loading && (
+          <div className="loading-spinner-overlay">
+            <span className="loader"></span>
+          </div>
+        )}
+
         {error && <p>Error loading jobs.</p>}
 
         {!loading && !error && (

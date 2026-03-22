@@ -198,8 +198,7 @@
     width: auto;
   }
 
-  #body form h3,
-  #body ul.blog li:first-child {
+  #body form h3 {
     padding: 16px;
   }
 
@@ -218,12 +217,26 @@
     -webkit-appearance: none;
   }
 
-  #body ul.blog {
+  #body ul.blog,
+  .date-selector,
+  .filter,
+  #event-feed h2,
+  #event-feed > p {
     padding: 0 10px;
   }
 
+  .date-selector input[type="date"] {
+    width: auto;
+    font-size: 16px;
+  }
+
+  .date-selector button {
+    font-size: 16px;
+  }
+
+  #body ul.blog li:first-child,
   #body ul.blog li {
-    padding: 16px;
+    padding: 16px 0;
   }
 
   #body ul.blog li img {

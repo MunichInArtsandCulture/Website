@@ -1,27 +1,27 @@
 @use 'variables' as *;
 /* $mobile Breakpoint */
 @media only screen and (max-width : $mobile) {
-  
+
   html {
     -webkit-text-size-adjust: none;
   }
 
-  
+
 
   #header ul#navigation {
     background: white;
     display: none;
-    font-size: 1.5625em;
+    font-size: 1em;
     height: auto;
+    right: 0;
     left: 0;
     margin: 0 auto;
     position: absolute;
     padding: 0;
     top: 71px;
-    transition: all .5s ease-in-out;
-    width: 100%;
+    width: 90%;
     z-index: 1001;
-    box-shadow: 1px 1px 14px #63636363;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
   }
 
   #header ul#navigation li {
@@ -32,8 +32,9 @@
     line-height: normal;
     margin: 0;
     padding: 0;
-    text-align: center;
+    text-align: left;
     width: 100%;
+    position: relative;
   }
 
   #header ul#navigation li:first-child,
@@ -44,30 +45,36 @@
 
   #header ul#navigation li a {
     background: none;
-    border-top: 1px solid #717171;
-    color: #333;
+    border-top: none;
+    border-bottom: 1px solid #343434;
+    color: #363636;
     display: block;
-    font-family: Arial;
-    font-size: 0.8125em;
-    font-weight: normal;
-    height: 49px;
-    line-height: 49px;
-    padding: 0 15px;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    text-transform: uppercase;
+    padding: 18px 20px;
     text-align: left;
     width: auto;
-    margin: 0 0;
+    margin: 0;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  #header ul#navigation li:last-child>a {
+    border-bottom: none;
   }
 
   #header ul#navigation li span {
-    background: transparent url(../images/mobile/mobile-expand.png) no-repeat;
-    border-left: 1px solid #99fa99;
-    border-top: 1px solid #99fa99;
+    background: transparent url(../images/mobile/mobile-expand.png) no-repeat center center;
+    border-left: 1px solid #717171;
+    border-top: none;
     display: block;
-    height: 49px;
     position: absolute;
     right: 0;
     top: 0;
+    bottom: 0;
     width: 50px;
+    height: auto;
   }
 
   #header ul#navigation li.current span {
@@ -76,14 +83,15 @@
 
   #header ul#navigation li.current ul li a {
     background: none;
-    color: #ffffff;
+    color: #363636;
   }
 
   #header ul#navigation li a:hover,
+  #header ul#navigation li a:active,
   #header ul#navigation li.current ul li a:hover,
   #header ul#navigation li.current a {
-    background: black;
-    color: #ffffff;
+    background: #000000 !important;
+    color: #ffffff !important;
   }
 
   #header ul#navigation>li:first-child>a {
@@ -133,6 +141,10 @@
     padding: 45px 0 46px;
     width: 100%;
     border-style: none;
+  }
+
+  #art-spaces-feed {
+    padding-inline: 10px !important;
   }
 
   #body div#tagline {
@@ -207,6 +219,7 @@
     border-radius: 0;
     padding: 0 3%;
     -webkit-appearance: none;
+    appearance: none;
     width: 93%;
   }
 
@@ -215,22 +228,38 @@
     padding: 0;
     text-align: center;
     -webkit-appearance: none;
+    appearance: none;
   }
 
   #body ul.blog,
   .date-selector,
   .filter,
   #event-feed h2,
-  #event-feed > p {
+  #event-feed>p {
     padding: 0 10px;
   }
 
-  .date-selector input[type="date"] {
-    width: auto;
+  .date-picker-wrapper {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: 406px;
+
+    @media (max-width: 426px) {
+      max-width: 200px;
+    }
+  }
+
+  .date-selector input[type="date"],
+  .date-selector input.custom-flatpickr-input {
+    width: 100%;
+    box-sizing: border-box;
     font-size: 16px;
   }
 
   .date-selector button {
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: 200px;
     font-size: 16px;
   }
 
@@ -295,7 +324,7 @@
 
 /* 320px Breakpoint */
 @media screen and (max-width : 320px) {
-  
+
   #header h1 {
     font-size: 2.8125em;
   }
@@ -322,8 +351,4 @@
 /* Mobile Navigation Logic */
 
 
-@media only screen and (max-width : $mobile) {
-  
-
-  
-}
+@media only screen and (max-width : $mobile) {}

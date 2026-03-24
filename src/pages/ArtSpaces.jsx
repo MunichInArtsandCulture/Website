@@ -1,104 +1,357 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { useApiCache } from '../context/ApiCacheContext'
 
-const content = {
-  residencies: [
-    { title: "Artist in Residence", desc: "As part of the City of Munich's artist-in-residence initiative, artists, curators, and researchers from around the world are offered accommodation, workspace, financial support, and the opportunity to create, present their work, reflect, and engage in critical exchange.", link: "https://www.artistinresidence-munich.de/" },
-    { title: "Halle 6", desc: "Since July 2023, HALLE 6 has offered guest studios and housing for international artists in Munich. Supported by the City of Munich and other institutions, it promotes artistic exchange through residencies, symposia, and the Artist at Risk program. Booking is semiannual.", link: "https://www.halle6.net/residenz" },
-    { title: "Kunstverein München", desc: "The Writers Residency supports authors, critics, and artists whose work centers on writing. In partnership with Kunstverein München, it offers housing, a stipend, and public readings to foster exchange, reflection, and fiction beyond traditional exhibition spaces. The focus is time and space to write.", link: "https://www.kunstverein-muenchen.de/de/programm/writers-residency" },
-    { title: "Schafhof", desc: "As part of the European Art Fellowship, Schafhof hosts artists from across Europe for one to three months. In exchange, artists from Upper Bavaria stay abroad. The program fosters European exchange and enriches regional cultural life.", link: "https://www.schafhof-kunstforum.de/Residenzprogramm/" },
-  ],
-  studios: [
-    { title: "Atelierhaus Baumstraße", desc: "Around 50 artists from fields like visual arts, architecture, stage design, and jewelry work at Atelierhaus Baumstraße. Spaces are awarded every five years by jury selection. Located in Glockenbachviertel, the house opens annually for public studio visits.", link: "https://www.atelierhaus-baumstrasse.com/" },
-    { title: "BBK - Atelierbörse", desc: "This page lists current studio offers. You can also publish your own offer or request. Ads are deleted after 3 months. Munich's Cultural Department supports artists with subsidized studios and rent grants every three years.", link: "https://bbk-muc-obb.de/aktuelles/atelierboerse/" },
-    { title: "Eventlocation.com", desc: "eventlocations.com is an international platform for marketing event spaces and finding the perfect venue. Unlike others, it's commission-free, allowing direct contact between hosts and organizers. It's operated by Elbgoods GmbH, which also runs related platforms like eventcatering.com and eventbook.com.", link: "https://www.eventlocations.com/de/munchen-atelier" },
-    { title: "Gabriele Space", desc: "GABRIELE SPACE is an IMAL project offering free studios, workshops, and exhibition space for young artists in Munich. It supports artistic production, skill-sharing, and community exchange through non-commercial, participatory use of vacant buildings. The focus lies on empowerment, experimentation, and neighborhood engagement.", link: "https://www.gabriele-space.de/gabi3/uber-uns/" },
-    { title: "H.ALLE", desc: "The H.ALLE for ALL offers open workshops every Saturday from 14:00–18:00. Activities include a repair workshop with shared tools, rotating artistic workshops (e.g. printmaking, ceramics, upcycling), and an open studio space for collaborative or independent creative work. Some workshops are family-friendly.", link: "https://imalrepaircafe.wordpress.com/samstag/" },
-    { title: "HALLE 6 ", desc: "HALLE 6 offers temporary workspaces for artists needing room for large-scale projects, rehearsals, or stage design. Available spaces include a multifunctional workshop and three studios with ground-level access, heating, Wi-Fi, and optional equipment. Spaces are flexible and can be adapted to individual project needs.", link: "https://www.halle6.net/studio-vermietung" },
-    { title: "Haus2 e.V.", desc: "Haus2 e.V. is a collaborative initiative at KreativLabor, offering spaces (24–42 m²) for art, culture, and cultural education. Rooms are allocated through a jury process, with rents currently at commercial rates. The long-term goal is to create more affordable conditions for cultural workers.", link: "http://haus2.net/raumvergabe/" },
-    { title: "ImmoScout24", desc: "Bru, you know what that is.", link: "https://www.immobilienscout24.de/gewerbe-flaechen/de/bayern/muenchen/atelier-mieten/" },
-    { title: "Isar Atelier", desc: "Rent your own studio space and join the Isar Atelier community in Munich's Dreimühlenviertel. The 100 m² space includes two studios, a cozy kitchen, and bathroom. One flexible spot in the shared 40 m² room is currently available. Warm, well-equipped, and close to the Isar.", link: "https://www.farbraum-muenchen.de/dein-atelierplatz-1/" },
-    { title: "Kleinanzeigenr", desc: "Kleinanzeigen with the appropriate filters to find places within the city limits of Munich.", link: "https://www.kleinanzeigen.de/s-immobilien/muenchen/anzeige:angebote/preis::750/atelier-/k0c195l6411r14" },
-    { title: "KUNSTLABOR 2", desc: "KUNSTLABOR 2, in partnership with super+, offers 40 studios for creatives on a 1,300 m² floor in Munich's Dachauerstraße 90. Located above exhibition spaces, the studios support cross-genre collaboration and host Open Studios twice a year. Sizes range from 13–60 m².", link: "https://kunstlabor.org/kunst/atelier-mieten-muenchen/" },
-    { title: "Leonrod-Haus", desc: "Since 2011, the Leonrod-Haus für Kunst und Film has united various art forms under one roof at Leonrodplatz. In 2024, artists founded an official association to promote artistic visibility. Open Studios will take place during the Kreativquartier Festival.", link: "https://www.leonrod-haus.de/kontakt/" },
-    { title: "Otto-Steidle-Ateliers", desc: "The Otto-Steidle-Ateliers, located beneath the pedestrian bridge on Ganghoferstraße, offer 30 m² studio spaces on five-year terms. Founded in 2006, the project is supported by FONDARA, the City of Munich, and includes scholarships from local foundations. Named after architect Otto Steidle.", link: "https://akademieverein.de/steidle-ateliers/" },
-    { title: "PLATFORM", desc: "The PLATFORM studios are located in a former industrial building in Munich-South, near Aidenbachstraße U-Bahn. On a 2,000 m² floor, 23 bright studios host 40 professional artists, selected through an application process. Managed by Münchner Arbeit gGmbH.", link: "https://www.platform-muenchen.de/ateliers/" },
-    { title: "quoka", desc: "QUOKA is a free online classifieds platform for buying and selling locally or nationwide. Users can find everything from second-hand items to nearly new goods, and post their own ads easily and for free.", link: "https://www.quoka.de/anzeigen/immobilienmarkt/vermietungen/vermietung-ateliers-uebungsraeume/bayern/muenchen/?utm_source=chatgpt.com" },
-    { title: "Stadt München", desc: "The City of Munich provides spaces for artists to create and present their work through its cultural funding programs.", link: "https://stadt.muenchen.de/infos/raeume-fuer-kultur.html" },
-  ],
-  locations: [
-    { title: "Abraxas Musical Akademie", desc: "Offers hourly rentals of five studios for private lessons, courses, auditions, and rehearsals. Ideal for dance, singing, or acting, with spaces ranging from 72 m² to 170 m², equipped with mirrored walls.", link: "https://abraxas-musical-akademie.de/service#saalvermietung" },
-    { title: "Atelierhaus Baumstraße", desc: "Located in a former factory, this 100 m² venue is ideal for seminars, dance, and creative workshops. Available for nonprofits, course leaders, and local groups. Equipped with a kitchenette. Private celebrations are not permitted.", link: "https://www.glockenbachwerkstatt.de/raeume-mieten/atelierhaus-baumstrasse/" },
-    { title: "Einsatz Club", desc: "Versatile event space with two rooms and outdoor area, available for private parties, concerts, and workshops. Rental packages range from hourly to full-day options, with flexible pricing based on group size and event type.", link: "https://www.einsatz.club/" },
-    { title: "Einstein Kultur", desc: "Einstein Kultur offers four fully equipped halls in central Munich, suitable for theater, concerts, workshops, and private events. Spaces accommodate up to 200 guests, available for rent from September to July with flexible arrangements and professional support.", link: "https://www.einsteinkultur.de/hallen/" },
-    { title: "Fat Cat", desc: "Fat Cat offers a range of flexible spaces for concerts, readings, theater, and workshops. Venues include concert halls, seminar rooms, and a multipurpose space for up to 70 people. Booking inquiries via email.", link: "https://fatcat-muc.de/venues/" },
-    { title: "Feierwerk", desc: "Feierwerk provides rental spaces at several locations across Munich, including Hansastraße, Funkstation, Südpolstation, and Trafixx. Suitable for events from private parties to corporate functions, with optional in-house catering and rehearsal rooms available.", link: "https://www.feierwerk.de/vermietung-catering" },
-    { title: "Forum 2", desc: "Forum 2 offers a unique former cinema venue in Munich's Olympiadorf. Ideal for film screenings, concerts, and community events. Includes a 6×8 m stage, 88-seat hall, and gallery. Booking inquiries via email.", link: "https://www.kultur-forum2.de/vermietung/" },
-    { title: "GABRIELE SPACE", desc: "GABRIELE SPACE offers free studios, workshops, and exhibition spaces for young artists in Munich. Locations are available temporarily through creative reuse of vacant buildings. Spaces support collaborative work, events, and public exhibitions.", link: "https://www.gabriele-space.de/gabi3/uber-uns/" },
-    { title: "Giesinger Bahnhof", desc: "Centrally located venue offering flexible rooms for concerts, workshops, readings, and meetings. Equipped with stage, sound, video tech, and more. Catering is exclusively handled by the in-house Gleiswirtschaft restaurant. Booking via email or online form.", link: "https://giesinger-bahnhof.de/raum/" },
-    { title: "Glockenbachwerkstatt Bürgerhaus", desc: "The Bürgerhaus provides centrally located rooms for cultural and volunteer events. Available Mondays and Tuesdays, 17:30–22:30, ideal for courses, meetings, and group activities. On-site food and drinks available at the Stadtteiltreff.", link: "https://www.glockenbachwerkstatt.de/raeume-mieten/" },
-    { title: "Halle 6", desc: "HALLE 6 provides flexible studios and workspaces for artists and cultural workers. Spaces are available for workshops, rehearsals, large-format art, and events. Equipment, technical staff, and custom setups are available on request. Booking by email.", link: "https://www.halle6.net/studio-vermietung" },
-    { title: "IMAL Musiktheater", desc: "IMAL Musiktheater offers a versatile stage for rehearsals, performances, and teaching. Artists can rent the space for short- or mid-term cultural projects. Booking inquiries via email are welcome for tailored use of the venue.", link: "https://imal-musiktheater.de/r-ume" },
-    { title: "KÖŞK", desc: "KÖŞK is a 130 m² project-based art space run by Kreisjugendring München-Stadt. It offers temporary use for creative initiatives. Project proposals must be submitted by email for review and potential scheduling.", link: "https://www.koesk-muenchen.de/kontakt/" },
-    { title: "Kulturhaus Milbertshofen", desc: "Kulturhaus Milbertshofen offers rooms for cultural projects, rehearsals, and meetings. Bookings must be submitted via the online form. Private events are only allowed in side rooms. Offers include music spaces, a main hall, and technical support.", link: "https://kulturhaus-milbertshofen.de/raeume-3/" },
-    { title: "Kulturzentrum Trudering", desc: "Kulturzentrum Trudering invites visual artists to exhibit works for four-week periods. The venue provides exhibition support, PR, and installation assistance. Submissions with artwork samples can be emailed for consideration.", link: "https://www.kulturzentrum-trudering.de/kunst/ausstellungen-2/" },
-    { title: "lieberscholli", desc: "Located in a repurposed paper factory, lieberscholli offers 600-capacity indoor and outdoor spaces for concerts, parties, and art events. Daily rentals include staff, cleaning, sound, and DJ equipment. Bookings via Eventlocations platform.", link: "https://www.eventlocations.com/de/venues/alte-papierfabrik-lieberscholli-space-for-art-club-and-culture-munich" },
-    { title: "LIVE.EVIL", desc: "LIVE.EVIL is a 300-person live club with a bar, lounge, and stage. Also features a 300 m² terrace and 150-seat restaurant for events. Equipped with full AV tech and customizable rental options.", link: "https://www.eventlocations.com/de/venues/liveevil-munich" },
-    { title: "Mucca", desc: "Mucca provides over 15 versatile rooms for artistic and cultural use, including studios, rehearsal spaces, music rooms, and the 150-capacity MUCCA Halle. Ideal for community-driven projects and creative group formats.", link: "https://www.mucca.org/rooms/" },
-    { title: "Muffatwerk", desc: "Muffatwerk offers multiple spaces, including Muffathalle (642 m²), Ampere (340 m²), and studios for dance, theater, or workshops. Equipped with AV tech and ideal for concerts, readings, and multimedia events.", link: "https://www.muffatwerk.de/de/veranstalter_service/raume" },
-    { title: "Pasinger Fabrik", desc: "Offers studios and event spaces for rehearsals, readings, and workshops. Studio 1 (120 m²) and Studio 2 (77.5 m²) are rentable. Event halls are available in rare cases due to internal programming.", link: "https://pasinger-fabrik.de/anmietung-von-raeumen/" },
-    { title: "Pelkovenschlössl", desc: "This historic venue in Moosach offers barrier-free rooms for private events, theater, seminars, and readings. A separate hall and garden space at Hacklhaus is also rentable for up to 45 guests.", link: "https://www.pelkovenschloessl.de/feiern/" },
-    { title: "Rossi's Glück", desc: "Located in Bahnwärter Atelierpark, this double-container venue with bar and outdoor area accommodates up to 80 guests. Offers full-service event packages and catering options for private gatherings.", link: "https://www.rossisglueck.org/" },
-    { title: "Seidlvilla", desc: "Located in Werksviertel-Mitte, this venue includes whiteBOX (272 m²), Gastatelier (163 m²), and Flüsterkneipe (210 m²) for rehearsals, exhibitions, and workshops. Rooms offer industrial charm and flexible setups.", link: "https://www.seidlvilla.de/raeume" },
-    { title: "Stadtteilkultur 2411", desc: "Located in Werksviertel-Mitte, this venue includes whiteBOX (272 m²), Gastatelier (163 m²), and Flüsterkneipe (210 m²) for rehearsals, exhibitions, and workshops. Rooms offer industrial charm and flexible setups.", link: "https://www.stadtteilkultur2411.de/" },
-    { title: "Werksviertel-Mitte Kunst", desc: "Located in Werksviertel-Mitte, this venue includes whiteBOX (272 m²), Gastatelier (163 m²), and Flüsterkneipe (210 m²) for rehearsals, exhibitions, and workshops. Rooms offer industrial charm and flexible setups.", link: "https://werksviertel-kunst.de/raeume-und-vermietung/" },
-    { title: "YOU Eventlocation", desc: "Club-style venue with 150 m² indoor & 30 m² outdoor space, ideal for birthdays, concerts & corporate events. Includes bar, stage, DJ booth, light/sound system, and various rental packages.", link: "https://www.you-muc.de/" },
-    { title: "ZIRKA Studios", desc: "Creative venue with four units for production, events, or workshops. Located at Kreativquartier.", link: "https://www.eventlocations.com/de/venues/zirka-studios-munchen" },
-  ]
-}
+// --- MAPPED GOOGLE APPS SCRIPT LINK ---
+const API_URL = "https://script.google.com/macros/s/AKfycbyzC0yCB7JM8plmYvesa055gVbuuypu4vEDEbKSeZ6q7T624LMmf8y3KTsR60Db0et2/exec"
+
+const CATEGORIES = [
+  { id: 'Art_Studios', label: 'Art Studios' },
+  { id: 'Sound_Studios', label: 'Sound Studios' },
+  { id: 'Event_Locations', label: 'Event Locations' },
+  { id: 'Residencies', label: 'Residencies' }
+]
 
 export default function ArtSpaces() {
-  const [activeCategory, setActiveCategory] = useState('residencies')
+  const { getCached, setCached } = useApiCache()
+  const [data, setData] = useState(getCached(API_URL) || null)
+  const [loading, setLoading] = useState(!getCached(API_URL))
+  const [error, setError] = useState(null)
 
-  const entries = content[activeCategory] || []
+  const [activeCategory, setActiveCategory] = useState('Art_Studios')
+  const [expandedRow, setExpandedRow] = useState(null)
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' })
+
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const dropdownRef = useRef(null)
+
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false)
+  const sortDropdownRef = useRef(null)
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false)
+      }
+      if (sortDropdownRef.current && !sortDropdownRef.current.contains(e.target)) {
+        setSortDropdownOpen(false)
+      }
+    }
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [])
+
+  useEffect(() => {
+    if (API_URL === "HIER_DEINEN_APPSRIPT_LINK_EINFÜGEN") {
+      setError("Bitte füge deinen Google Apps Script Link in der Datei ArtSpaces.jsx ein (Zeile 5)!")
+      setLoading(false)
+      return
+    }
+
+    const cached = getCached(API_URL)
+    if (cached) {
+      setData(cached)
+      setLoading(false)
+      return
+    }
+
+    setLoading(true)
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(json => {
+        setCached(API_URL, json)
+        setData(json)
+        setLoading(false)
+      })
+      .catch(err => {
+        setError(err.message)
+        setLoading(false)
+      })
+  }, [getCached, setCached])
+
+  const currentItems = data ? data[activeCategory] || [] : []
+
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+    setExpandedRow(null);
+  };
+
+  const sortedItems = [...currentItems].sort((a, b) => {
+    if (!sortConfig.key) return 0;
+
+    const aVal = (a[sortConfig.key] || '').toString().toLowerCase();
+    const bVal = (b[sortConfig.key] || '').toString().toLowerCase();
+
+    if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+    if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  const getSortIcon = (key) => {
+    if (sortConfig.key !== key) return '▼';
+    return sortConfig.direction === 'asc' ? '▲' : '▼';
+  };
 
   return (
     <>
       <div className="title-box">
-        <div className="date-selector" style={{ marginBottom: '2rem' }}>
-          <button
-            className={`category-btn${activeCategory === 'residencies' ? ' active' : ''}`}
-            onClick={() => setActiveCategory('residencies')}
-          >
-            <span className="hyphenated">Resi&shy;dencies</span>
-          </button>
-          <button
-            className={`category-btn${activeCategory === 'studios' ? ' active' : ''}`}
-            onClick={() => setActiveCategory('studios')}
-          >
-            Art Studios
-          </button>
-          <button
-            className={`category-btn${activeCategory === 'locations' ? ' active' : ''}`}
-            onClick={() => setActiveCategory('locations')}
-          >
-            Event Locations
-          </button>
+        {/* Desktop View Tabs */}
+        <div className="date-selector desktop-only" style={{ marginBottom: '2rem', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+          {CATEGORIES.map(cat => (
+            <button
+              key={cat.id}
+              onClick={() => {
+                setActiveCategory(cat.id)
+                setExpandedRow(null)
+                setSortConfig({ key: null, direction: 'asc' }) // Reset sorting on tab change!
+              }}
+              style={{
+                padding: '10px 20px',
+                fontSize: '16px',
+                fontFamily: 'Inter',
+                border: '1px solid #d1d3d4',
+                background: activeCategory === cat.id ? '#1E7A62' : 'white',
+                color: activeCategory === cat.id ? 'white' : '#363636',
+                cursor: 'pointer',
+                borderRadius: '2px',
+                transition: 'all 0.2sease'
+              }}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Mobile View Dropdowns */}
+        <div className="filter mobile-only" style={{ marginBottom: '2rem', display: 'flex', gap: '15px' }}>
+
+          <div style={{ flex: '0 1 auto' }}>
+            <div style={{ fontSize: '13px', color: '#6B6B6B', marginBottom: '5px' }}>Category</div>
+            <div className="custom-dropdown" ref={dropdownRef}>
+              <button
+                id="dropdown-button"
+                style={{ width: '100%' }}
+                onClick={() => {
+                  setDropdownOpen(!dropdownOpen)
+                  setSortDropdownOpen(false)
+                }}
+              >
+                {CATEGORIES.find(c => c.id === activeCategory)?.label || 'Select Category'}
+              </button>
+              <ul id="dropdown-options" className={dropdownOpen ? '' : 'hidden'}>
+                {CATEGORIES.map(cat => (
+                  <li
+                    key={cat.id}
+                    data-value={cat.id}
+                    className={activeCategory === cat.id ? 'active' : ''}
+                    onClick={() => {
+                      setActiveCategory(cat.id)
+                      setExpandedRow(null)
+                      setSortConfig({ key: null, direction: 'asc' }) // Reset sorting on category jump
+                      setDropdownOpen(false)
+                    }}
+                  >
+                    {cat.label}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div style={{ flex: '0 1 auto' }}>
+            <div style={{ fontSize: '13px', color: '#6B6B6B', marginBottom: '5px' }}>Sort by</div>
+            <div className="custom-dropdown" ref={sortDropdownRef}>
+              <button
+                id="dropdown-button"
+                style={{ width: '100%' }}
+                onClick={() => {
+                  setSortDropdownOpen(!sortDropdownOpen)
+                  setDropdownOpen(false)
+                }}
+              >
+                {sortConfig.key ? (sortConfig.key === 'transit' ? 'reachability' : sortConfig.key === 'name' ? 'Name' : sortConfig.key === 'location' ? 'Location' : 'size') : 'Name'}
+              </button>
+              <ul id="dropdown-options" className={sortDropdownOpen ? '' : 'hidden'}>
+                {['name', 'location', 'transit', 'size'].map(key => {
+                  const label = key === 'transit' ? 'reachability' : key === 'name' ? 'Name' : key === 'location' ? 'Location' : 'size';
+                  return (
+                    <li
+                      key={key}
+                      onClick={() => {
+                        handleSort(key);
+                        setSortDropdownOpen(false);
+                      }}
+                    >
+                      {label}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <div id="event-feed" style={{ fontFamily: 'sans-serif', padding: '0px' }}>
-        <ul className="blog">
-          {entries.length === 0 ? (
-            <li><p>No content found.</p></li>
-          ) : (
-            entries.map((entry, i) => (
-              <li key={i}>
-                <h3><a href={entry.link} target="_blank" rel="noopener noreferrer">{entry.title}</a></h3>
-                <p className="event-description">{entry.desc}</p>
-              </li>
-            ))
-          )}
-        </ul>
+      <div id="art-spaces-feed" style={{ fontFamily: 'Inter', padding: '0px' }}>
+        {loading && (
+          <div className="loading-spinner-overlay" style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span className="loader"></span>
+          </div>
+        )}
+
+        {error && <p style={{ color: 'red', marginTop: '20px' }}>{error}</p>}
+
+        {!loading && !error && (
+          <div className="table-container" style={{ maxWidth: '100%', overflowX: 'auto' }}>
+            {/* Table Header (Desktop) */}
+            <div className="table-header desktop-only" style={{
+              display: 'flex',
+              borderBottom: '1px solid #c7c7c7',
+              padding: '12px 0 12px 10px',
+              color: '#6B6B6B',
+              fontSize: '18px',
+              fontFamily: 'Inter',
+              minWidth: '600px'
+            }}>
+              <div style={{ flex: '0 0 40px' }}></div>
+              <div onClick={() => handleSort('name')} style={{ flex: '2', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', userSelect: 'none' }}>Name <span style={{ fontSize: '12px' }}>{getSortIcon('name')}</span></div>
+              <div onClick={() => handleSort('location')} style={{ flex: '1.5', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', userSelect: 'none' }}>Location <span style={{ fontSize: '12px' }}>{getSortIcon('location')}</span></div>
+              <div onClick={() => handleSort('transit')} style={{ flex: '1.5', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', userSelect: 'none' }}>infrastructure <span style={{ fontSize: '12px' }}>{getSortIcon('transit')}</span></div>
+              <div onClick={() => handleSort('size')} style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', userSelect: 'none' }}>size <span style={{ fontSize: '12px' }}>{getSortIcon('size')}</span></div>
+            </div>
+
+            {/* Table Rows */}
+            <div className="table-body">
+              {sortedItems.length === 0 ? (
+                <p style={{ padding: '20px 0' }}>Keine Einträge gefunden.</p>
+              ) : (
+                sortedItems.map((item, i) => {
+                  const isExpanded = expandedRow === i;
+                  return (
+                    <div key={i} className="table-row-group" style={{ borderBottom: '1px solid #d1d3d4' }}>
+
+                      {/* --- DESKTOP VIEW --- */}
+                      <div className="desktop-only">
+                        <div
+                          className="table-row"
+                          style={{
+                            display: 'flex',
+                            padding: '18px 0 18px 10px',
+                            alignItems: 'center',
+                            color: '#363636',
+                            fontSize: '18px',
+                            minWidth: '600px'
+                          }}
+                        >
+                          <div
+                            onClick={() => setExpandedRow(isExpanded ? null : i)}
+                            style={{ flex: '0 0 40px', display: 'flex', alignItems: 'center', cursor: 'pointer', padding: '10px 0' }}
+                          >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}>
+                              <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                          </div>
+                          <div style={{ flex: '2', fontWeight: '500' }}>
+                            {item.link ? (
+                              <a href={item.link} target="_blank" rel="noopener noreferrer" style={{ color: '#1E7A62', textDecoration: 'none' }}>
+                                {item.name}
+                              </a>
+                            ) : item.name}
+                          </div>
+                          <div style={{ flex: '1.5' }}>
+                            {item.loc_link ? (
+                              <a href={item.loc_link} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
+                                {item.location}
+                              </a>
+                            ) : item.location}
+                          </div>
+                          <div style={{ flex: '1.5' }}>{item.transit}</div>
+                          <div style={{ flex: '1' }}>{item.size}</div>
+                        </div>
+
+                        {/* Expanded Content Desktop */}
+                        {isExpanded && (
+                          <div className="expanded-content" style={{ padding: '0 20px 24px 50px', color: '#6B6B6B', fontSize: '18px', lineHeight: '1.5' }}>
+                            <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{item.description}</p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* --- MOBILE VIEW --- */}
+                      <div className="mobile-only" style={{ padding: '20px 0', flexDirection: 'column' }}>
+
+                        {/* Row 1: Caret, Name, Location */}
+                        <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '5px' }}>
+
+                          {/* Caret */}
+                          <div
+                            onClick={() => setExpandedRow(isExpanded ? null : i)}
+                            style={{ flex: '0 0 32px', display: 'flex', alignItems: 'center', cursor: 'pointer', marginTop: '2px' }}
+                          >
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease', color: '#363636' }}>
+                              <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                          </div>
+
+                          {/* Content Container */}
+                          <div style={{ flex: '1', display: 'flex', flexDirection: 'column' }}>
+
+                            {/* Title & Location */}
+                            <div style={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: '15px', marginBottom: '15px' }}>
+                              <div style={{ fontWeight: '600', fontSize: '21px', color: '#252525', letterSpacing: '-0.01em' }}>
+                                {item.link ? (
+                                  <a href={item.link} target="_blank" rel="noopener noreferrer" style={{ color: '#252525', textDecoration: 'none' }}>
+                                    {item.name}
+                                  </a>
+                                ) : item.name}
+                              </div>
+                              <div style={{ fontSize: '16px', color: '#252525' }}>
+                                {item.loc_link ? (
+                                  <a href={item.loc_link} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
+                                    {item.location}
+                                  </a>
+                                ) : item.location}
+                              </div>
+                            </div>
+
+                            {/* Stats Columns */}
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'clamp(10px, 6vw, 60px)' }}>
+                              <div style={{ flex: '0 0 auto', minWidth: '110px' }}>
+                                <div style={{ fontSize: '13px', color: '#888', marginBottom: '4px' }}>reachability</div>
+                                <div style={{ fontSize: '16px', color: '#252525', fontWeight: '400', whiteSpace: 'pre-wrap' }}>{item.transit || 'NA'}</div>
+                              </div>
+                              <div style={{ flex: '0 0 auto', minWidth: '80px' }}>
+                                <div style={{ fontSize: '13px', color: '#888', marginBottom: '4px' }}>price</div>
+                                <div style={{ fontSize: '16px', color: '#252525', fontWeight: '400', whiteSpace: 'pre-wrap' }}>{item.price || 'NA'}</div>
+                              </div>
+                              <div style={{ flex: '1', minWidth: '80px' }}>
+                                <div style={{ fontSize: '13px', color: '#888', marginBottom: '4px' }}>size</div>
+                                <div style={{ fontSize: '16px', color: '#252525', fontWeight: '400', whiteSpace: 'pre-wrap' }}>{item.size || 'NA'}</div>
+                              </div>
+                            </div>
+
+                            {/* Expanded Content Mobile */}
+                            {isExpanded && (
+                              <div className="expanded-content" style={{ marginTop: '20px', color: '#666', fontSize: '16px', lineHeight: '1.6' }}>
+                                <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{item.description}</p>
+                              </div>
+                            )}
+
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  )
+                })
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </>
   )

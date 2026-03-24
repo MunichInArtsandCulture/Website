@@ -9,8 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "flatpickr": "^4.6.13",
+    "papaparse": "^5.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-flatpickr": "^4.0.11",
     "react-router-dom": "^7.2.0"
   },
   "devDependencies": {

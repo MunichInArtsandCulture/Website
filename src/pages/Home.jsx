@@ -9,7 +9,7 @@ export default function Home() {
           Munich in Arts and Culture (MIAAC) is an <strong>independent platform</strong> showcasing Munich’s <strong>creative scene</strong>, including <strong>events, art, jobs, spaces, and resources</strong>, with a focus on alternative culture.
         </p>
         <p>
-           It collaborates with local artists to <strong>increase visibility</strong> and support cultural exchange and networking.
+          It collaborates with local artists to <strong>increase visibility</strong> and support cultural exchange and networking.
         </p>
         <p>
           MIAAC is <strong>privately run</strong> and not affiliated with any organizations. Content is provided <strong>without guarantee</strong> and may contain errors or subjective descriptions.

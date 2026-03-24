@@ -1,0 +1,354 @@
+@use 'variables' as *;
+/* $mobile Breakpoint */
+@media only screen and (max-width : $mobile) {
+
+  html {
+    -webkit-text-size-adjust: none;
+  }
+
+
+
+  #header ul#navigation {
+    background: white;
+    display: none;
+    font-size: 1em;
+    height: auto;
+    right: 0;
+    left: 0;
+    margin: 0 auto;
+    position: absolute;
+    padding: 0;
+    top: 71px;
+    width: 90%;
+    z-index: 1001;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+  }
+
+  #header ul#navigation li {
+    background: none;
+    display: block;
+    float: none;
+    height: auto;
+    line-height: normal;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    width: 100%;
+    position: relative;
+  }
+
+  #header ul#navigation li:first-child,
+  #header ul#navigation li ul li:first-child {
+    border: none;
+    width: 100%;
+  }
+
+  #header ul#navigation li a {
+    background: none;
+    border-top: none;
+    border-bottom: 1px solid #343434;
+    color: #363636;
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    text-transform: uppercase;
+    padding: 18px 20px;
+    text-align: left;
+    width: auto;
+    margin: 0;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  #header ul#navigation li:last-child>a {
+    border-bottom: none;
+  }
+
+  #header ul#navigation li span {
+    background: transparent url(../images/mobile/mobile-expand.png) no-repeat center center;
+    border-left: 1px solid #717171;
+    border-top: none;
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 50px;
+    height: auto;
+  }
+
+  #header ul#navigation li.current span {
+    background: url(../images/mobile/mobile-expand.png) no-repeat;
+  }
+
+  #header ul#navigation li.current ul li a {
+    background: none;
+    color: #363636;
+  }
+
+  #header ul#navigation li a:hover,
+  #header ul#navigation li a:active,
+  #header ul#navigation li.current ul li a:hover,
+  #header ul#navigation li.current a {
+    background: #000000 !important;
+    color: #ffffff !important;
+  }
+
+  #header ul#navigation>li:first-child>a {
+    border: none;
+  }
+
+  #header ul#navigation li ul {
+    border: 0;
+    display: none;
+    left: 0;
+    margin: 0;
+    opacity: 1;
+    padding: 0;
+    position: relative;
+    top: 0;
+    width: 100%;
+  }
+
+  #header ul#navigation li ul,
+  #header ul#navigation li:hover ul {
+    display: none;
+  }
+
+  #header ul#navigation li ul li {
+    background: none;
+    height: auto;
+    line-height: normal;
+    padding: 0;
+    text-align: left;
+  }
+
+  #header ul#navigation li ul li a {
+    padding: 0 30px;
+  }
+
+  #header {
+    position: relative;
+    width: 90%;
+  }
+
+  #header h1 {
+    padding: 74px 0 0;
+  }
+
+  #body {
+    margin: 20px auto 0;
+    padding: 45px 0 46px;
+    width: 100%;
+    border-style: none;
+  }
+
+  #art-spaces-feed {
+    padding-inline: 10px !important;
+  }
+
+  #body div#tagline {
+    float: none;
+    margin: 20px auto 0;
+    width: 90%;
+  }
+
+  #body div#tagline h1 {
+    background-size: 37% auto;
+    line-height: 1em;
+    padding: 0 0 50px;
+  }
+
+  #body div#tagline p {
+    font-size: 18px;
+    line-height: 27px;
+    padding: 6px 10px;
+  }
+
+  #body img.figure {
+    float: none;
+    margin: 0 auto;
+    width: 90%;
+    max-width: 470px;
+  }
+
+  #body>h2 {
+    padding: 0 20px 30px;
+  }
+
+  #body div.content {
+    padding: 0 20px;
+  }
+
+  #body div.content div,
+  #footer div {
+    float: none;
+    width: auto;
+  }
+
+  #body div.content img.figure {
+    margin: 0 auto;
+  }
+
+  #body div.content div div.section {
+    padding: 30px 0 0;
+    width: auto;
+  }
+
+  #body div.content div ul li {
+    margin: 0 5%;
+    width: 40%;
+  }
+
+  #body div.content div ul li:first-child {
+    margin: 0 5%;
+  }
+
+  #body form {
+    margin: 0 auto;
+    padding: 0 20px;
+    width: auto;
+  }
+
+  #body form h3 {
+    padding: 16px;
+  }
+
+  #body form label input,
+  #body form label textarea {
+    border-radius: 0;
+    padding: 0 3%;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 93%;
+  }
+
+  #body form input#send {
+    margin: 8px 2px 0 0;
+    padding: 0;
+    text-align: center;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  #body ul.blog,
+  .date-selector,
+  .filter,
+  #event-feed h2,
+  #event-feed>p {
+    padding: 0 10px;
+  }
+
+  .date-picker-wrapper {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: 406px;
+
+    @media (max-width: 426px) {
+      max-width: 200px;
+    }
+  }
+
+  .date-selector input[type="date"],
+  .date-selector input.custom-flatpickr-input {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+
+  .date-selector button {
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: 200px;
+    font-size: 16px;
+  }
+
+  #body ul.blog li:first-child,
+  #body ul.blog li {
+    padding: 16px 0;
+  }
+
+  #body ul.blog li img {
+    margin: 0 0 20px;
+    width: 100%;
+  }
+
+  #body ul.blog li h3 {
+    line-height: 1.35em;
+  }
+
+  #body div.content div.article {
+    width: auto;
+  }
+
+  #body div.content div.sidebar {
+    float: none;
+    margin: 0;
+    width: auto;
+  }
+
+  #body div.content div.sidebar ul li:first-child {
+    margin: 0;
+  }
+
+  #footer {
+    padding: 20px 0;
+    width: 90%;
+  }
+
+  #footer div span {
+    line-height: 1.25em;
+    text-align: center;
+  }
+
+  #footer div p {
+    font-size: 10px;
+    line-height: 1.65em;
+    padding: 20px 0 0;
+    text-align: center;
+  }
+
+  #footer div#connect {
+    float: none;
+    margin: 30px auto 0;
+    max-width: 185px;
+  }
+
+  .instagram-wrapper {
+    float: none;
+    margin: 20px auto 0;
+    width: 90%;
+    max-width: 470px;
+  }
+}
+
+/* 320px Breakpoint */
+@media screen and (max-width : 320px) {
+
+  #header h1 {
+    font-size: 2.8125em;
+  }
+
+  #header h1 a span {
+    font-size: 0.5em;
+    line-height: 1.25em;
+  }
+
+  #body div#tagline h1 {
+    font-size: 25px;
+    padding: 0 0 30px;
+  }
+
+  #body div#tagline p {
+    font-size: 14px;
+  }
+
+  #footer div p {
+    font-size: 11px;
+  }
+}
+
+/* Mobile Navigation Logic */
+
+
+@media only screen and (max-width : $mobile) {}

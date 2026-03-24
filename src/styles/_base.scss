@@ -9,9 +9,18 @@ body {
   padding: 0;
 }
 
-.desktop-only {
+.desktop-only,
+.hide-on-mobile {
   @media only screen and (max-width: $mobile) {
     display: none !important;
+  }
+}
+
+.show-on-mobile {
+  display: none !important;
+
+  @media only screen and (max-width: $mobile) {
+    display: block !important;
   }
 }
 
@@ -92,10 +101,11 @@ p a:hover {
 #header ul#navigation li a {
   color: #757575;
   font-size: 18px;
-  margin: 0 40px;
+  margin: 0 30px;
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 #header ul#navigation li a:hover,
@@ -149,6 +159,14 @@ p a:hover {
   min-height: 400px;
 }
 
+.home-flex-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  width: 100%;
+}
+
 #body>h2 {
   color: #808080;
   font-family: 'inter';
@@ -162,7 +180,7 @@ p a:hover {
 #body img.figure {
   display: block;
   float: left;
-  max-width: 370px;
+  max-width: 350px;
   width: auto;
   opacity: 97%;
 }
@@ -170,7 +188,7 @@ p a:hover {
 #body div#tagline {
   float: right;
   margin: 0 0 0 0;
-  max-width: 460px;
+  max-width: 440px;
 }
 
 #body div#tagline h1 {

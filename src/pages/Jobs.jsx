@@ -67,15 +67,17 @@ export default function Jobs() {
   return (
     <>
       <div className="title-box">
-        <div className="filter">
-          <label htmlFor="categorySelect">Select category:</label>
-          <div className="custom-dropdown" ref={dropdownRef}>
-            <button
-              id="dropdown-button"
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-            >
-              {selectedCategory}
-            </button>
+        <div className="filter" style={{ marginBottom: '2rem' }}>
+          <div style={{ flex: '0 1 auto' }}>
+            <div style={{ fontSize: '13px', color: '#6B6B6B', marginBottom: '5px' }}>Category</div>
+            <div className="custom-dropdown" ref={dropdownRef}>
+              <button
+                id="dropdown-button"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                style={{ width: '100%' }}
+              >
+                {selectedCategory}
+              </button>
             <ul id="dropdown-options" className={dropdownOpen ? '' : 'hidden'}>
               {CATEGORY_LIST.map(cat => (
                 <li
@@ -90,6 +92,7 @@ export default function Jobs() {
                 </li>
               ))}
             </ul>
+          </div>
           </div>
         </div>
       </div>
@@ -110,7 +113,7 @@ export default function Jobs() {
             ) : (
               filteredJobs.map((job, i) => (
                 <li key={i}>
-                  <h3><a href={job.link} target="_blank" rel="noopener noreferrer">{job.title}</a></h3>
+                  <h3><a href={job.link} target="_blank" rel="noopener noreferrer">{job.title && job.title.length > 80 ? job.title.substring(0, 80) + '...' : job.title}</a></h3>
                   <p className="event-description"><strong>{job.employer}</strong></p>
                 </li>
               ))

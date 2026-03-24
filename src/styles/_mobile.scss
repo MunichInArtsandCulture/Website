@@ -245,7 +245,7 @@
     max-width: 406px;
 
     @media (max-width: 426px) {
-      max-width: 200px;
+      max-width: 100%;
     }
   }
 
@@ -254,6 +254,7 @@
     width: 100%;
     box-sizing: border-box;
     font-size: 16px;
+    text-align: center;
   }
 
   .date-selector button {
@@ -261,6 +262,11 @@
     width: 100%;
     max-width: 200px;
     font-size: 16px;
+
+    @media (max-width: 426px) {
+      max-width: 100%;
+      flex: 1 1 100%;
+    }
   }
 
   #body ul.blog li:first-child,

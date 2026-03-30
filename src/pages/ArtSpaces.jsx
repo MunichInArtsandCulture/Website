@@ -99,7 +99,7 @@ export default function ArtSpaces() {
     <>
       <div className="title-box">
         {/* Desktop View Tabs */}
-        <div className="date-selector desktop-only" style={{ marginBottom: '2rem', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+        <div className="date-selector desktop-only" style={{ marginBottom: '2rem', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
           {CATEGORIES.map(cat => (
             <button
               key={cat.id}
@@ -112,11 +112,11 @@ export default function ArtSpaces() {
                 padding: '10px 20px',
                 fontSize: '16px',
                 fontFamily: 'Inter',
-                border: '1px solid #d1d3d4',
+                border: '1px solid #b6d8cf',
                 background: activeCategory === cat.id ? '#1E7A62' : 'white',
                 color: activeCategory === cat.id ? 'white' : '#363636',
                 cursor: 'pointer',
-                borderRadius: '2px',
+                borderRadius: '3px',
                 transition: 'all 0.2sease'
               }}
             >
@@ -126,14 +126,15 @@ export default function ArtSpaces() {
         </div>
 
         {/* Mobile View Dropdowns */}
-        <div className="filter mobile-only" style={{ marginBottom: '2rem', display: 'flex', gap: '15px' }}>
+        <div className="filter mobile-only" style={{ marginBottom: '2rem', display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
 
           <div style={{ flex: '0 1 auto' }}>
             <div style={{ fontSize: '13px', color: '#6B6B6B', marginBottom: '5px' }}>Category</div>
-            <div className="custom-dropdown" ref={dropdownRef}>
+            <div className="custom-dropdown" ref={dropdownRef} style={{ zIndex: dropdownOpen ? 1001 : 999 }}>
               <button
                 id="dropdown-button"
-                style={{ width: '100%' }}
+                className="active"
+                style={{ width: '100%', fontSize: '16px', border: '1px solid #b6d8cf', borderRadius: '3px' }}
                 onClick={() => {
                   setDropdownOpen(!dropdownOpen)
                   setSortDropdownOpen(false)
@@ -163,20 +164,20 @@ export default function ArtSpaces() {
 
           <div style={{ flex: '0 1 auto' }}>
             <div style={{ fontSize: '13px', color: '#6B6B6B', marginBottom: '5px' }}>Sort by</div>
-            <div className="custom-dropdown" ref={sortDropdownRef}>
+            <div className="custom-dropdown" ref={sortDropdownRef} style={{ zIndex: sortDropdownOpen ? 1001 : 999 }}>
               <button
                 id="dropdown-button"
-                style={{ width: '100%' }}
+                style={{ width: '100%', fontSize: '16px', border: '1px solid #b6d8cf', borderRadius: '3px' }}
                 onClick={() => {
                   setSortDropdownOpen(!sortDropdownOpen)
                   setDropdownOpen(false)
                 }}
               >
-                {sortConfig.key ? (sortConfig.key === 'transit' ? 'reachability' : sortConfig.key === 'name' ? 'Name' : sortConfig.key === 'location' ? 'Location' : 'size') : 'Name'}
+                {sortConfig.key ? (sortConfig.key === 'type' ? 'Type' : sortConfig.key === 'name' ? 'Name' : sortConfig.key === 'location' ? 'Location' : 'Size') : 'Name'}
               </button>
               <ul id="dropdown-options" className={sortDropdownOpen ? '' : 'hidden'}>
-                {['name', 'location', 'transit', 'size'].map(key => {
-                  const label = key === 'transit' ? 'reachability' : key === 'name' ? 'Name' : key === 'location' ? 'Location' : 'size';
+                {['name', 'location', 'type', 'size'].map(key => {
+                  const label = key === 'type' ? 'Type' : key === 'name' ? 'Name' : key === 'location' ? 'Location' : 'Size';
                   return (
                     <li
                       key={key}
@@ -220,7 +221,7 @@ export default function ArtSpaces() {
               <div style={{ flex: '0 0 40px' }}></div>
               <div onClick={() => handleSort('name')} style={{ flex: '2', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', userSelect: 'none' }}>Name <span style={{ fontSize: '12px' }}>{getSortIcon('name')}</span></div>
               <div onClick={() => handleSort('location')} style={{ flex: '1.5', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', userSelect: 'none' }}>Location <span style={{ fontSize: '12px' }}>{getSortIcon('location')}</span></div>
-              <div onClick={() => handleSort('transit')} style={{ flex: '1.5', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', userSelect: 'none' }}>infrastructure <span style={{ fontSize: '12px' }}>{getSortIcon('transit')}</span></div>
+              <div onClick={() => handleSort('type')} style={{ flex: '1.5', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', userSelect: 'none' }}>Type <span style={{ fontSize: '12px' }}>{getSortIcon('type')}</span></div>
               <div onClick={() => handleSort('size')} style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', userSelect: 'none' }}>size <span style={{ fontSize: '12px' }}>{getSortIcon('size')}</span></div>
             </div>
 
@@ -269,8 +270,8 @@ export default function ArtSpaces() {
                               </a>
                             ) : item.location}
                           </div>
-                          <div style={{ flex: '1.5' }}>{item.transit}</div>
-                          <div style={{ flex: '1' }}>{item.size}</div>
+                          <div style={{ flex: '1.5' }}>{item.type || 'NA'}</div>
+                          <div style={{ flex: '1' }}>{item.size || 'NA'}</div>
                         </div>
 
                         {/* Expanded Content Desktop */}
@@ -301,8 +302,8 @@ export default function ArtSpaces() {
                           <div style={{ flex: '1', display: 'flex', flexDirection: 'column' }}>
 
                             {/* Title & Location */}
-                            <div style={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: '15px', marginBottom: '15px' }}>
-                              <div style={{ fontWeight: '600', fontSize: '21px', color: '#252525', letterSpacing: '-0.01em' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '5px', marginBottom: '15px' }}>
+                              <div style={{ fontWeight: '600', fontSize: '23px', color: '#252525', letterSpacing: '-0.01em' }}>
                                 {item.link ? (
                                   <a href={item.link} target="_blank" rel="noopener noreferrer" style={{ color: '#252525', textDecoration: 'none' }}>
                                     {item.name}
@@ -318,28 +319,28 @@ export default function ArtSpaces() {
                               </div>
                             </div>
 
-                            {/* Stats Columns */}
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'clamp(10px, 6vw, 60px)' }}>
-                              <div style={{ flex: '0 0 auto', minWidth: '110px' }}>
-                                <div style={{ fontSize: '13px', color: '#888', marginBottom: '4px' }}>reachability</div>
-                                <div style={{ fontSize: '16px', color: '#252525', fontWeight: '400', whiteSpace: 'pre-wrap' }}>{item.transit || 'NA'}</div>
-                              </div>
-                              <div style={{ flex: '0 0 auto', minWidth: '80px' }}>
-                                <div style={{ fontSize: '13px', color: '#888', marginBottom: '4px' }}>price</div>
-                                <div style={{ fontSize: '16px', color: '#252525', fontWeight: '400', whiteSpace: 'pre-wrap' }}>{item.price || 'NA'}</div>
-                              </div>
-                              <div style={{ flex: '1', minWidth: '80px' }}>
-                                <div style={{ fontSize: '13px', color: '#888', marginBottom: '4px' }}>size</div>
-                                <div style={{ fontSize: '16px', color: '#252525', fontWeight: '400', whiteSpace: 'pre-wrap' }}>{item.size || 'NA'}</div>
-                              </div>
-                            </div>
-
                             {/* Expanded Content Mobile */}
                             {isExpanded && (
-                              <div className="expanded-content" style={{ marginTop: '20px', color: '#666', fontSize: '16px', lineHeight: '1.6' }}>
+                              <div className="expanded-content" style={{ marginBottom: '15px', color: '#666', fontSize: '16px', lineHeight: '1.6' }}>
                                 <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{item.description}</p>
                               </div>
                             )}
+
+                            {/* Stats Columns */}
+                            <div style={{ display: 'flex', flexWrap: 'nowrap', gap: '10px' }}>
+                              <div style={{ flex: '1 1 0', minWidth: '0' }}>
+                                <div style={{ fontSize: '13px', color: '#888', marginBottom: '4px' }}>type</div>
+                                <div style={{ fontSize: '16px', color: '#252525', fontWeight: '400', whiteSpace: 'pre-wrap', wordBreak: 'break-word', overflowWrap: 'break-word' }}>{item.type || 'NA'}</div>
+                              </div>
+                              <div style={{ flex: '1 1 0', minWidth: '0' }}>
+                                <div style={{ fontSize: '13px', color: '#888', marginBottom: '4px' }}>size</div>
+                                <div style={{ fontSize: '16px', color: '#252525', fontWeight: '400', whiteSpace: 'pre-wrap', wordBreak: 'break-word', overflowWrap: 'break-word' }}>{item.size || 'NA'}</div>
+                              </div>
+                              <div style={{ flex: '1 1 0', minWidth: '0', opacity: (!item.price || item.price === 'NA' || item.price === 'N/A') ? 0 : 1 }}>
+                                <div style={{ fontSize: '13px', color: '#888', marginBottom: '4px' }}>price</div>
+                                <div style={{ fontSize: '16px', color: '#252525', fontWeight: '400', whiteSpace: 'pre-wrap', wordBreak: 'break-word', overflowWrap: 'break-word' }}>{item.price || 'NA'}</div>
+                              </div>
+                            </div>
 
                           </div>
                         </div>
@@ -350,6 +351,12 @@ export default function ArtSpaces() {
                 })
               )}
             </div>
+            
+            <div className="footnote-box" style={{ padding: '20px 10px', fontSize: '11px', color: '#888', fontStyle: 'inherit', marginTop: '10px' }}>
+              <p style={{ margin: '0 0 10px 0' }}><i style={{ fontStyle: 'italic' }}>*Free:</i> Some venues funded by public institutions may offer free use for non-commercial events. Eligibility depends on specific requirements (e.g. event type, audience, and cultural relevance). This listing does not guarantee free access - please verify directly with the venue.</p>
+              <p style={{ margin: 0 }}><i style={{ fontStyle: 'italic' }}>*Prices:</i> All listed prices are indicative and provided without guarantee. Information may be outdated, based on third-party sources, or affected by translation and processing. Please verify all details directly with the venue.</p>
+            </div>
+            
           </div>
         )}
       </div>

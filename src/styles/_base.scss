@@ -45,7 +45,7 @@ img {
 }
 
 p {
-  line-height: 30px;
+  line-height: 27px;
   margin: 0;
 }
 
@@ -396,6 +396,30 @@ p a:hover {
   text-decoration: underline;
 }
 
+.apply-now-btn {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.footnote-box p {
+  line-height: 17px !important;
+}
+
+.job-meta-row {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  gap: 30px;
+
+  .event-description {
+    margin: 0 !important;
+    text-align: right;
+  }
+}
+
 #body ul.blog li span,
 #body div.content div.article span,
 #body div.content div.sidebar ul li span {
@@ -513,8 +537,8 @@ p a:hover {
 
 .event-description {
   color: #5E5E5E;
-  font-size: 20px;
-  font-weight: 450;
+  font-size: 19px;
+  font-weight: 420;
   letter-spacing: -3%;
   line-height: 144%;
   margin-top: 6px;
@@ -646,6 +670,7 @@ p a:hover {
 .date-selector input[type="date"]:hover,
 .date-selector input.custom-flatpickr-input:hover,
 #dropdown-button:hover,
+#dropdown-button.active,
 .date-selector button.active,
 .date-selector input[type="date"].active,
 .date-selector input.custom-flatpickr-input.active {

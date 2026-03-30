@@ -222,14 +222,18 @@ export default function Events() {
                 </h2>
 
                 {group.events.length === 0 ? (
-                  <p style={{ lineHeight: '30px' }}>
-                    No events found :( <br />
-                    You can check the{' '}
-                    <a href="https://docs.google.com/document/d/1xT5Ovg8pouKkpwHXKdU45J9vlyqEYD__ZGuKZErmhTU/" target="_blank" rel="noopener noreferrer">
-                      Database
-                    </a>{' '}
-                    just in case.
-                  </p>
+                  <ul className="blog">
+                    <li style={{ borderTop: 'none', paddingTop: '10px' }}>
+                      <p className="event-description" style={{ lineHeight: '30px', margin: 0 }}>
+                        No events found :( <br />
+                        You can check the{' '}
+                        <a href="https://docs.google.com/document/d/1xT5Ovg8pouKkpwHXKdU45J9vlyqEYD__ZGuKZErmhTU/" target="_blank" rel="noopener noreferrer">
+                          Database
+                        </a>{' '}
+                        just in case.
+                      </p>
+                    </li>
+                  </ul>
                 ) : (
                   <ul className="blog">
                     {group.events.map((event, i) => (

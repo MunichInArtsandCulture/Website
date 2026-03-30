@@ -4,7 +4,7 @@ import { useApiCache } from '../context/ApiCacheContext'
 const API_URL = "https://script.google.com/macros/s/AKfycbyKnfmzqe_o7PiiAlTeciaImwOmOqrRBeHLV1SL_jvl-fPIBiwuLkIhGlDW0ZymcPArtQ/exec"
 
 const CATEGORY_LIST = [
-  "Art, Artist Support and Event Management",
+  "Art, Support, & Event Management",
   "Musicians and Singers",
   "Education, Pedagogical and Social",
   "Stage and Event Technology",
@@ -17,7 +17,7 @@ const CATEGORY_LIST = [
   "Other"
 ]
 
-const DEFAULT_CATEGORY = "Art, Artist Support and Event Management"
+const DEFAULT_CATEGORY = "Art, Support, & Event Management"
 
 export default function Jobs() {
   const { getCached, setCached } = useApiCache()
@@ -62,7 +62,10 @@ export default function Jobs() {
     return () => document.removeEventListener('click', handleClickOutside)
   }, [])
 
-  const filteredJobs = allJobs ? allJobs.filter(job => job.category === selectedCategory) : []
+  const filteredJobs = allJobs ? allJobs.filter(job => {
+    if (selectedCategory === "Art, Support, & Event Management" && job.category === "Art, Artist Support and Event Management") return true;
+    return job.category === selectedCategory;
+  }) : []
 
   return (
     <>
@@ -78,21 +81,21 @@ export default function Jobs() {
               >
                 {selectedCategory}
               </button>
-            <ul id="dropdown-options" className={dropdownOpen ? '' : 'hidden'}>
-              {CATEGORY_LIST.map(cat => (
-                <li
-                  key={cat}
-                  data-value={cat}
-                  onClick={() => {
-                    setSelectedCategory(cat)
-                    setDropdownOpen(false)
-                  }}
-                >
-                  {cat}
-                </li>
-              ))}
-            </ul>
-          </div>
+              <ul id="dropdown-options" className={dropdownOpen ? '' : 'hidden'}>
+                {CATEGORY_LIST.map(cat => (
+                  <li
+                    key={cat}
+                    data-value={cat}
+                    onClick={() => {
+                      setSelectedCategory(cat)
+                      setDropdownOpen(false)
+                    }}
+                  >
+                    {cat}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -113,8 +116,18 @@ export default function Jobs() {
             ) : (
               filteredJobs.map((job, i) => (
                 <li key={i}>
-                  <h3><a href={job.link} target="_blank" rel="noopener noreferrer">{job.title && job.title.length > 80 ? job.title.substring(0, 80) + '...' : job.title}</a></h3>
-                  <p className="event-description"><strong>{job.employer}</strong></p>
+                  <h3 style={{ color: '#363236', fontWeight: 600, marginTop: '10px', letterSpacing: '-1px' }}>
+                    {job.title && job.title.length > 80 ? job.title.substring(0, 80) + '...' : job.title}
+                  </h3>
+                  <div className="job-meta-row" style={{ marginTop: '8px' }}>
+                    <a href={job.link} target="_blank" rel="noopener noreferrer" className="apply-now-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#685769', fontWeight: 600, fontSize: '17px' }}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 14 14">
+                        <path fill="currentColor" fillRule="evenodd" d="M13.854.146a.5.5 0 0 1 .113.534l-5 13a.5.5 0 0 1-.922.027l-2.091-4.6L9.03 6.03a.75.75 0 0 0-1.06-1.06L4.893 8.046l-4.6-2.09a.5.5 0 0 1 .028-.923l13-5a.5.5 0 0 1 .533.113" clipRule="evenodd" />
+                      </svg>
+                      Apply Now
+                    </a>
+                    <p className="event-description"><strong>{job.employer}</strong></p>
+                  </div>
                 </li>
               ))
             )}

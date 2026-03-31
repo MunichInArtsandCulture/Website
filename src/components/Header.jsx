@@ -84,8 +84,8 @@ export default function Header() {
 
       {/* Mobile Overlay to catch clicks outside the menu */}
       {mobileMenuOpen && (
-        <div 
-          className="mobile-overlay mobile-only" 
+        <div
+          className="mobile-overlay mobile-only"
           onClick={() => setMobileMenuOpen(false)}
           style={{
             position: 'fixed',
@@ -100,7 +100,7 @@ export default function Header() {
       )}
 
       {/* Mobile Sidebar Navigation */}
-      <div 
+      <div
         ref={sidebarRef}
         className={`mobile-sidebar mobile-only ${mobileMenuOpen ? 'open' : ''}`}
         style={{ zIndex: 1000 }} // Ensure it's above the overlay

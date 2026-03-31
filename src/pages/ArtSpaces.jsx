@@ -6,9 +6,9 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyzC0yCB7JM8plmYvesa055
 
 const CATEGORIES = [
   { id: 'Art_Studios', label: 'Art Studios' },
-  { id: 'Sound_Studios', label: 'Sound Studios' },
   { id: 'Event_Locations', label: 'Event Locations' },
-  { id: 'Residencies', label: 'Residencies' }
+  { id: 'Residencies', label: 'Residencies' },
+  { id: 'Sound_Studios', label: 'Sound Studios' }
 ]
 
 export default function ArtSpaces() {
@@ -68,7 +68,17 @@ export default function ArtSpaces() {
       })
   }, [getCached, setCached])
 
-  const currentItems = data ? data[activeCategory] || [] : []
+  const currentItems = data ? (data[activeCategory] || []).map(item => ({
+    ...item,
+    name: item.name || item.Name || item.Title || item.title || 'Unnamed Space',
+    location: item.location || item.Location || item.Ort || item.ort,
+    loc_link: item.loc_link || item.Loc_link || item.loc_url || item.Loc_url || '',
+    link: item.link || item.Link || item.Url || item.url || '',
+    type: item.type || item.Type || item.TYPE || item.Typ || item.typ || item['type '] || item['Type '] || '',
+    size: item.size || item.Size || item.SIZE || item.Größe || item.größe || '',
+    price: item.price || item.Price || item.costs || item.Costs || item.Preis || item.preis || '',
+    description: item.description || item.Description || item.long_text || item.Long_text || item.Beschreibung || item.beschreibung || ''
+  })) : []
 
   const handleSort = (key) => {
     let direction = 'asc';
@@ -82,12 +92,11 @@ export default function ArtSpaces() {
   const sortedItems = [...currentItems].sort((a, b) => {
     if (!sortConfig.key) return 0;
 
-    const aVal = (a[sortConfig.key] || '').toString().toLowerCase();
-    const bVal = (b[sortConfig.key] || '').toString().toLowerCase();
+    const aVal = (a[sortConfig.key] || '').toString().trim();
+    const bVal = (b[sortConfig.key] || '').toString().trim();
 
-    if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
-    if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
-    return 0;
+    const compare = aVal.localeCompare(bVal, 'de', { sensitivity: 'base' });
+    return sortConfig.direction === 'asc' ? compare : -compare;
   });
 
   const getSortIcon = (key) => {
@@ -116,7 +125,7 @@ export default function ArtSpaces() {
                 background: activeCategory === cat.id ? '#1E7A62' : 'white',
                 color: activeCategory === cat.id ? 'white' : '#363636',
                 cursor: 'pointer',
-                borderRadius: '3px',
+                borderRadius: '20px',
                 transition: 'all 0.2sease'
               }}
             >
@@ -125,75 +134,89 @@ export default function ArtSpaces() {
           ))}
         </div>
 
-        {/* Mobile View Dropdowns */}
-        <div className="filter mobile-only" style={{ marginBottom: '2rem', display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-
-          <div style={{ flex: '0 1 auto' }}>
-            <div style={{ fontSize: '13px', color: '#6B6B6B', marginBottom: '5px' }}>Category</div>
-            <div className="custom-dropdown" ref={dropdownRef} style={{ zIndex: dropdownOpen ? 1001 : 999 }}>
+        {/* Mobile View Filters */}
+        <div className="filter mobile-only" style={{ marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+          
+          {/* Horizontally scrolling category buttons */}
+          <div style={{ display: 'flex', overflowX: 'auto', gap: '6px', paddingBottom: '5px', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            {CATEGORIES.map(cat => (
               <button
-                id="dropdown-button"
-                className="active"
-                style={{ width: '100%', fontSize: '16px', border: '1px solid #b6d8cf', borderRadius: '3px' }}
+                key={cat.id}
                 onClick={() => {
-                  setDropdownOpen(!dropdownOpen)
-                  setSortDropdownOpen(false)
+                  setActiveCategory(cat.id)
+                  setExpandedRow(null)
+                  setSortConfig({ key: null, direction: 'asc' })
+                }}
+                style={{
+                  padding: '8px 16px',
+                  fontSize: '15px',
+                  fontFamily: 'Inter',
+                  border: '1px solid #b6d8cf',
+                  background: activeCategory === cat.id ? '#1E7A62' : 'white',
+                  color: activeCategory === cat.id ? 'white' : '#363636',
+                  cursor: 'pointer',
+                  borderRadius: '20px',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
+                  transition: 'all 0.2s ease'
                 }}
               >
-                {CATEGORIES.find(c => c.id === activeCategory)?.label || 'Select Category'}
+                {cat.label}
               </button>
-              <ul id="dropdown-options" className={dropdownOpen ? '' : 'hidden'}>
-                {CATEGORIES.map(cat => (
-                  <li
-                    key={cat.id}
-                    data-value={cat.id}
-                    className={activeCategory === cat.id ? 'active' : ''}
-                    onClick={() => {
-                      setActiveCategory(cat.id)
-                      setExpandedRow(null)
-                      setSortConfig({ key: null, direction: 'asc' }) // Reset sorting on category jump
-                      setDropdownOpen(false)
-                    }}
-                  >
-                    {cat.label}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            ))}
           </div>
 
-          <div style={{ flex: '0 1 auto' }}>
-            <div style={{ fontSize: '13px', color: '#6B6B6B', marginBottom: '5px' }}>Sort by</div>
-            <div className="custom-dropdown" ref={sortDropdownRef} style={{ zIndex: sortDropdownOpen ? 1001 : 999 }}>
+          {/* Sort Dropdown */}
+          <div style={{ width: '180px' }}>
+            <div className="custom-dropdown" ref={sortDropdownRef} style={{ zIndex: sortDropdownOpen ? 1001 : 999, width: '100%' }}>
               <button
                 id="dropdown-button"
-                style={{ width: '100%', fontSize: '16px', border: '1px solid #b6d8cf', borderRadius: '3px' }}
+                className="no-triangle"
+                style={{ width: '100%', fontSize: '15px', border: '1px solid #b6d8cf', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '10px 15px' }}
                 onClick={() => {
                   setSortDropdownOpen(!sortDropdownOpen)
                   setDropdownOpen(false)
                 }}
               >
-                {sortConfig.key ? (sortConfig.key === 'type' ? 'Type' : sortConfig.key === 'name' ? 'Name' : sortConfig.key === 'location' ? 'Location' : 'Size') : 'Name'}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 12 12"><path fill="currentColor" d="M1 2.75A.75.75 0 0 1 1.75 2h8.5a.75.75 0 0 1 0 1.5h-8.5A.75.75 0 0 1 1 2.75m2 3A.75.75 0 0 1 3.75 5h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 3 5.75M5.25 8a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5z"></path></svg>
+                  <span>Sort by</span>
+                </div>
               </button>
-              <ul id="dropdown-options" className={sortDropdownOpen ? '' : 'hidden'}>
-                {['name', 'location', 'type', 'size'].map(key => {
+              <ul id="dropdown-options" className={sortDropdownOpen ? '' : 'hidden'} style={{ background: 'white', border: '1px solid rgb(182, 216, 207)', borderRadius: '20px', marginTop: '2px', padding: '0px', overflowY: 'auto', overflowX: 'hidden', maxHeight: '250px', WebkitOverflowScrolling: 'touch' }}>
+                {['name', 'location', 'type', 'size'].flatMap((key, idx, arr) => {
                   const label = key === 'type' ? 'Type' : key === 'name' ? 'Name' : key === 'location' ? 'Location' : 'Size';
-                  return (
+                  
+                  return [
                     <li
-                      key={key}
+                      key={`${key}-asc`}
                       onClick={() => {
-                        handleSort(key);
+                        setSortConfig({ key, direction: 'asc' });
+                        setExpandedRow(null);
                         setSortDropdownOpen(false);
                       }}
+                      className={sortConfig.key === key && sortConfig.direction === 'asc' ? 'active' : ''}
+                      style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '10px', borderBottom: '1px solid #b6d8cf', color: '#363636', fontSize: '15px' }}
                     >
-                      {label}
+                      <span style={{ fontSize: '10px', color: '#444' }}>▲</span> <span>{label}</span>
+                    </li>,
+                    <li
+                      key={`${key}-desc`}
+                      onClick={() => {
+                        setSortConfig({ key, direction: 'desc' });
+                        setExpandedRow(null);
+                        setSortDropdownOpen(false);
+                      }}
+                      className={sortConfig.key === key && sortConfig.direction === 'desc' ? 'active' : ''}
+                      style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '10px', borderBottom: (idx === arr.length - 1) ? 'none' : '1px solid #b6d8cf', color: '#363636', fontSize: '15px' }}
+                    >
+                      <span style={{ fontSize: '10px', color: '#444' }}>▼</span> <span>{label}</span>
                     </li>
-                  );
+                  ];
                 })}
               </ul>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -354,7 +377,7 @@ export default function ArtSpaces() {
             
             <div className="footnote-box" style={{ padding: '20px 10px', fontSize: '11px', color: '#888', fontStyle: 'inherit', marginTop: '10px' }}>
               <p style={{ margin: '0 0 10px 0' }}><i style={{ fontStyle: 'italic' }}>*Free:</i> Some venues funded by public institutions may offer free use for non-commercial events. Eligibility depends on specific requirements (e.g. event type, audience, and cultural relevance). This listing does not guarantee free access - please verify directly with the venue.</p>
-              <p style={{ margin: 0 }}><i style={{ fontStyle: 'italic' }}>*Prices:</i> All listed prices are indicative and provided without guarantee. Information may be outdated, based on third-party sources, or affected by translation and processing. Please verify all details directly with the venue.</p>
+              <p style={{ margin: 0 }}><i style={{ fontStyle: 'italic' }}>*Content:</i> All details are provided without guarantee. They may be outdated, based on third-party sources, or affected by translation and processing. Please verify everything directly with the venue.</p>
             </div>
             
           </div>

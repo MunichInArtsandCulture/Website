@@ -1,11 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { useApiCache } from '../context/ApiCacheContext'
 
-// --- MAPPED GOOGLE APPS SCRIPT LINK ---
-// Ersetze diesen Link durch deine neue Google Apps Script Web App URL!
 const API_URL = "https://script.google.com/macros/s/AKfycbw6_uXNglWnCbAr7_XvdLiVMfxjSGGyHVBE0lISkOay3Jt2A9gnAYwH90-a-KbUXdDO2A/exec"
 
-const DEFAULT_CATEGORY = "Soundsystems"
+const DEFAULT_CATEGORY = "Funding"
 
 export default function Resources() {
   const { getCached, setCached } = useApiCache()
@@ -14,23 +12,25 @@ export default function Resources() {
   const [error, setError] = useState(null)
 
   const [selectedCategory, setSelectedCategory] = useState(DEFAULT_CATEGORY)
-  const [dropdownOpen, setDropdownOpen] = useState(false)
-  const dropdownRef = useRef(null)
-
   const [expandedRow, setExpandedRow] = useState(null)
   const [expandedTimeRow, setExpandedTimeRow] = useState(null)
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' })
 
-  // Reset expanded row when category changes
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false)
+  const sortDropdownRef = useRef(null)
+
+  // Reset expanded rows when category changes
   useEffect(() => {
     setExpandedRow(null)
     setExpandedTimeRow(null)
+    setSortConfig({ key: null, direction: 'asc' })
   }, [selectedCategory])
 
-  // Close dropdown on outside click
+  // Close sort dropdown on outside click
   useEffect(() => {
     function handleClickOutside(e) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownOpen(false)
+      if (sortDropdownRef.current && !sortDropdownRef.current.contains(e.target)) {
+        setSortDropdownOpen(false)
       }
     }
     document.addEventListener('click', handleClickOutside)
@@ -39,7 +39,7 @@ export default function Resources() {
 
   useEffect(() => {
     if (API_URL === "HIER_DEINEN_APPSRIPT_LINK_EINFÜGEN") {
-      setError("Bitte füge deinen Google Apps Script Link in der Datei Resources.jsx ein (Zeile 6)!")
+      setError("Bitte füge deinen Google Apps Script Link in der Datei Resources.jsx ein (Zeile 4)!")
       setLoading(false)
       return
     }
@@ -65,7 +65,11 @@ export default function Resources() {
       })
   }, [getCached, setCached])
 
-  const categories = data ? Object.keys(data) : []
+  const categories = data ? Object.keys(data).sort((a, b) => {
+    if (a === 'Funding') return -1
+    if (b === 'Funding') return 1
+    return 0
+  }) : []
 
   // If the selected category doesn't exist yet in the data, default to the first one available
   useEffect(() => {
@@ -77,33 +81,146 @@ export default function Resources() {
   const entries = data ? data[selectedCategory] || [] : []
   const isToolsCategory = selectedCategory.toLowerCase().includes("tools")
 
+  // Normalize entries for sorting
+  const normalizedEntries = entries.map(entry => ({
+    ...entry,
+    _name: entry.Name || entry.name || entry.Title || entry.title || entry.Soundsystem || entry['DJ Equipment'] || entry.Equipment || '',
+    _location: entry.Location || entry.location || entry.District || entry.district || entry.Ort || entry.ort || '',
+  }))
+
+  const sortedEntries = [...normalizedEntries].sort((a, b) => {
+    if (!sortConfig.key) return 0
+    const aVal = (a[sortConfig.key] || '').toString().trim()
+    const bVal = (b[sortConfig.key] || '').toString().trim()
+    const compare = aVal.localeCompare(bVal, 'de', { sensitivity: 'base' })
+    return sortConfig.direction === 'asc' ? compare : -compare
+  })
+
+  const getSortIcon = (key) => {
+    if (sortConfig.key !== key) return '▼'
+    return sortConfig.direction === 'asc' ? '▲' : '▼'
+  }
+
+  // Display label overrides — sheet key stays unchanged, only UI label changes
+  const LABEL_OVERRIDES = {
+    'Tools/Workspaces': 'Tools/Maker Spaces',
+  }
+
+  // Build dynamic CATEGORIES from data keys (preserving original labels)
+  const CATEGORIES = categories.map(key => ({
+    id: key,
+    label: LABEL_OVERRIDES[key] || key.replace(/_/g, ' ')
+  }))
+
   return (
     <>
       <div className="title-box">
-        <div className="filter" style={{ marginBottom: '2rem' }}>
-          <div style={{ flex: '0 1 auto' }}>
-            <div style={{ fontSize: '13px', color: '#6B6B6B', marginBottom: '5px' }}>Category</div>
-            <div className="custom-dropdown" ref={dropdownRef}>
+        {/* Desktop View Tabs */}
+        <div className="date-selector desktop-only" style={{ marginBottom: '2rem', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+          {CATEGORIES.map(cat => (
+            <button
+              key={cat.id}
+              onClick={() => {
+                setSelectedCategory(cat.id)
+                setExpandedRow(null)
+                setExpandedTimeRow(null)
+                setSortConfig({ key: null, direction: 'asc' })
+              }}
+              style={{
+                padding: '10px 20px',
+                fontSize: '16px',
+                fontFamily: 'Inter',
+                border: '1px solid #b6d8cf',
+                background: selectedCategory === cat.id ? '#1E7A62' : 'white',
+                color: selectedCategory === cat.id ? 'white' : '#363636',
+                cursor: 'pointer',
+                borderRadius: '20px',
+                transition: 'all 0.2s ease',
+                width: 'auto'
+              }}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Mobile View Filters */}
+        <div className="filter mobile-only" style={{ marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+
+          {/* Horizontally scrolling category buttons */}
+          <div style={{ display: 'flex', overflowX: 'auto', gap: '6px', paddingBottom: '5px', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            {CATEGORIES.map(cat => (
+              <button
+                key={cat.id}
+                onClick={() => {
+                  setSelectedCategory(cat.id)
+                  setExpandedRow(null)
+                  setExpandedTimeRow(null)
+                  setSortConfig({ key: null, direction: 'asc' })
+                }}
+                style={{
+                  padding: '8px 16px',
+                  fontSize: '15px',
+                  fontFamily: 'Inter',
+                  border: '1px solid #b6d8cf',
+                  background: selectedCategory === cat.id ? '#1E7A62' : 'white',
+                  color: selectedCategory === cat.id ? 'white' : '#363636',
+                  cursor: 'pointer',
+                  borderRadius: '20px',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Sort Dropdown */}
+          <div style={{ width: '180px' }}>
+            <div className="custom-dropdown" ref={sortDropdownRef} style={{ zIndex: sortDropdownOpen ? 1001 : 999, width: '100%' }}>
               <button
                 id="dropdown-button"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-                style={{ width: '100%' }}
+                className="no-triangle"
+                style={{ width: '100%', fontSize: '15px', border: '1px solid #b6d8cf', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '10px 15px' }}
+                onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
               >
-                {selectedCategory}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 12 12"><path fill="currentColor" d="M1 2.75A.75.75 0 0 1 1.75 2h8.5a.75.75 0 0 1 0 1.5h-8.5A.75.75 0 0 1 1 2.75m2 3A.75.75 0 0 1 3.75 5h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 3 5.75M5.25 8a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5z"></path></svg>
+                  <span>Sort by</span>
+                </div>
               </button>
-              <ul id="dropdown-options" className={dropdownOpen ? '' : 'hidden'}>
-                {categories.map(cat => (
-                  <li
-                    key={cat}
-                    data-value={cat}
-                    onClick={() => {
-                      setSelectedCategory(cat)
-                      setDropdownOpen(false)
-                    }}
-                  >
-                    {cat}
-                  </li>
-                ))}
+              <ul id="dropdown-options" className={sortDropdownOpen ? '' : 'hidden'} style={{ background: 'white', border: '1px solid rgb(182, 216, 207)', borderRadius: '20px', marginTop: '2px', padding: '0px', overflowY: 'auto', overflowX: 'hidden', maxHeight: '250px', WebkitOverflowScrolling: 'touch' }}>
+                {['_name', '_location'].flatMap((key, idx, arr) => {
+                  const label = key === '_name' ? 'Name' : 'Location'
+                  return [
+                    <li
+                      key={`${key}-asc`}
+                      onClick={() => {
+                        setSortConfig({ key, direction: 'asc' })
+                        setExpandedRow(null)
+                        setSortDropdownOpen(false)
+                      }}
+                      className={sortConfig.key === key && sortConfig.direction === 'asc' ? 'active' : ''}
+                      style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '10px', borderBottom: '1px solid #b6d8cf', color: '#363636', fontSize: '15px' }}
+                    >
+                      <span style={{ fontSize: '10px', color: '#444' }}>▲</span> <span>{label}</span>
+                    </li>,
+                    <li
+                      key={`${key}-desc`}
+                      onClick={() => {
+                        setSortConfig({ key, direction: 'desc' })
+                        setExpandedRow(null)
+                        setSortDropdownOpen(false)
+                      }}
+                      className={sortConfig.key === key && sortConfig.direction === 'desc' ? 'active' : ''}
+                      style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '10px', borderBottom: (idx === arr.length - 1) ? 'none' : '1px solid #b6d8cf', color: '#363636', fontSize: '15px' }}
+                    >
+                      <span style={{ fontSize: '10px', color: '#444' }}>▼</span> <span>{label}</span>
+                    </li>
+                  ]
+                })}
               </ul>
             </div>
           </div>
@@ -121,23 +238,23 @@ export default function Resources() {
 
         {!loading && !error && (
           <ul className="blog">
-            {entries.length === 0 ? (
+            {sortedEntries.length === 0 ? (
               <li><p>No resources found for this category.</p></li>
             ) : (
-              entries.map((entry, i) => {
-                const isExpanded = expandedRow === i;
-                const isTimeExpanded = expandedTimeRow === i;
+              sortedEntries.map((entry, i) => {
+                const isExpanded = expandedRow === i
+                const isTimeExpanded = expandedTimeRow === i
 
-                const isSoundsystemOrDJCategory = selectedCategory.toLowerCase().includes("soundsystem") || selectedCategory.toLowerCase().includes("dj");
+                const isSoundsystemOrDJCategory = selectedCategory.toLowerCase().includes("soundsystem") || selectedCategory.toLowerCase().includes("dj")
 
                 if (isSoundsystemOrDJCategory) {
-                  const name = entry.Name || entry.name || entry.Title || entry.title || entry.Soundsystem || entry['DJ Equipment'] || entry.Equipment || 'Unnamed Resource';
-                  const location = entry.Location || entry.location || entry.District || entry.district || entry.Ort || entry.ort || '';
-                  const specs = entry.Specs || entry.specs || entry.Equipment || entry.equipment || entry.System || entry.system || '';
-                  const description = entry.Description || entry.description || entry.Decription || entry.decription || entry.About || entry.about || entry.Info || entry.info || entry.long_text || '';
-                  const linkUrl = entry.Link || entry.link || entry.Url || entry.url || '';
-                  const href = linkUrl ? (linkUrl.startsWith('http') ? linkUrl : `https://${linkUrl}`) : null;
-                  
+                  const name = entry.Name || entry.name || entry.Title || entry.title || entry.Soundsystem || entry['DJ Equipment'] || entry.Equipment || 'Unnamed Resource'
+                  const location = entry.Location || entry.location || entry.District || entry.district || entry.Ort || entry.ort || ''
+                  const specs = entry.Specs || entry.specs || entry.Equipment || entry.equipment || entry.System || entry.system || ''
+                  const description = entry.Description || entry.description || entry.Decription || entry.decription || entry.About || entry.about || entry.Info || entry.info || entry.long_text || ''
+                  const linkUrl = entry.Link || entry.link || entry.Url || entry.url || ''
+                  const href = linkUrl ? (linkUrl.startsWith('http') ? linkUrl : `https://${linkUrl}`) : null
+
                   return (
                     <li key={i} style={{ padding: '24px 0', borderTop: 'none', borderBottom: '1.6px solid #c7c7c7', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
                       <div style={{ cursor: 'pointer', paddingRight: '12px', paddingTop: '2px' }} onClick={() => setExpandedRow(isExpanded ? null : i)}>
@@ -151,9 +268,7 @@ export default function Resources() {
                             <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }} onClick={(e) => e.stopPropagation()}>
                               {name}
                             </a>
-                          ) : (
-                            name
-                          )}
+                          ) : name}
                         </div>
                         {location && (
                           <div style={{ fontFamily: 'Inter', fontWeight: 650, fontSize: '16px', color: '#6D6D6D', marginBottom: isExpanded ? '16px' : '0' }}>
@@ -165,9 +280,9 @@ export default function Resources() {
                             {specs && (
                               <ul style={{ margin: 0, paddingLeft: '20px', listStyleType: 'disc', fontFamily: 'Inter', fontWeight: 400, fontSize: '16px', color: '#685769', lineHeight: '1.5' }}>
                                 {specs.split('\n').filter(s => s.trim() !== '').map((spec, idx) => {
-                                  let text = spec.trim();
-                                  if (text.startsWith('-') || text.startsWith('•') || text.startsWith('*')) text = text.substring(1).trim();
-                                  return <li key={idx} style={{ paddingBottom: '4px', paddingTop: 0, borderTop: 'none', background: 'transparent' }}>{text}</li>;
+                                  let text = spec.trim()
+                                  if (text.startsWith('-') || text.startsWith('•') || text.startsWith('*')) text = text.substring(1).trim()
+                                  return <li key={idx} style={{ paddingBottom: '4px', paddingTop: 0, borderTop: 'none', background: 'transparent' }}>{text}</li>
                                 })}
                               </ul>
                             )}
@@ -184,19 +299,19 @@ export default function Resources() {
                 }
 
                 if (isToolsCategory) {
-                  const name = entry.Name || entry.name || entry.Title || entry.title || 'Unnamed Workspace';
-                  const linkUrl = entry.Link || entry.link || entry.Url || entry.url;
-                  const host = entry.Host || entry.host;
-                  const location = entry.Location || entry.location;
-                  const locLink = entry.Loc_link || entry.loc_link || entry.loc_url;
-                  const costs = entry.Costs || entry.costs || entry.Price || entry.price;
-                  const shortText = entry.short_text || entry.Short_text || entry.Short_Text || entry['short_text'] || entry.Short || entry.short || '';
-                  const longText = entry.long_text || entry.Long_text || entry.Long_Text || entry['long_text'] || entry.Description || entry.description || '';
+                  const name = entry.Name || entry.name || entry.Title || entry.title || 'Unnamed Workspace'
+                  const linkUrl = entry.Link || entry.link || entry.Url || entry.url
+                  const host = entry.Host || entry.host
+                  const location = entry.Location || entry.location
+                  const locLink = entry.Loc_link || entry.loc_link || entry.loc_url
+                  const costs = entry.Costs || entry.costs || entry.Price || entry.price
+                  const shortText = entry.short_text || entry.Short_text || entry.Short_Text || entry['short_text'] || entry.Short || entry.short || ''
+                  const longText = entry.long_text || entry.Long_text || entry.Long_Text || entry['long_text'] || entry.Description || entry.description || ''
 
-                  const daysArr = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
-                  const jsDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-                  const todayStr = jsDays[new Date().getDay()];
-                  const todayTime = entry[`opening_${todayStr.toLowerCase()}`] || entry[todayStr] || entry[todayStr.toLowerCase()] || 'closed';
+                  const daysArr = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
+                  const jsDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
+                  const todayStr = jsDays[new Date().getDay()]
+                  const todayTime = entry[`opening_${todayStr.toLowerCase()}`] || entry[todayStr] || entry[todayStr.toLowerCase()] || 'closed'
 
                   return (
                     <li key={i} style={{ padding: '24px 0 24px 0', borderTop: 'none', borderBottom: '1.6px solid #c7c7c7' }}>
@@ -224,13 +339,13 @@ export default function Resources() {
                             <div
                               style={{ display: 'flex', flexDirection: 'column', gap: '4px', cursor: 'pointer' }}
                               onClick={(e) => {
-                                e.stopPropagation();
-                                setExpandedTimeRow(isTimeExpanded ? null : i);
+                                e.stopPropagation()
+                                setExpandedTimeRow(isTimeExpanded ? null : i)
                               }}
                             >
                               {(isTimeExpanded ? daysArr : [todayStr]).map((day, dIdx) => {
-                                const dayText = isTimeExpanded ? (entry[`opening_${day.toLowerCase()}`] || entry[day] || entry[day.toLowerCase()] || 'closed') : todayTime;
-                                const isBold = day === todayStr;
+                                const dayText = isTimeExpanded ? (entry[`opening_${day.toLowerCase()}`] || entry[day] || entry[day.toLowerCase()] || 'closed') : todayTime
+                                const isBold = day === todayStr
                                 return (
                                   <div key={day} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                     {dIdx === 0 ? (
@@ -264,31 +379,29 @@ export default function Resources() {
                 }
 
                 // Default logic for other categories
-                const titleKey = Object.keys(entry).find(k => ['name', 'anbieter', 'title'].includes(k.toLowerCase()));
-                const title = titleKey ? entry[titleKey] : 'Unnamed Resource';
+                const titleKey = Object.keys(entry).find(k => ['name', 'anbieter', 'title'].includes(k.toLowerCase()))
+                const title = titleKey ? entry[titleKey] : 'Unnamed Resource'
 
-                const linkKey = Object.keys(entry).find(k => ['link', 'url'].includes(k.toLowerCase()));
-                let link = linkKey ? entry[linkKey] : null;
+                const linkKey = Object.keys(entry).find(k => ['link', 'url'].includes(k.toLowerCase()))
+                let link = linkKey ? entry[linkKey] : null
 
                 if (link && !link.startsWith('http') && link.includes('@') && !link.startsWith('mailto:')) {
-                  link = `mailto:${link}`;
+                  link = `mailto:${link}`
                 } else if (link && !link.startsWith('http') && !link.startsWith('mailto:')) {
-                  link = `https://${link}`;
+                  link = `https://${link}`
                 }
 
-                const otherKeys = Object.keys(entry).filter(k => k !== titleKey && k !== linkKey && entry[k] && entry[k].toString().trim() !== '');
+                const otherKeys = Object.keys(entry).filter(k => k !== titleKey && k !== linkKey && k !== '_name' && k !== '_location' && entry[k] && entry[k].toString().trim() !== '')
 
-                const longTextKeys = otherKeys.filter(k => ['description', 'requirements', 'specs', 'short'].some(word => k.toLowerCase().includes(word)));
-                const shortPropsKeys = otherKeys.filter(k => !longTextKeys.includes(k));
+                const longTextKeys = otherKeys.filter(k => ['description', 'requirements', 'specs', 'short'].some(word => k.toLowerCase().includes(word)))
+                const shortPropsKeys = otherKeys.filter(k => !longTextKeys.includes(k))
 
                 return (
                   <li key={i} style={{ display: 'flex', flexDirection: 'column', gap: '15px', padding: '18px 0', borderTop: 'none', borderBottom: '1.6px solid #c7c7c7' }}>
                     <h3 style={{ margin: 0, padding: 0 }}>
                       {link ? (
                         <a href={link} target="_blank" rel="noopener noreferrer">{title}</a>
-                      ) : (
-                        title
-                      )}
+                      ) : title}
                     </h3>
 
                     {shortPropsKeys.length > 0 && (
@@ -305,7 +418,7 @@ export default function Resources() {
                     {longTextKeys.length > 0 && (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                         {longTextKeys.map(key => {
-                          const hideLabel = selectedCategory.toLowerCase().includes('awareness') && key.toLowerCase().includes('description');
+                          const hideLabel = selectedCategory.toLowerCase().includes('awareness') && key.toLowerCase().includes('description')
                           return (
                             <div key={key} style={{ color: '#5E5E5E', fontSize: '16px', lineHeight: '1.5' }}>
                               {!hideLabel && (
@@ -313,7 +426,7 @@ export default function Resources() {
                               )}
                               <p style={hideLabel ? { margin: 0, whiteSpace: 'pre-wrap', color: '#5E5E5E', fontSize: '18px', fontWeight: 420, letterSpacing: '-0.03em' } : { margin: 0, whiteSpace: 'pre-wrap', color: '#252525' }}>{entry[key]}</p>
                             </div>
-                          );
+                          )
                         })}
                       </div>
                     )}

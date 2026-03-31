@@ -260,11 +260,13 @@
     }
   }
 
-  .filter > div,
-  .custom-dropdown {
+  .filter>div,
+  .custom-dropdown,
+  ul#dropdown-options {
     @media (max-width: 425px) {
       flex: 1 1 100% !important;
       width: 100% !important;
+      border-radius: 20px !important;
     }
   }
 
@@ -274,13 +276,16 @@
     box-sizing: border-box;
     font-size: 16px;
     text-align: center;
+    border-radius: 20px;
   }
 
-  .date-selector button {
+  .date-selector button,
+  #dropdown-button {
     flex: 1 1 auto;
     width: 100%;
     max-width: 200px;
     font-size: 16px;
+    border-radius: 20px;
 
     @media (max-width: 426px) {
       max-width: 100%;

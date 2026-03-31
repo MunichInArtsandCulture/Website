@@ -1,12 +1,17 @@
 @use 'variables' as *;
 
-/* Template by freewebsitetemplates.com */
+html,
+body {
+  overflow-x: hidden;
+}
+
 body {
   background: white;
   color: #315f52;
   font-family: 'latoregular';
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 .desktop-only,
@@ -115,7 +120,7 @@ p a:hover {
 
 #header ul#navigation li.current a {
   color: #2f752f;
-  text-shadow: 0px 0px 2px rgba(106, 255, 110, 0.5215686275);
+  text-shadow: 0px 0px 2px rgba(106, 255, 227, 0.52);
 }
 
 #header ul#navigation li ul {
@@ -498,7 +503,7 @@ p a:hover {
 
 #footer div#connect {
   float: right;
-  overflow: hidden;
+  overflow: visible;
   width: auto;
 }
 
@@ -512,6 +517,11 @@ p a:hover {
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%23969696'%3E%3Cpath fill-rule='evenodd' d='M12 7a5 5 0 1 0 0 10a5 5 0 0 0 0-10m-3 5a3 3 0 1 0 6 0a3 3 0 0 0-6 0' clip-rule='evenodd'/%3E%3Cpath d='M18 5a1 1 0 1 0 0 2a1 1 0 0 0 0-2'/%3E%3Cpath fill-rule='evenodd' d='M5 1a4 4 0 0 0-4 4v14a4 4 0 0 0 4 4h14a4 4 0 0 0 4-4V5a4 4 0 0 0-4-4zm14 2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2' clip-rule='evenodd'/%3E%3C/g%3E%3C/svg%3E") no-repeat;
   height: 40px;
   width: 40px;
+  transition: opacity 0.2s ease;
+}
+
+#footer div#connect a#instagram:hover {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%23685769'%3E%3Cpath fill-rule='evenodd' d='M12 7a5 5 0 1 0 0 10a5 5 0 0 0 0-10m-3 5a3 3 0 1 0 6 0a3 3 0 0 0-6 0' clip-rule='evenodd'/%3E%3Cpath d='M18 5a1 1 0 1 0 0 2a1 1 0 0 0 0-2'/%3E%3Cpath fill-rule='evenodd' d='M5 1a4 4 0 0 0-4 4v14a4 4 0 0 0 4 4h14a4 4 0 0 0 4-4V5a4 4 0 0 0-4-4zm14 2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2' clip-rule='evenodd'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 #footer div#connect a#telegram {
@@ -521,12 +531,21 @@ p a:hover {
   width: 40px;
 }
 
+#footer div#connect a#telegram:hover {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23685769' fill-rule='evenodd' d='M5 1a4 4 0 0 0-4 4v14a4 4 0 0 0 4 4h14a4 4 0 0 0 4-4V5a4 4 0 0 0-4-4zm15 11a8 8 0 1 1-16 0a8 8 0 0 1 16 0m-13.468-.236c0-.074.049-.145.118-.17l8.963-3.417a.19.19 0 0 1 .185.034c.05.043.072.114.057.179l-1.788 7.518a.18.18 0 0 1-.114.129a.18.18 0 0 1-.17-.023l-3.375-2.718l3.012-2.702a.11.11 0 0 0 .017-.142a.11.11 0 0 0-.139-.036l-4.475 2.311l-2.173-.793a.19.19 0 0 1-.118-.17' clip-rule='evenodd'/%3E%3C/svg%3E");
+}
+
 #footer div#connect a#kofi_out {
   height: 36px;
   margin: 1.7px 0 0 0;
   width: 36px;
   background-color: #969696;
   border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+#footer div#connect a#kofi_out:hover {
+  background-color: rgb(104, 87, 105);
 }
 
 #footer div#connect a#kofi_out div#kofi_in {
@@ -534,6 +553,7 @@ p a:hover {
   height: 28px;
   margin: 4.5px;
 }
+
 
 .event-description {
   color: #5E5E5E;
@@ -647,7 +667,7 @@ p a:hover {
   background: #d1d3d400;
   border: 1px solid #b6d8cf;
   color: #363636;
-  border-radius: 3px;
+  border-radius: 20px;
   cursor: pointer;
   outline: none;
   width: 180px;
@@ -664,6 +684,11 @@ p a:hover {
   font-size: 0.7em;
   margin-left: 10px;
   opacity: 0.7;
+}
+
+#dropdown-button.no-triangle::after {
+  display: none !important;
+  content: none !important;
 }
 
 .date-selector button:hover,
@@ -696,6 +721,24 @@ p a:hover {
   max-height: 250px;
   overflow-y: auto;
   width: 100%;
+}
+
+#dropdown-options::-webkit-scrollbar {
+  width: 6px;
+}
+
+#dropdown-options::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 10px 0;
+}
+
+#dropdown-options::-webkit-scrollbar-thumb {
+  background: rgba(182, 216, 207, 0.8);
+  border-radius: 10px;
+}
+
+#dropdown-options::-webkit-scrollbar-thumb:hover {
+  background: rgba(30, 122, 98, 0.6);
 }
 
 #dropdown-options.hidden {

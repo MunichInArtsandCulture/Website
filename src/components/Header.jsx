@@ -1,10 +1,38 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const path = location.pathname;
+
+  const sidebarRef = useRef(null);
+  const toggleRef = useRef(null);
+
+  // Close mobile menu on click outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        mobileMenuOpen &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target) &&
+        toggleRef.current &&
+        !toggleRef.current.contains(event.target)
+      ) {
+        setMobileMenuOpen(false);
+      }
+    }
+
+    if (mobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [mobileMenuOpen]);
 
   return (
     <>
@@ -15,6 +43,7 @@ export default function Header() {
         <span
           id="mobile-navigation"
           className="mobile-only"
+          ref={toggleRef}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           style={{
             alignItems: 'center',
@@ -53,8 +82,29 @@ export default function Header() {
         </ul>
       </div>
 
+      {/* Mobile Overlay to catch clicks outside the menu */}
+      {mobileMenuOpen && (
+        <div 
+          className="mobile-overlay mobile-only" 
+          onClick={() => setMobileMenuOpen(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(0, 0, 0, 0.25)', // Subtle tint to show it's active
+            zIndex: 999, // Below sidebar (1000) but above everything else
+          }}
+        />
+      )}
+
       {/* Mobile Sidebar Navigation */}
-      <div className={`mobile-sidebar mobile-only ${mobileMenuOpen ? 'open' : ''}`}>
+      <div 
+        ref={sidebarRef}
+        className={`mobile-sidebar mobile-only ${mobileMenuOpen ? 'open' : ''}`}
+        style={{ zIndex: 1000 }} // Ensure it's above the overlay
+      >
         <ul>
           <li className={path === '/opencalls' ? 'current' : ''}>
             <Link to="/opencalls" onClick={() => setMobileMenuOpen(false)}>How to Art</Link>

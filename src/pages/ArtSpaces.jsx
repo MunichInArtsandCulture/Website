@@ -80,6 +80,12 @@ export default function ArtSpaces() {
     description: item.description || item.Description || item.long_text || item.Long_text || item.Beschreibung || item.beschreibung || ''
   })) : []
 
+  const [filterType, setFilterType] = useState(null)
+  const [showFreeOnly, setShowFreeOnly] = useState(false)
+  const [isSortHovered, setIsSortHovered] = useState(false)
+
+  const activeFiltersCount = (filterType ? 1 : 0) + (showFreeOnly ? 1 : 0)
+
   const handleSort = (key) => {
     let direction = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -89,7 +95,14 @@ export default function ArtSpaces() {
     setExpandedRow(null);
   };
 
-  const sortedItems = [...currentItems].sort((a, b) => {
+  const filteredItems = currentItems.filter(item => {
+    const matchesType = !filterType || item.type.toString().trim() === filterType
+    const p = item.price ? item.price.toString().trim().toLowerCase() : ''
+    const matchesFree = !showFreeOnly || (p.startsWith('free') || p.startsWith('fee'))
+    return matchesType && matchesFree
+  })
+
+  const sortedItems = [...filteredItems].sort((a, b) => {
     if (!sortConfig.key) return 0;
 
     const aVal = (a[sortConfig.key] || '').toString().trim();
@@ -98,6 +111,11 @@ export default function ArtSpaces() {
     const compare = aVal.localeCompare(bVal, 'de', { sensitivity: 'base' });
     return sortConfig.direction === 'asc' ? compare : -compare;
   });
+
+  const uniqueTypes = [...new Set(currentItems
+    .map(item => item.type.toString().trim())
+    .filter(t => t !== '')
+  )].sort();
 
   const getSortIcon = (key) => {
     if (sortConfig.key !== key) return '▼';
@@ -115,7 +133,9 @@ export default function ArtSpaces() {
               onClick={() => {
                 setActiveCategory(cat.id)
                 setExpandedRow(null)
-                setSortConfig({ key: null, direction: 'asc' }) // Reset sorting on tab change!
+                setSortConfig({ key: null, direction: 'asc' })
+                setFilterType(null)
+                setShowFreeOnly(false)
               }}
               style={{
                 padding: '10px 20px',
@@ -126,7 +146,7 @@ export default function ArtSpaces() {
                 color: activeCategory === cat.id ? 'white' : '#363636',
                 cursor: 'pointer',
                 borderRadius: '20px',
-                transition: 'all 0.2sease'
+                transition: 'all 0.2s ease'
               }}
             >
               {cat.label}
@@ -146,6 +166,8 @@ export default function ArtSpaces() {
                   setActiveCategory(cat.id)
                   setExpandedRow(null)
                   setSortConfig({ key: null, direction: 'asc' })
+                  setFilterType(null)
+                  setShowFreeOnly(false)
                 }}
                 style={{
                   padding: '8px 16px',
@@ -158,6 +180,7 @@ export default function ArtSpaces() {
                   borderRadius: '20px',
                   whiteSpace: 'nowrap',
                   flexShrink: 0,
+                  maxWidth: 'fit-content',
                   transition: 'all 0.2s ease'
                 }}
               >
@@ -166,13 +189,30 @@ export default function ArtSpaces() {
             ))}
           </div>
 
-          {/* Sort Dropdown */}
-          <div style={{ width: '180px' }}>
-            <div className="custom-dropdown" ref={sortDropdownRef} style={{ zIndex: sortDropdownOpen ? 1001 : 999, width: '100%' }}>
+          {/* Sort & Filter Dropdown (Renamed) */}
+          <div style={{ width: 'auto', alignSelf: 'flex-start', display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <div className="custom-dropdown" ref={sortDropdownRef} style={{ zIndex: sortDropdownOpen ? 100 : 10, width: '100%' }}>
               <button
                 id="dropdown-button"
                 className="no-triangle"
-                style={{ width: '100%', fontSize: '15px', border: '1px solid #b6d8cf', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '10px 15px' }}
+                onMouseEnter={() => setIsSortHovered(true)}
+                onMouseLeave={() => setIsSortHovered(false)}
+                style={{ 
+                  width: 'auto', 
+                  flex: 'initial', 
+                  maxWidth: 'fit-content', 
+                  fontSize: '15px', 
+                  border: '1px solid #b6d8cf', 
+                  borderRadius: '20px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'flex-start', 
+                  padding: '10px 15px', 
+                  background: isSortHovered ? '#1E7A62' : (activeFiltersCount > 0 ? '#f0f9f7' : 'white'),
+                  color: isSortHovered ? 'white' : '#363636',
+                  transition: 'all 0.2s ease',
+                  cursor: 'pointer'
+                }}
                 onClick={() => {
                   setSortDropdownOpen(!sortDropdownOpen)
                   setDropdownOpen(false)
@@ -180,40 +220,68 @@ export default function ArtSpaces() {
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 12 12"><path fill="currentColor" d="M1 2.75A.75.75 0 0 1 1.75 2h8.5a.75.75 0 0 1 0 1.5h-8.5A.75.75 0 0 1 1 2.75m2 3A.75.75 0 0 1 3.75 5h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 3 5.75M5.25 8a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5z"></path></svg>
-                  <span>Sort by</span>
+                  <span>Filter & Sort {activeFiltersCount > 0 ? `(${activeFiltersCount})` : ''}</span>
                 </div>
               </button>
-              <ul id="dropdown-options" className={sortDropdownOpen ? '' : 'hidden'} style={{ background: 'white', border: '1px solid rgb(182, 216, 207)', borderRadius: '20px', marginTop: '2px', padding: '0px', overflowY: 'auto', overflowX: 'hidden', maxHeight: '250px', WebkitOverflowScrolling: 'touch' }}>
-                {['name', 'location', 'type', 'size'].flatMap((key, idx, arr) => {
-                  const label = key === 'type' ? 'Type' : key === 'name' ? 'Name' : key === 'location' ? 'Location' : 'Size';
-                  
-                  return [
-                    <li
-                      key={`${key}-asc`}
-                      onClick={() => {
-                        setSortConfig({ key, direction: 'asc' });
-                        setExpandedRow(null);
-                        setSortDropdownOpen(false);
-                      }}
-                      className={sortConfig.key === key && sortConfig.direction === 'asc' ? 'active' : ''}
-                      style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '10px', borderBottom: '1px solid #b6d8cf', color: '#363636', fontSize: '15px' }}
-                    >
-                      <span style={{ fontSize: '10px', color: '#444' }}>▲</span> <span>{label}</span>
-                    </li>,
-                    <li
-                      key={`${key}-desc`}
-                      onClick={() => {
-                        setSortConfig({ key, direction: 'desc' });
-                        setExpandedRow(null);
-                        setSortDropdownOpen(false);
-                      }}
-                      className={sortConfig.key === key && sortConfig.direction === 'desc' ? 'active' : ''}
-                      style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '10px', borderBottom: (idx === arr.length - 1) ? 'none' : '1px solid #b6d8cf', color: '#363636', fontSize: '15px' }}
-                    >
-                      <span style={{ fontSize: '10px', color: '#444' }}>▼</span> <span>{label}</span>
-                    </li>
-                  ];
-                })}
+              <ul id="dropdown-options" className={sortDropdownOpen ? '' : 'hidden'} style={{ background: 'white', border: '1px solid rgb(182, 216, 207)', borderRadius: '20px', marginTop: '2px', padding: '8px 0', overflowY: 'auto', overflowX: 'hidden', maxHeight: '350px', WebkitOverflowScrolling: 'touch', minWidth: '200px' }}>
+                
+                {/* Reset Option */}
+                {(activeFiltersCount > 0 || sortConfig.key) && (
+                  <li 
+                    onClick={() => {
+                      setFilterType(null)
+                      setShowFreeOnly(false)
+                      setSortConfig({ key: null, direction: 'asc' })
+                    }}
+                    style={{ padding: '12px 20px', color: '#125643', fontWeight: 500, fontSize: '15px', fontFamily: 'Inter', borderBottom: '1px solid #eee', cursor: 'pointer' }}
+                  >
+                    Reset all
+                  </li>
+                )}
+
+                {/* Free Only Toggle */}
+                <li
+                  onClick={() => {
+                    setShowFreeOnly(!showFreeOnly)
+                  }}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px', cursor: 'pointer', background: showFreeOnly ? '#f0f9f7' : 'transparent' }}
+                >
+                  <span style={{ fontSize: '15px', color: '#363636' }}>Free only</span>
+                  {showFreeOnly && <span style={{ color: '#1E7A62' }}>✓</span>}
+                </li>
+
+                {/* Sort by Location */}
+                <li
+                  onClick={() => {
+                    setSortConfig(sortConfig.key === 'location' ? { key: null, direction: 'asc' } : { key: 'location', direction: 'asc' })
+                  }}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px', cursor: 'pointer', borderTop: '1px solid #eee', background: sortConfig.key === 'location' ? '#f0f9f7' : 'transparent' }}
+                >
+                  <span style={{ fontSize: '15px', color: '#363636' }}>by Location</span>
+                  {sortConfig.key === 'location' && <span style={{ color: '#1E7A62' }}>✓</span>}
+                </li>
+
+                {/* Type Filters Header */}
+                {uniqueTypes.length > 0 && (
+                  <li style={{ padding: '12px 20px 6px 20px', fontSize: '15px', color: '#555', fontWeight: 500, fontFamily: 'Inter', borderTop: '1px solid #eee' }}>
+                    Filter by Type
+                  </li>
+                )}
+
+                {/* Dynamic Type Filters */}
+                {uniqueTypes.map(type => (
+                  <li
+                    key={type}
+                    onClick={() => {
+                      setFilterType(filterType === type ? null : type)
+                    }}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px', cursor: 'pointer', background: filterType === type ? '#f0f9f7' : 'transparent' }}
+                  >
+                    <span style={{ fontSize: '15px', color: '#363636' }}>{type}</span>
+                    {filterType === type && <span style={{ color: '#1E7A62' }}>✓</span>}
+                  </li>
+                ))}
+
               </ul>
             </div>
           </div>

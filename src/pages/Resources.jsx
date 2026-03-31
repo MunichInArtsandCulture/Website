@@ -101,16 +101,17 @@ export default function Resources() {
     return sortConfig.direction === 'asc' ? '▲' : '▼'
   }
 
-  // Display label overrides — sheet key stays unchanged, only UI label changes
-  const LABEL_OVERRIDES = {
-    'Tools/Workspaces': 'Tools/Maker Spaces',
-  }
-
-  // Build dynamic CATEGORIES from data keys (preserving original labels)
-  const CATEGORIES = categories.map(key => ({
-    id: key,
-    label: LABEL_OVERRIDES[key] || key.replace(/_/g, ' ')
-  }))
+  // Hardcoded CATEGORIES to ensure consistent labels during and after loading.
+  // The 'id' must match the sheet name in the Google Spreadsheet.
+  const CATEGORIES = [
+    { id: 'Funding', label: 'Funding' },
+    { id: 'Tools/Workspaces', label: 'Tools/Makerspaces' },
+    { id: 'Soundsystems', label: 'Soundsystems' },
+    { id: 'DJ Equipment', label: 'DJ Equipment' },
+    { id: 'Lights', label: 'Lights' },
+    { id: 'Merch production', label: 'Merch production' },
+    { id: 'Awareness Teams', label: 'Awareness teams' }
+  ]
 
   return (
     <>
@@ -169,6 +170,7 @@ export default function Resources() {
                   borderRadius: '20px',
                   whiteSpace: 'nowrap',
                   flexShrink: 0,
+                  maxWidth: 'fit-content',
                   transition: 'all 0.2s ease'
                 }}
               >
@@ -178,12 +180,12 @@ export default function Resources() {
           </div>
 
           {/* Sort Dropdown */}
-          <div style={{ width: '180px' }}>
+          <div style={{ width: 'auto', alignSelf: 'flex-start' }}>
             <div className="custom-dropdown" ref={sortDropdownRef} style={{ zIndex: sortDropdownOpen ? 1001 : 999, width: '100%' }}>
               <button
                 id="dropdown-button"
                 className="no-triangle"
-                style={{ width: '100%', fontSize: '15px', border: '1px solid #b6d8cf', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '10px 15px' }}
+                style={{ width: 'auto', flex: 'initial', maxWidth: 'fit-content', fontSize: '15px', border: '1px solid #b6d8cf', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '10px 15px' }}
                 onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -203,7 +205,7 @@ export default function Resources() {
                         setSortDropdownOpen(false)
                       }}
                       className={sortConfig.key === key && sortConfig.direction === 'asc' ? 'active' : ''}
-                      style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '10px', borderBottom: '1px solid #b6d8cf', color: '#363636', fontSize: '15px' }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '0 10px', borderBottom: '1px solid #b6d8cf', color: '#363636', fontSize: '15px' }}
                     >
                       <span style={{ fontSize: '10px', color: '#444' }}>▲</span> <span>{label}</span>
                     </li>,
@@ -215,7 +217,7 @@ export default function Resources() {
                         setSortDropdownOpen(false)
                       }}
                       className={sortConfig.key === key && sortConfig.direction === 'desc' ? 'active' : ''}
-                      style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '10px', borderBottom: (idx === arr.length - 1) ? 'none' : '1px solid #b6d8cf', color: '#363636', fontSize: '15px' }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '0 10px', borderBottom: (idx === arr.length - 1) ? 'none' : '1px solid #b6d8cf', color: '#363636', fontSize: '15px' }}
                     >
                       <span style={{ fontSize: '10px', color: '#444' }}>▼</span> <span>{label}</span>
                     </li>
@@ -245,15 +247,47 @@ export default function Resources() {
                 const isExpanded = expandedRow === i
                 const isTimeExpanded = expandedTimeRow === i
 
-                const isSoundsystemOrDJCategory = selectedCategory.toLowerCase().includes("soundsystem") || selectedCategory.toLowerCase().includes("dj")
+                const isSpecialMediaCategory = selectedCategory.toLowerCase().includes("soundsystem") ||
+                  selectedCategory.toLowerCase().includes("dj") ||
+                  selectedCategory.toLowerCase().includes("lights") ||
+                  selectedCategory.toLowerCase().includes("awareness") ||
+                  selectedCategory.toLowerCase().includes("tools")
 
-                if (isSoundsystemOrDJCategory) {
+                if (isSpecialMediaCategory) {
+                  const isTools = selectedCategory.toLowerCase().includes("tools")
                   const name = entry.Name || entry.name || entry.Title || entry.title || entry.Soundsystem || entry['DJ Equipment'] || entry.Equipment || 'Unnamed Resource'
                   const location = entry.Location || entry.location || entry.District || entry.district || entry.Ort || entry.ort || ''
+                  const host = entry.Host || entry.host || ''
                   const specs = entry.Specs || entry.specs || entry.Equipment || entry.equipment || entry.System || entry.system || ''
                   const description = entry.Description || entry.description || entry.Decription || entry.decription || entry.About || entry.about || entry.Info || entry.info || entry.long_text || ''
+                  const shortText = entry.short_text || entry.Short_text || entry.Short_Text || ''
+                  const costs = entry.Costs || entry.costs || entry.Price || entry.price || ''
                   const linkUrl = entry.Link || entry.link || entry.Url || entry.url || ''
                   const href = linkUrl ? (linkUrl.startsWith('http') ? linkUrl : `https://${linkUrl}`) : null
+                  
+                  // Today's opening time for tools
+                  let todayTime = ''
+                  if (isTools) {
+                    const jsDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+                    const todayStr = jsDays[new Date().getDay()]
+                    
+                    const getTimeForDay = (day) => {
+                      const d = day.toLowerCase()
+                      const d2 = d.substring(0, 2)
+                      const g = d === 'mon' ? 'mo' : d === 'tue' ? 'di' : d === 'wed' ? 'mi' : d === 'thu' ? 'do' : d === 'fri' ? 'fr' : d === 'sat' ? 'sa' : 'so'
+                      const variations = [
+                        `opening_${d}`, d, day, 
+                        `opening_${d2}`, d2, day.substring(0, 2),
+                        `opening_${g}`, g, g.charAt(0).toUpperCase() + g.charAt(1),
+                        d === 'mon' ? 'monday' : d === 'tue' ? 'tuesday' : d === 'wed' ? 'wednesday' : d === 'thu' ? 'thursday' : d === 'fri' ? 'friday' : d === 'sat' ? 'saturday' : 'sunday'
+                      ]
+                      for (const v of variations) {
+                        if (entry[v] && entry[v].toString().toLowerCase() !== 'na' && entry[v].toString().trim() !== '') return entry[v]
+                      }
+                      return 'closed'
+                    }
+                    todayTime = getTimeForDay(todayStr)
+                  }
 
                   return (
                     <li key={i} style={{ padding: '24px 0', borderTop: 'none', borderBottom: '1.6px solid #c7c7c7', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
@@ -263,34 +297,69 @@ export default function Resources() {
                         </svg>
                       </div>
                       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                        <div style={{ fontWeight: 700, fontSize: '24px', fontFamily: 'Inter', color: '#3F3F3F', marginBottom: '4px', letterSpacing: '-0.02em', cursor: href ? 'auto' : 'pointer' }} onClick={() => { if (!href) setExpandedRow(isExpanded ? null : i) }}>
+                        <div style={{ fontWeight: 700, fontSize: '24px', fontFamily: 'Inter', color: '#3F3F3F', marginBottom: '2px', letterSpacing: '-0.02em', cursor: href ? 'auto' : 'pointer' }} onClick={() => { if (!href) setExpandedRow(isExpanded ? null : i) }}>
                           {href ? (
                             <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }} onClick={(e) => e.stopPropagation()}>
                               {name}
                             </a>
                           ) : name}
                         </div>
-                        {location && (
-                          <div style={{ fontFamily: 'Inter', fontWeight: 650, fontSize: '16px', color: '#6D6D6D', marginBottom: isExpanded ? '16px' : '0' }}>
-                            {location}
+                        
+                        {(host || location) && (
+                          <div style={{ fontFamily: 'Inter', fontWeight: 650, fontSize: '16px', color: '#6D6D6D', marginBottom: '2px' }}>
+                            {host}{host && location ? ' • ' : ''}{location}
                           </div>
                         )}
+
+                        {shortText && (
+                          <div
+                            onClick={() => setExpandedRow(isExpanded ? null : i)}
+                            style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '16px', color: '#707070', lineHeight: '1.4', letterSpacing: '-0.3px', cursor: 'pointer', marginBottom: isTools ? '4px' : (isExpanded ? '16px' : '8px') }}
+                          >
+                            {shortText}
+                          </div>
+                        )}
+
+                        {isTools && (
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center', fontFamily: 'Inter', fontSize: '16px', fontWeight: 650, color: '#685769', marginBottom: isExpanded ? '16px' : '4px' }}>
+                            <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 23C5.925 23 1 18.075 1 12S5.925 1 12 1s11 4.925 11 11s-4.925 11-11 11m1-17.5h-2v6.914l4 4L16.414 15L13 11.586z" />
+                              </svg>
+                              <span>{todayTime}</span>
+                            </div>
+                            {costs && costs.trim().toUpperCase() !== 'NA' && (
+                              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 17 24" fill="currentColor">
+                                  <path d="m16.64 20.097l.597 2.71a.5.5 0 0 1-.053.385l.001-.002a.54.54 0 0 1-.286.246l-.004.001l-.086.017a.8.8 0 0 1-.174.059l-.005.001q-.11.026-.273.08t-.366.094q-.205.042-.434.086t-.511.086t-.571.08t-.622.051q-.333.017-.656.017a11.3 11.3 0 0 1-7.002-2.246l.03.021a11.04 11.04 0 0 1-4.039-5.914l-.018-.077H.549a.553.553 0 0 1-.546-.545V13.32a.553.553 0 0 1 .545-.546h1.125q-.034-.971.017-1.79H.527a.525.525 0 0 1-.525-.525v-.022v.001v-1.964c0-.29.235-.525.525-.525h.022h-.001h1.67a11.16 11.16 0 0 1 4.118-5.738l.033-.022A11.26 11.26 0 0 1 13.199 0h-.007h.066c1.151 0 2.268.143 3.335.412l-.094-.02c.142.046.26.136.339.254l.001.002a.56.56 0 0 1 .05.413l.001-.004l-.733 2.71a.5.5 0 0 1-.238.331l-.002.001a.49.49 0 0 1-.412.041l.003.001l-.068-.017q-.068-.017-.196-.042l-.298-.06l-.383-.06l-.443-.051l-.494-.042l-.503-.017l-.1-.001c-1.393 0-2.69.407-3.78 1.109l.028-.017A6.8 6.8 0 0 0 6.728 7.9l-.017.043h7.978a.56.56 0 0 1 .546.651v-.003l-.409 1.943a.5.5 0 0 1-.548.443h.002h-8.32a15 15 0 0 0 .002 1.832l-.002-.043h7.831c.17 0 .321.08.419.204l.001.001a.55.55 0 0 1 .102.464l.001-.004l-.409 1.909a.55.55 0 0 1-.527.443H6.784c1.036 2.558 3.5 4.33 6.378 4.33h.069h-.003q.307 0 .614-.026t.571-.06t.503-.08t.418-.086l.315-.08l.205-.051l.086-.034a.5.5 0 0 1 .445.036l-.002-.001c.134.077.23.208.258.362z" />
+                                </svg>
+                                <span>{costs.replace(/€|EUR|€/gi, '').trim()}</span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
                         {isExpanded && (
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                            {specs && (
-                              <ul style={{ margin: 0, paddingLeft: '20px', listStyleType: 'disc', fontFamily: 'Inter', fontWeight: 400, fontSize: '16px', color: '#685769', lineHeight: '1.5' }}>
-                                {specs.split('\n').filter(s => s.trim() !== '').map((spec, idx) => {
-                                  let text = spec.trim()
-                                  if (text.startsWith('-') || text.startsWith('•') || text.startsWith('*')) text = text.substring(1).trim()
-                                  return <li key={idx} style={{ paddingBottom: '4px', paddingTop: 0, borderTop: 'none', background: 'transparent' }}>{text}</li>
-                                })}
-                              </ul>
-                            )}
                             {description && (
-                              <div style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '16px', color: '#646464', lineHeight: '1.6', letterSpacing: '-0.01em' }}>
+                              <div
+                                onClick={() => setExpandedRow(null)}
+                                style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '16px', color: '#3F3F3F', lineHeight: '1.6', letterSpacing: '-0.01em', cursor: 'pointer' }}
+                              >
                                 <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{description}</p>
                               </div>
                             )}
+                            {specs && (
+                              <div style={{ marginTop: description ? '0px' : '0px' }}>
+                                <ul style={{ margin: 0, paddingLeft: '20px', listStyleType: 'disc', fontFamily: 'Inter', fontWeight: 400, fontSize: '16px', color: '#685769', lineHeight: '1.5' }}>
+                                  {specs.split('\n').filter(s => s.trim() !== '').map((spec, idx) => {
+                                    let text = spec.trim()
+                                    if (text.startsWith('-') || text.startsWith('•') || text.startsWith('*')) text = text.substring(1).trim()
+                                    return <li key={idx} style={{ paddingBottom: '4px', paddingTop: 0, borderTop: 'none', background: 'transparent' }}>{text}</li>
+                                  })}
+                                </ul>
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
@@ -298,85 +367,7 @@ export default function Resources() {
                   )
                 }
 
-                if (isToolsCategory) {
-                  const name = entry.Name || entry.name || entry.Title || entry.title || 'Unnamed Workspace'
-                  const linkUrl = entry.Link || entry.link || entry.Url || entry.url
-                  const host = entry.Host || entry.host
-                  const location = entry.Location || entry.location
-                  const locLink = entry.Loc_link || entry.loc_link || entry.loc_url
-                  const costs = entry.Costs || entry.costs || entry.Price || entry.price
-                  const shortText = entry.short_text || entry.Short_text || entry.Short_Text || entry['short_text'] || entry.Short || entry.short || ''
-                  const longText = entry.long_text || entry.Long_text || entry.Long_Text || entry['long_text'] || entry.Description || entry.description || ''
 
-                  const daysArr = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
-                  const jsDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
-                  const todayStr = jsDays[new Date().getDay()]
-                  const todayTime = entry[`opening_${todayStr.toLowerCase()}`] || entry[todayStr] || entry[todayStr.toLowerCase()] || 'closed'
-
-                  return (
-                    <li key={i} style={{ padding: '24px 0 24px 0', borderTop: 'none', borderBottom: '1.6px solid #c7c7c7' }}>
-                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                        <div style={{ cursor: 'pointer', paddingRight: '8px' }} onClick={() => setExpandedRow(isExpanded ? null : i)}>
-                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3F3F3F" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease', marginTop: '3px', flexShrink: 0 }}>
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                          </svg>
-                        </div>
-                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                          <div style={{ fontWeight: 700, fontSize: '22px', fontFamily: 'Inter', color: '#3F3F3F', marginBottom: '8px' }}>
-                            {linkUrl ? <a href={linkUrl.startsWith('http') ? linkUrl : `https://${linkUrl}`} target="_blank" rel="noopener noreferrer" style={{ color: '#3F3F3F', textDecoration: 'none' }}>{name}</a> : name}
-                          </div>
-                          <div style={{ fontFamily: 'Inter', fontWeight: 600, fontSize: '15px', color: '#6D6D6D', marginBottom: '8px' }}>
-                            {host && <>{host} <span style={{ padding: '0 4px' }}>•</span> </>}
-                            {locLink ? <a href={locLink.startsWith('http') ? locLink : `https://${locLink}`} target="_blank" rel="noopener noreferrer" style={{ color: '#6D6D6D' }}>{location}</a> : <span style={{ color: '#6D6D6D' }}>{location}</span>}
-                          </div>
-                          {(shortText || longText) && (
-                            <div style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '15px', color: '#707070', letterSpacing: '-0.03em', marginBottom: '16px', lineHeight: '1.5' }}>
-                              <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{isExpanded ? longText : shortText}</p>
-                            </div>
-                          )}
-
-                          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '30px', fontFamily: 'Inter', fontWeight: 700, fontSize: '15px', color: '#685769' }}>
-                            <div
-                              style={{ display: 'flex', flexDirection: 'column', gap: '4px', cursor: 'pointer' }}
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                setExpandedTimeRow(isTimeExpanded ? null : i)
-                              }}
-                            >
-                              {(isTimeExpanded ? daysArr : [todayStr]).map((day, dIdx) => {
-                                const dayText = isTimeExpanded ? (entry[`opening_${day.toLowerCase()}`] || entry[day] || entry[day.toLowerCase()] || 'closed') : todayTime
-                                const isBold = day === todayStr
-                                return (
-                                  <div key={day} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                                    {dIdx === 0 ? (
-                                      <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" style={{ flexShrink: 0 }}>
-                                        <path fill="currentColor" d="M12 23C5.925 23 1 18.075 1 12S5.925 1 12 1s11 4.925 11 11s-4.925 11-11 11m1-17.5h-2v6.914l4 4L16.414 15L13 11.586z" />
-                                      </svg>
-                                    ) : (
-                                      <div style={{ width: '17px', flexShrink: 0 }} />
-                                    )}
-                                    <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-                                      <span style={{ width: '25px', color: isBold ? '#685769' : '#888', fontWeight: isBold ? 700 : 400 }}>{day}</span>
-                                      <span style={{ color: isBold ? '#685769' : '#888', fontWeight: isBold ? 700 : 400 }}>{dayText}</span>
-                                    </div>
-                                  </div>
-                                )
-                              })}
-                            </div>
-                            {costs && (
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 17 24" style={{ flexShrink: 0 }}>
-                                  <path fill="currentColor" d="m16.64 20.097l.597 2.71a.5.5 0 0 1-.053.385l.001-.002a.54.54 0 0 1-.286.246l-.004.001l-.086.017a.8.8 0 0 1-.174.059l-.005.001q-.11.026-.273.08t-.366.094q-.205.042-.434.086t-.511.086t-.571.08t-.622.051q-.333.017-.656.017a11.3 11.3 0 0 1-7.002-2.246l.03.021a11.04 11.04 0 0 1-4.039-5.914l-.018-.077H.549a.553.553 0 0 1-.546-.545V13.32a.553.553 0 0 1 .545-.546h1.125q-.034-.971.017-1.79H.527a.525.525 0 0 1-.525-.525v-.022v.001v-1.964c0-.29.235-.525.525-.525h.022h-.001h1.67a11.16 11.16 0 0 1 4.118-5.738l.033-.022A11.26 11.26 0 0 1 13.199 0h-.007h.066c1.151 0 2.268.143 3.335.412l-.094-.02c.142.046.26.136.339.254l.001.002a.56.56 0 0 1 .05.413l.001-.004l-.733 2.71a.5.5 0 0 1-.238.331l-.002.001a.49.49 0 0 1-.412.041l.003.001l-.068-.017q-.068-.017-.196-.042l-.298-.06l-.383-.06l-.443-.051l-.494-.042l-.503-.017l-.1-.001c-1.393 0-2.69.407-3.78 1.109l.028-.017A6.8 6.8 0 0 0 6.728 7.9l-.017.043h7.978a.56.56 0 0 1 .546.651v-.003l-.409 1.943a.5.5 0 0 1-.548.443h.002h-8.32a15 15 0 0 0 .002 1.832l-.002-.043h7.831c.17 0 .321.08.419.204l.001.001a.55.55 0 0 1 .102.464l.001-.004l-.409 1.909a.55.55 0 0 1-.527.443H6.784c1.036 2.558 3.5 4.33 6.378 4.33h.069h-.003q.307 0 .614-.026t.571-.06t.503-.08t.418-.086l.315-.08l.205-.051l.086-.034a.5.5 0 0 1 .445.036l-.002-.001c.134.077.23.208.258.362z" />
-                                </svg>
-                                <span>{costs}</span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  )
-                }
 
                 // Default logic for other categories
                 const titleKey = Object.keys(entry).find(k => ['name', 'anbieter', 'title'].includes(k.toLowerCase()))

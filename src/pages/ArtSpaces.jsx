@@ -12,7 +12,7 @@ const CATEGORIES = [
 ]
 
 export default function ArtSpaces() {
-  const { getCached, setCached } = useApiCache()
+  const { getCached, fetchWithPriority } = useApiCache()
   const [data, setData] = useState(getCached(API_URL) || null)
   const [loading, setLoading] = useState(!getCached(API_URL))
   const [error, setError] = useState(null)

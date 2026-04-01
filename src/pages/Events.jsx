@@ -45,7 +45,7 @@ const FLATPICKR_OPTIONS = {
 }
 
 export default function Events() {
-  const { getCached, setCached } = useApiCache()
+  const { getCached, fetchWithPriority } = useApiCache()
   const [allEvents, setAllEvents] = useState(getCached(API_URL) || null)
   const [loading, setLoading] = useState(!getCached(API_URL))
   const [error, setError] = useState(null)

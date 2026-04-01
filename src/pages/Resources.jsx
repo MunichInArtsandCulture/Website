@@ -6,7 +6,7 @@ const API_URL = DATA_SOURCES.RESOURCES
 const DEFAULT_CATEGORY = "Funding"
 
 export default function Resources() {
-  const { getCached, setCached } = useApiCache()
+  const { getCached, fetchWithPriority } = useApiCache()
   const [data, setData] = useState(getCached(API_URL) || null)
   const [loading, setLoading] = useState(!getCached(API_URL))
   const [error, setError] = useState(null)

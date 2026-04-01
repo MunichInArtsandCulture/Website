@@ -86,7 +86,7 @@ const formatDeadlineDisplay = (dateStr) => {
 }
 
 export default function Jobs() {
-  const { getCached, setCached } = useApiCache()
+  const { getCached, fetchWithPriority } = useApiCache()
 
   // Mode: 'jobs' | 'opencalls'
   const [mode, setMode] = useState('jobs')

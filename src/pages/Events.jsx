@@ -75,13 +75,25 @@ export default function Events() {
 
     setLoading(true)
     fetch(API_URL)
-      .then(res => res.json())
+      .then(async res => {
+        if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          const text = await res.text();
+          if (text.includes("<!DOCTYPE") || text.includes("<html")) {
+            throw new Error("Google Script returned HTML instead of JSON. This usually means the script is not shared correctly or requires authorization. Please open the API URL in your browser to verify.");
+          }
+          throw new Error("Received non-JSON response from API.");
+        }
+        return res.json();
+      })
       .then(events => {
         setCached(API_URL, events)
         setAllEvents(events)
         setLoading(false)
       })
       .catch(err => {
+        console.error("Fetch error:", err);
         setError(err.message)
         setLoading(false)
       })

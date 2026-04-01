@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useApiCache } from '../context/ApiCacheContext'
 
-const API_URL = "https://script.google.com/macros/s/AKfycbw6_uXNglWnCbAr7_XvdLiVMfxjSGGyHVBE0lISkOay3Jt2A9gnAYwH90-a-KbUXdDO2A/exec"
+const API_URL = "/data/resources.json"
 
 const DEFAULT_CATEGORY = "Funding"
 
@@ -38,12 +38,6 @@ export default function Resources() {
   }, [])
 
   useEffect(() => {
-    if (API_URL === "HIER_DEINEN_APPSRIPT_LINK_EINFÜGEN") {
-      setError("Bitte füge deinen Google Apps Script Link in der Datei Resources.jsx ein (Zeile 4)!")
-      setLoading(false)
-      return
-    }
-
     const cached = getCached(API_URL)
     if (cached) {
       setData(cached)
@@ -53,14 +47,18 @@ export default function Resources() {
 
     setLoading(true)
     fetch(API_URL)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error(`Could not load resources: ${res.status}`);
+        return res.json();
+      })
       .then(json => {
         setCached(API_URL, json)
         setData(json)
         setLoading(false)
       })
       .catch(err => {
-        setError(err.message)
+        console.error("Fetch error:", err);
+        setError("Die Daten konnten nicht geladen werden. Bitte stelle sicher, dass die Datei resources.json im Ordner public/data/ existiert.")
         setLoading(false)
       })
   }, [getCached, setCached])

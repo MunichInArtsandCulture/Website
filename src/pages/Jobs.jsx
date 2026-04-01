@@ -132,9 +132,24 @@ export default function Jobs() {
     if (cached) { setAllJobs(cached); setJobsLoading(false); return }
     setJobsLoading(true)
     fetch(JOBS_API_URL)
-      .then(res => res.json())
+      .then(async res => {
+        if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          const text = await res.text();
+          if (text.includes("<!DOCTYPE") || text.includes("<html")) {
+            throw new Error("Google Script returned HTML instead of JSON. Check script sharing/authorization.");
+          }
+          throw new Error("Received non-JSON response from API.");
+        }
+        return res.json();
+      })
       .then(data => { setCached(JOBS_API_URL, data); setAllJobs(data); setJobsLoading(false) })
-      .catch(err => { setJobsError(err.message); setJobsLoading(false) })
+      .catch(err => { 
+        console.error("Jobs fetch error:", err);
+        setJobsError(err.message); 
+        setJobsLoading(false) 
+      })
   }, [getCached, setCached])
 
   // Fetch open calls when mode switches to 'opencalls'
@@ -146,9 +161,24 @@ export default function Jobs() {
     if (cached) { setOpenCalls(cached); return }
     setCallsLoading(true)
     fetch(OPEN_CALLS_API_URL)
-      .then(res => res.json())
+      .then(async res => {
+        if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          const text = await res.text();
+          if (text.includes("<!DOCTYPE") || text.includes("<html")) {
+            throw new Error("Google Script returned HTML instead of JSON. Check script sharing/authorization.");
+          }
+          throw new Error("Received non-JSON response from API.");
+        }
+        return res.json();
+      })
       .then(data => { setCached(OPEN_CALLS_API_URL, data); setOpenCalls(data); setCallsLoading(false) })
-      .catch(err => { setCallsError(err.message); setCallsLoading(false) })
+      .catch(err => { 
+        console.error("Calls fetch error:", err);
+        setCallsError(err.message); 
+        setCallsLoading(false) 
+      })
   }, [mode, getCached, setCached, openCalls])
 
   const filteredJobs = allJobs ? (

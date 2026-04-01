@@ -57,7 +57,7 @@ export default function Resources() {
         setError("Die Daten konnten nicht geladen werden. Bitte stelle sicher, dass die Datei resources.json (oder dein Google Sheet) erreichbar ist.")
         setLoading(false)
       })
-  }, [getCached, setCached])
+  }, [getCached, fetchWithPriority])
 
   const categories = data ? Object.keys(data).sort((a, b) => {
     if (a === 'Funding') return -1

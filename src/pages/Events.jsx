@@ -85,7 +85,7 @@ export default function Events() {
         setError(err.message)
         setLoading(false)
       })
-  }, [getCached, setCached])
+  }, [getCached, fetchWithPriority])
 
   const todayIso = getAdjustedToday().toLocaleDateString('sv-SE')
   const tomorrow = getAdjustedToday()

@@ -142,7 +142,7 @@ export default function Jobs() {
         setJobsError(err.message); 
         setJobsLoading(false) 
       })
-  }, [getCached, setCached])
+  }, [getCached, fetchWithPriority])
 
   // Fetch open calls when mode switches to 'opencalls'
   useEffect(() => {
@@ -163,7 +163,7 @@ export default function Jobs() {
         setCallsError(err.message); 
         setCallsLoading(false) 
       })
-  }, [mode, getCached, setCached, openCalls])
+  }, [mode, getCached, fetchWithPriority, openCalls])
 
   const filteredJobs = allJobs ? (
     selectedCategory === 'All'

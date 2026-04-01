@@ -60,7 +60,7 @@ export default function ArtSpaces() {
         setError("Die Daten konnten nicht geladen werden. Bitte stelle sicher, dass die Datei art_spaces.json (oder dein Google Sheet) erreichbar ist.")
         setLoading(false)
       })
-  }, [getCached, setCached])
+  }, [getCached, fetchWithPriority])
 
   const currentItems = data ? (data[activeCategory] || []).map(item => ({
     ...item,

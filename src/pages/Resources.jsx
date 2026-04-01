@@ -339,6 +339,24 @@ export default function Resources() {
                           </div>
                         )}
 
+                        {!isExpanded && description && description.trim().toUpperCase() !== 'NA' && !isTools && (
+                          <div
+                            onClick={() => setExpandedRow(i)}
+                            style={{ 
+                              fontFamily: 'Inter', 
+                              fontWeight: 400, 
+                              fontSize: '15.5px', 
+                              color: '#9E9E9E', 
+                              lineHeight: '1.45', 
+                              cursor: 'pointer', 
+                              marginTop: (host || location || shortText) ? '2px' : '0px',
+                              letterSpacing: '-0.3px'
+                            }}
+                          >
+                            {description.length > 80 ? `${description.substring(0, 80).trim()} ...` : description}
+                          </div>
+                        )}
+
                         {isExpanded && (
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                             {description && (

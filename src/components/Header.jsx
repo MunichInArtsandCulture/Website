@@ -37,7 +37,7 @@ export default function Header() {
   return (
     <>
       <div id="header">
-        <h1><Link to="/">MIAAC<span>Munich in Arts and Culture </span></Link></h1>
+        <h1><Link to="/">MIAAC<span>Munich in Arts and Culture</span></Link></h1>
 
         {/* Mobile Toggle Button */}
         <span

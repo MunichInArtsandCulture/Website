@@ -68,7 +68,7 @@ p a:hover {
 }
 
 #header h1 {
-  font-size: 60px;
+  font-size: 65px;
   font-weight: normal;
   margin: 0;
   padding: 30px 0;
@@ -81,13 +81,14 @@ p a:hover {
 }
 
 #header h1 a span {
-  color: #6363638f;
+  color: #808080;
   display: block;
-  font-size: 25px;
+  font-size: 19px;
   text-transform: lowercase;
-  font-family: Major Mono display;
-  font-weight: bolder;
-  letter-spacing: -9%;
+  font-family: 'Inter', sans-serif;
+  font-weight: 320;
+  letter-spacing: -0.9px;
+  margin-top: -3px;
 }
 
 #header ul#navigation {

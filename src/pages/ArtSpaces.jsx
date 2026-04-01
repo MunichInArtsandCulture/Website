@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useApiCache } from '../context/ApiCacheContext'
 
 // --- LOCAL DATA PATH ---
-const API_URL = "/data/art_spaces.json"
+const API_URL = "data/art_spaces.json"
 
 const CATEGORIES = [
   { id: 'Art_Studios', label: 'Art Studios' },

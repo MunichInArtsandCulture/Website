@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useApiCache } from '../context/ApiCacheContext'
 
-const API_URL = "/data/resources.json"
+const API_URL = "data/resources.json"
 
 const DEFAULT_CATEGORY = "Funding"
 

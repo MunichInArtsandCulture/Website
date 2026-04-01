@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
-import { useApiCache } from '../context/ApiCacheContext'
+import { useApiCache, DATA_SOURCES } from '../context/ApiCacheContext'
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_green.css";
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxO0dXiimcDzRpscpbXY84AgB2EgbV1xezSgRQHV6oyYqkTcIvDJ7V3ABGRABSXebJQ/exec"
+const API_URL = DATA_SOURCES.EVENTS
 
 function formatDateForComparison(date) {
   const d = new Date(date)
@@ -74,21 +74,9 @@ export default function Events() {
     }
 
     setLoading(true)
-    fetch(API_URL)
-      .then(async res => {
-        if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
-        const contentType = res.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          const text = await res.text();
-          if (text.includes("<!DOCTYPE") || text.includes("<html")) {
-            throw new Error("Google Script returned HTML instead of JSON. This usually means the script is not shared correctly or requires authorization. Please open the API URL in your browser to verify.");
-          }
-          throw new Error("Received non-JSON response from API.");
-        }
-        return res.json();
-      })
+    fetchWithPriority(API_URL, true)
       .then(events => {
-        setCached(API_URL, events)
+        if (!events) throw new Error("Could not retrieve events");
         setAllEvents(events)
         setLoading(false)
       })

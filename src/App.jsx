@@ -1,4 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useApiCache } from './context/ApiCacheContext'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import Home from './pages/Home'
@@ -9,6 +11,13 @@ import Resources from './pages/Resources'
 import HowToArt from './pages/HowToArt'
 
 export default function App() {
+  const { startBackgroundPreload } = useApiCache()
+
+  useEffect(() => {
+    // Start preloading the queue in background after initial render
+    startBackgroundPreload()
+  }, [startBackgroundPreload])
+
   return (
     <>
       <Header />

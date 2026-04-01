@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
-import { useApiCache } from '../context/ApiCacheContext'
+import { useApiCache, DATA_SOURCES } from '../context/ApiCacheContext'
 
-const API_URL = "data/resources.json"
+const API_URL = DATA_SOURCES.RESOURCES
 
 const DEFAULT_CATEGORY = "Funding"
 
@@ -46,19 +46,15 @@ export default function Resources() {
     }
 
     setLoading(true)
-    fetch(API_URL)
-      .then(res => {
-        if (!res.ok) throw new Error(`Could not load resources: ${res.status}`);
-        return res.json();
-      })
+    fetchWithPriority(API_URL, true)
       .then(json => {
-        setCached(API_URL, json)
+        if (!json) throw new Error("Could not load resources");
         setData(json)
         setLoading(false)
       })
       .catch(err => {
         console.error("Fetch error:", err);
-        setError("Die Daten konnten nicht geladen werden. Bitte stelle sicher, dass die Datei resources.json im Ordner public/data/ existiert.")
+        setError("Die Daten konnten nicht geladen werden. Bitte stelle sicher, dass die Datei resources.json (oder dein Google Sheet) erreichbar ist.")
         setLoading(false)
       })
   }, [getCached, setCached])

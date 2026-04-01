@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
-import { useApiCache } from '../context/ApiCacheContext'
+import { useApiCache, DATA_SOURCES } from '../context/ApiCacheContext'
 
 // --- LOCAL DATA PATH ---
-const API_URL = "data/art_spaces.json"
+const API_URL = DATA_SOURCES.ART_SPACES
 
 const CATEGORIES = [
   { id: 'Art_Studios', label: 'Art Studios' },
@@ -49,19 +49,15 @@ export default function ArtSpaces() {
     }
 
     setLoading(true)
-    fetch(API_URL)
-      .then(res => {
-        if (!res.ok) throw new Error(`Could not load data: ${res.status}`);
-        return res.json();
-      })
+    fetchWithPriority(API_URL, true)
       .then(json => {
-        setCached(API_URL, json)
+        if (!json) throw new Error("Could not load data");
         setData(json)
         setLoading(false)
       })
       .catch(err => {
         console.error("Fetch error:", err);
-        setError("Die Daten konnten nicht geladen werden. Bitte stelle sicher, dass die Dateiart_spaces.json im Ordner public/data/ existiert.")
+        setError("Die Daten konnten nicht geladen werden. Bitte stelle sicher, dass die Datei art_spaces.json (oder dein Google Sheet) erreichbar ist.")
         setLoading(false)
       })
   }, [getCached, setCached])

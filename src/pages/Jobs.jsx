@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
-import { useApiCache } from '../context/ApiCacheContext'
+import { useApiCache, DATA_SOURCES } from '../context/ApiCacheContext'
 
-const JOBS_API_URL = "https://script.google.com/macros/s/AKfycbyKnfmzqe_o7PiiAlTeciaImwOmOqrRBeHLV1SL_jvl-fPIBiwuLkIhGlDW0ZymcPArtQ/exec"
+const JOBS_API_URL = DATA_SOURCES.JOBS
 
-const OPEN_CALLS_API_URL = "https://script.google.com/macros/s/AKfycbyPOcGDPmoRNgdIpZqOMBccIXacwUKWEpN5NftDlfeQ0FRZmttFW2PuJMtZyce_X2Nk/exec"
+const OPEN_CALLS_API_URL = DATA_SOURCES.OPEN_CALLS
 
 const JOB_CATEGORY_LIST = [
   "All",
@@ -131,20 +131,12 @@ export default function Jobs() {
     const cached = getCached(JOBS_API_URL)
     if (cached) { setAllJobs(cached); setJobsLoading(false); return }
     setJobsLoading(true)
-    fetch(JOBS_API_URL)
-      .then(async res => {
-        if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
-        const contentType = res.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          const text = await res.text();
-          if (text.includes("<!DOCTYPE") || text.includes("<html")) {
-            throw new Error("Google Script returned HTML instead of JSON. Check script sharing/authorization.");
-          }
-          throw new Error("Received non-JSON response from API.");
-        }
-        return res.json();
+    fetchWithPriority(JOBS_API_URL, true)
+      .then(data => {
+        if (!data) throw new Error("Could not retrieve jobs");
+        setAllJobs(data)
+        setJobsLoading(false)
       })
-      .then(data => { setCached(JOBS_API_URL, data); setAllJobs(data); setJobsLoading(false) })
       .catch(err => { 
         console.error("Jobs fetch error:", err);
         setJobsError(err.message); 
@@ -160,20 +152,12 @@ export default function Jobs() {
     const cached = getCached(OPEN_CALLS_API_URL)
     if (cached) { setOpenCalls(cached); return }
     setCallsLoading(true)
-    fetch(OPEN_CALLS_API_URL)
-      .then(async res => {
-        if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
-        const contentType = res.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          const text = await res.text();
-          if (text.includes("<!DOCTYPE") || text.includes("<html")) {
-            throw new Error("Google Script returned HTML instead of JSON. Check script sharing/authorization.");
-          }
-          throw new Error("Received non-JSON response from API.");
-        }
-        return res.json();
+    fetchWithPriority(OPEN_CALLS_API_URL, true)
+      .then(data => {
+        if (!data) throw new Error("Could not retrieve calls");
+        setOpenCalls(data)
+        setCallsLoading(false)
       })
-      .then(data => { setCached(OPEN_CALLS_API_URL, data); setOpenCalls(data); setCallsLoading(false) })
       .catch(err => { 
         console.error("Calls fetch error:", err);
         setCallsError(err.message); 

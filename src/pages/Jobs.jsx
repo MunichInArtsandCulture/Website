@@ -185,6 +185,7 @@ export default function Jobs() {
 
   return (
     <>
+      <h1 className="mobile-page-title">Creative Jobs</h1>
       {/* ── Mode toggle ── */}
       <div className="filter" style={{ display: 'flex', gap: '6px', marginBottom: '2rem', flexWrap: 'wrap' }}>
         <button style={modeBtn(mode === 'jobs')} onClick={() => setMode('jobs')}>Positions</button>

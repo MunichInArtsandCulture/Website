@@ -29,6 +29,23 @@ body {
   }
 }
 
+.mobile-page-title {
+  display: none;
+  font-family: "Inter", sans-serif;
+  font-size: 26px;
+  font-weight: 300;
+  line-height: 1;
+  margin-top: -10px;
+  letter-spacing: -1px;
+  color: #779b90;
+  padding-inline: 20px;
+  padding: 0px 0px 0px 20px;
+
+  @media only screen and (max-width: $mobile) {
+    display: block;
+  }
+}
+
 .mobile-only {
   display: none !important;
 

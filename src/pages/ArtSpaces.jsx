@@ -118,6 +118,7 @@ export default function ArtSpaces() {
 
   return (
     <>
+      <h1 className="mobile-page-title">Art Spaces</h1>
       <div className="title-box">
         {/* Desktop View Tabs */}
         <div className="date-selector desktop-only" style={{ marginBottom: '2rem', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>

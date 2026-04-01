@@ -182,6 +182,7 @@ export default function Events() {
 
   return (
     <>
+      <h1 className="mobile-page-title">Events</h1>
       <div className="date-selector" style={{ marginBottom: '0px', display: 'flex', gap: '6px', alignItems: 'center', paddingBottom: '2rem', flexWrap: 'wrap' }}>
         <button type="button" className={isTodayActive ? 'active' : ''} onClick={handleToday}>Today</button>
         <button type="button" className={isTomorrowActive ? 'active' : ''} onClick={handleTomorrow}>Tomorrow</button>

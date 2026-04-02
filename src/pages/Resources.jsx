@@ -390,7 +390,7 @@ export default function Resources() {
                         {/* Bottom Section: Hours & Costs Toggle Row */}
                         {isTools && (
                           <div style={{ marginTop: 'auto', paddingTop: '8px' }}>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', columnGap: '30px' }}>
                               
                               {/* Opening Hours Column (Fixed width for consistent price alignment) */}
                               {!isMerch && (

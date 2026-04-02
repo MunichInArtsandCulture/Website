@@ -291,7 +291,8 @@ export default function Resources() {
                   const deadline = entry[deadlineKey] || 'NA'
                   
                   const topicKey = Object.keys(entry).find(k => ['topic', 'category', 'type'].some(word => k.toLowerCase().includes(word) && k !== 'main_category'))
-                  const topic = entry[topicKey] || 'General'
+                  const topicValue = entry[topicKey] || 'General'
+                  const topic = topicValue.toString().replace(/_/g, ' ')
 
                   const linkKey = Object.keys(entry).find(k => ['link', 'url'].includes(k.toLowerCase()))
                   let link = entry[linkKey] || null

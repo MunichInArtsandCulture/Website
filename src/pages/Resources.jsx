@@ -288,7 +288,12 @@ export default function Resources() {
                   const host = entry[hostKey] || ''
                   
                   const deadlineKey = Object.keys(entry).find(k => k.toLowerCase().includes('deadline'))
-                  const deadline = entry[deadlineKey] || 'NA'
+                  const deadlineValue = entry[deadlineKey] || 'NA'
+                  const deadline = (() => {
+                    if (!deadlineValue || deadlineValue === 'NA' || deadlineValue === 'N/A') return 'NA'
+                    const d = new Date(deadlineValue)
+                    return isNaN(d.getTime()) ? deadlineValue : d.toLocaleDateString('de-DE')
+                  })()
                   
                   const topicKey = Object.keys(entry).find(k => ['topic', 'category', 'type'].some(word => k.toLowerCase().includes(word) && k !== 'main_category'))
                   const topicValue = entry[topicKey] || 'General'

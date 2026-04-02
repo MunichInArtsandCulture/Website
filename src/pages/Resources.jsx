@@ -496,6 +496,17 @@ export default function Resources() {
             )}
           </ul>
         )}
+
+        {(selectedCategory.toLowerCase().includes('tools') || selectedCategory.toLowerCase().includes('merch')) && (
+          <div className="footnote-box" style={{ padding: '20px 10px', fontSize: '11px', color: '#888', fontStyle: 'inherit', marginTop: '20px' }}>
+            <p style={{ margin: '0 0 10px 0' }}>
+              <i style={{ fontStyle: 'italic' }}>*Free:</i> Some venues funded by public institutions may offer free use for non-commercial events. Eligibility depends on specific requirements (e.g. event type, audience, and cultural relevance). This listing does not guarantee free access — please verify directly with the venue.
+            </p>
+            <p style={{ margin: 0 }}>
+              <i style={{ fontStyle: 'italic' }}>*Content:</i> All details are provided without guarantee. They may be outdated, based on third-party sources, or affected by translation and processing. Please verify everything directly with the venue.
+            </p>
+          </div>
+        )}
       </div>
     </>
   )

@@ -238,8 +238,8 @@ export default function Resources() {
         </div>
       </div>
 
-      <div id="event-feed" style={{ marginBottom: '30px' }}>
-        {loading && (
+      <div id="event-feed" style={{ marginBottom: '30px', position: 'relative', minHeight: '300px' }}>
+        {(loading || !isDataReady) && (
           <div className="loading-spinner-overlay">
             <span className="loader"></span>
           </div>

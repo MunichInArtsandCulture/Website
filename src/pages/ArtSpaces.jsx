@@ -27,19 +27,7 @@ export default function ArtSpaces() {
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false)
   const sortDropdownRef = useRef(null)
 
-  useEffect(() => {
-    function handleClickOutside(e) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownOpen(false)
-      }
-      if (sortDropdownRef.current && !sortDropdownRef.current.contains(e.target)) {
-        setSortDropdownOpen(false)
-      }
-    }
-    document.addEventListener('click', handleClickOutside)
-    return () => document.removeEventListener('click', handleClickOutside)
-  }, [])
-
+  // Fetch data on mount
   useEffect(() => {
     const cached = getCached(API_URL)
     if (cached) {
@@ -150,8 +138,16 @@ export default function ArtSpaces() {
         </div>
 
         {/* Mobile View Filters */}
-        <div className="filter mobile-only" style={{ marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+        <div className="filter mobile-only" style={{ marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '2px', position: 'relative' }}>
           
+          {(dropdownOpen || sortDropdownOpen) && (
+            <div 
+              className="dropdown-overlay" 
+              onClick={() => { setDropdownOpen(false); setSortDropdownOpen(false); }} 
+              style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1000, background: 'transparent' }} 
+            />
+          )}
+
           {/* Horizontally scrolling category buttons */}
           <div style={{ display: 'flex', overflowX: 'auto', gap: '6px', paddingBottom: '5px', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {CATEGORIES.map(cat => (
@@ -186,7 +182,7 @@ export default function ArtSpaces() {
 
           {/* Sort & Filter Dropdown (Renamed) */}
           <div style={{ width: 'auto', alignSelf: 'flex-start', display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <div className="custom-dropdown" ref={sortDropdownRef} style={{ zIndex: sortDropdownOpen ? 100 : 10, width: '100%' }}>
+            <div className="custom-dropdown" ref={sortDropdownRef} style={{ zIndex: sortDropdownOpen ? 1001 : 10, width: '100%', position: 'relative' }}>
               <button
                 id="dropdown-button"
                 className="no-triangle"
@@ -218,7 +214,7 @@ export default function ArtSpaces() {
                   <span>Filter & Sort {activeFiltersCount > 0 ? `(${activeFiltersCount})` : ''}</span>
                 </div>
               </button>
-              <ul id="dropdown-options" className={sortDropdownOpen ? '' : 'hidden'} style={{ background: 'white', border: '1px solid rgb(182, 216, 207)', borderRadius: '20px', marginTop: '2px', padding: '8px 0', overflowY: 'auto', overflowX: 'hidden', maxHeight: '350px', WebkitOverflowScrolling: 'touch', minWidth: '200px' }}>
+              <ul id="dropdown-options" className={sortDropdownOpen ? '' : 'hidden'} style={{ background: 'white', border: '1px solid rgb(182, 216, 207)', borderRadius: '20px', marginTop: '2px', padding: '8px 0', overflowY: 'auto', overflowX: 'hidden', maxHeight: '350px', WebkitOverflowScrolling: 'touch', minWidth: '200px', position: 'absolute', top: '100%', left: 0, zIndex: 1001 }}>
                 
                 {/* Reset Option */}
                 {(activeFiltersCount > 0 || sortConfig.key) && (
@@ -239,7 +235,9 @@ export default function ArtSpaces() {
                   onClick={() => {
                     setShowFreeOnly(!showFreeOnly)
                   }}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px', cursor: 'pointer', background: showFreeOnly ? '#f0f9f7' : 'transparent' }}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px', cursor: 'pointer', background: showFreeOnly ? '#b6d8cf' : 'transparent', transition: 'background 0.2s' }}
+                  onMouseEnter={(e) => e.target.style.background = '#b6d8cf'}
+                  onMouseLeave={(e) => e.target.style.background = showFreeOnly ? '#b6d8cf' : 'transparent'}
                 >
                   <span style={{ fontSize: '15px', color: '#363636' }}>Free only</span>
                   {showFreeOnly && <span style={{ color: '#1E7A62' }}>✓</span>}
@@ -248,29 +246,46 @@ export default function ArtSpaces() {
                 {/* Sort by Location */}
                 <li
                   onClick={() => {
-                    setSortConfig(sortConfig.key === 'location' ? { key: null, direction: 'asc' } : { key: 'location', direction: 'asc' })
+                    handleSort('district')
                   }}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px', cursor: 'pointer', borderTop: '1px solid #eee', background: sortConfig.key === 'location' ? '#f0f9f7' : 'transparent' }}
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'space-between', 
+                    padding: '12px 20px', 
+                    cursor: 'pointer', 
+                    background: sortConfig.key === 'district' ? '#b6d8cf' : 'transparent',
+                    transition: 'background 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.target.style.background = '#b6d8cf'}
+                  onMouseLeave={(e) => e.target.style.background = sortConfig.key === 'district' ? '#b6d8cf' : 'transparent'}
                 >
-                  <span style={{ fontSize: '15px', color: '#363636' }}>by Location</span>
-                  {sortConfig.key === 'location' && <span style={{ color: '#1E7A62' }}>✓</span>}
+                  <span style={{ fontSize: '15px', color: '#363636' }}>Sort by District</span>
+                  {sortConfig.key === 'district' && <span>{sortConfig.direction === 'asc' ? '▲' : '▼'}</span>}
                 </li>
 
-                {/* Type Filters Header */}
-                {uniqueTypes.length > 0 && (
-                  <li style={{ padding: '12px 20px 6px 20px', fontSize: '15px', color: '#555', fontWeight: 500, fontFamily: 'Inter', borderTop: '1px solid #eee' }}>
-                    Filter by Type
-                  </li>
-                )}
+                {/* Filter by Type */}
+                <li style={{ padding: '8px 20px 4px 20px', fontSize: '12px', fontWeight: 600, color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Filter by Type
+                </li>
+                
+                <li 
+                  onClick={() => { setFilterType(null); }}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 20px', cursor: 'pointer', background: filterType === null ? '#b6d8cf' : 'transparent', transition: 'background 0.2s' }}
+                  onMouseEnter={(e) => e.target.style.background = '#b6d8cf'}
+                  onMouseLeave={(e) => e.target.style.background = filterType === null ? '#b6d8cf' : 'transparent'}
+                >
+                  <span style={{ fontSize: '15px', color: '#363636' }}>Show all</span>
+                  {filterType === null && <span style={{ color: '#1E7A62' }}>✓</span>}
+                </li>
 
-                {/* Dynamic Type Filters */}
                 {uniqueTypes.map(type => (
-                  <li
+                  <li 
                     key={type}
-                    onClick={() => {
-                      setFilterType(filterType === type ? null : type)
-                    }}
-                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px', cursor: 'pointer', background: filterType === type ? '#f0f9f7' : 'transparent' }}
+                    onClick={() => { setFilterType(type); }}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 20px', cursor: 'pointer', background: filterType === type ? '#b6d8cf' : 'transparent', transition: 'background 0.2s' }}
+                    onMouseEnter={(e) => e.target.style.background = '#b6d8cf'}
+                    onMouseLeave={(e) => e.target.style.background = filterType === type ? '#b6d8cf' : 'transparent'}
                   >
                     <span style={{ fontSize: '15px', color: '#363636' }}>{type}</span>
                     {filterType === type && <span style={{ color: '#1E7A62' }}>✓</span>}

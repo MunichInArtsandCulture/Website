@@ -30,16 +30,6 @@ export default function Resources() {
 
   // Close sort dropdown on outside click
   useEffect(() => {
-    function handleClickOutside(e) {
-      if (sortDropdownRef.current && !sortDropdownRef.current.contains(e.target)) {
-        setSortDropdownOpen(false)
-      }
-    }
-    document.addEventListener('click', handleClickOutside)
-    return () => document.removeEventListener('click', handleClickOutside)
-  }, [])
-
-  useEffect(() => {
     const cachedStatic = getCached(RESOURCES_URL)
     const cachedDynamic = getCached(DYNAMIC_URL)
     
@@ -154,7 +144,15 @@ export default function Resources() {
         </div>
 
         {/* Mobile View Filters */}
-        <div className="filter mobile-only" style={{ marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+        <div className="filter mobile-only" style={{ marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '2px', position: 'relative' }}>
+          
+          {sortDropdownOpen && (
+            <div 
+              className="dropdown-overlay" 
+              onClick={() => setSortDropdownOpen(false)} 
+              style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1000, background: 'transparent' }} 
+            />
+          )}
 
           {/* Horizontally scrolling category buttons */}
           <div style={{ display: 'flex', overflowX: 'auto', gap: '6px', paddingBottom: '5px', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
@@ -189,11 +187,11 @@ export default function Resources() {
 
           {/* Sort Dropdown */}
           <div style={{ width: 'auto', alignSelf: 'flex-start' }}>
-            <div className="custom-dropdown" ref={sortDropdownRef} style={{ zIndex: sortDropdownOpen ? 1001 : 999, width: '100%' }}>
+            <div className="custom-dropdown" ref={sortDropdownRef} style={{ zIndex: sortDropdownOpen ? 1001 : 999, width: '100%', position: 'relative' }}>
               <button
                 id="dropdown-button"
                 className="no-triangle"
-                style={{ width: 'auto', flex: 'initial', maxWidth: 'fit-content', fontSize: '15px', border: '1px solid #b6d8cf', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '10px 15px' }}
+                style={{ width: 'auto', flex: 'initial', maxWidth: 'fit-content', fontSize: '15px', border: '1px solid #b6d8cf', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '10px 15px', background: sortDropdownOpen ? '#b6d8cf' : 'white', transition: 'background 0.2s' }}
                 onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -201,10 +199,12 @@ export default function Resources() {
                   <span>Sort by</span>
                 </div>
               </button>
-              <ul id="dropdown-options" className={sortDropdownOpen ? '' : 'hidden'} style={{ background: 'white', border: '1px solid rgb(182, 216, 207)', borderRadius: '20px', marginTop: '2px', padding: '0px', overflowY: 'auto', overflowX: 'hidden', maxHeight: '250px', WebkitOverflowScrolling: 'touch' }}>
+              <ul id="dropdown-options" className={sortDropdownOpen ? '' : 'hidden'} style={{ background: 'white', border: '1px solid rgb(182, 216, 207)', borderRadius: '20px', marginTop: '2px', padding: '0px', overflowY: 'auto', overflowX: 'hidden', maxHeight: '350px', WebkitOverflowScrolling: 'touch', minWidth: '200px', position: 'absolute', top: '100%', left: 0, zIndex: 1001 }}>
                 {[{ key: '_name', label: 'Name' }, { key: '_location', label: 'Location' }]
                   .filter(opt => !(opt.key === '_location' && selectedCategory.toLowerCase().includes('awareness')))
                   .flatMap(({ key, label }, idx, arr) => {
+                    const isAscActive = sortConfig.key === key && sortConfig.direction === 'asc'
+                    const isDescActive = sortConfig.key === key && sortConfig.direction === 'desc'
                     return [
                       <li 
                         key={`${key}-asc`}
@@ -213,8 +213,10 @@ export default function Resources() {
                           setExpandedRow(null)
                           setSortDropdownOpen(false)
                         }}
-                        className={sortConfig.key === key && sortConfig.direction === 'asc' ? 'active' : ''}
-                        style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '0 10px', borderBottom: '1px solid #b6d8cf', color: '#363636', fontSize: '15px' }}
+                        className={isAscActive ? 'active' : ''}
+                        style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '0 10px', borderBottom: '1px solid #b6d8cf', color: '#363636', fontSize: '15px', background: isAscActive ? '#b6d8cf' : 'transparent', transition: 'background 0.2s', cursor: 'pointer' }}
+                        onMouseEnter={(e) => e.target.style.background = '#b6d8cf'}
+                        onMouseLeave={(e) => e.target.style.background = isAscActive ? '#b6d8cf' : 'transparent'}
                       >
                         <span style={{ fontSize: '10px', color: '#444' }}>▲</span> <span>{label}</span>
                       </li>,
@@ -225,8 +227,11 @@ export default function Resources() {
                           setExpandedRow(null)
                           setSortDropdownOpen(false)
                         }}
-                        className={sortConfig.key === key && sortConfig.direction === 'desc' ? 'active' : ''}
-                        style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '0 10px', borderBottom: (idx === arr.length - 1) ? 'none' : '1px solid #b6d8cf', color: '#363636', fontSize: '15px' }}
+                        className={isDescActive ? 'active' : ''}
+                        style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '0 10px', borderBottom: (idx === arr.length - 1) ? 'none' : '1px solid #b6d8cf', color: '#363636', fontSize: '15px', background: isDescActive ? '#b6d8cf' : 'transparent', transition: 'background 0.2s', cursor: 'pointer' }}
+                        onMouseEnter={(e) => e.target.style.background = '#b6d8cf'}
+                        onMouseLeave={(e) => e.target.style.background = isDescActive ? '#b6d8cf' : 'transparent'}
+
                       >
                         <span style={{ fontSize: '10px', color: '#444' }}>▼</span> <span>{label}</span>
                       </li>

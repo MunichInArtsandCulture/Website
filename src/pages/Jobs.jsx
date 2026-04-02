@@ -110,16 +110,6 @@ export default function Jobs() {
   // Open Calls "show more" state
   const [expandedSummaries, setExpandedSummaries] = useState({})
 
-  useEffect(() => {
-    function handleClickOutside(e) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownOpen(false)
-      }
-    }
-    document.addEventListener('click', handleClickOutside)
-    return () => document.removeEventListener('click', handleClickOutside)
-  }, [])
-
   // Reset category when mode switches
   useEffect(() => {
     setSelectedCategory("All")
@@ -219,8 +209,15 @@ export default function Jobs() {
         </div>
 
         {/* Mobile: dropdown */}
-        <div className="filter mobile-only" style={{ marginBottom: '2rem' }}>
-          <div className="custom-dropdown" ref={dropdownRef} style={{ zIndex: dropdownOpen ? 1001 : 999, width: '220px' }}>
+        <div className="filter mobile-only" style={{ marginBottom: '2rem', position: 'relative' }}>
+          {dropdownOpen && (
+            <div 
+              className="dropdown-overlay" 
+              onClick={() => setDropdownOpen(false)} 
+              style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1000, background: 'transparent' }} 
+            />
+          )}
+          <div className="custom-dropdown" ref={dropdownRef} style={{ zIndex: dropdownOpen ? 1001 : 999, width: '220px', position: 'relative' }}>
             <button
               id="dropdown-button"
               className="no-triangle"
@@ -232,17 +229,33 @@ export default function Jobs() {
               <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 12 12"><path fill="currentColor" d="M1 2.75A.75.75 0 0 1 1.75 2h8.5a.75.75 0 0 1 0 1.5h-8.5A.75.75 0 0 1 1 2.75m2 3A.75.75 0 0 1 3.75 5h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 3 5.75M5.25 8a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5z"></path></svg>
               <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{(CATEGORY_LABELS[selectedCategory] || selectedCategory).replace(/_/g, ' ')}</span>
             </button>
-            <ul id="dropdown-options" className={dropdownOpen ? '' : 'hidden'} style={{ background: 'white', border: '1px solid rgb(182, 216, 207)', borderRadius: '20px', marginTop: '2px', padding: '0px', overflowY: 'auto', overflowX: 'hidden', maxHeight: '300px', WebkitOverflowScrolling: 'touch', width: '100%' }}>
-              {currentCategoryList.map((cat, idx) => (
-                <li
-                  key={cat}
-                  onClick={() => { setSelectedCategory(cat); setDropdownOpen(false) }}
-                  className={selectedCategory === cat ? 'active' : ''}
-                  style={{ display: 'flex', alignItems: 'center', padding: '12px 15px', margin: '0 10px', borderBottom: idx === currentCategoryList.length - 1 ? 'none' : '1px solid #b6d8cf', color: '#363636', fontSize: '15px', cursor: 'pointer' }}
-                >
-                  {CATEGORY_LABELS[cat] || cat.replace(/_/g, ' ')}
-                </li>
-              ))}
+            <ul id="dropdown-options" className={dropdownOpen ? '' : 'hidden'} style={{ background: 'white', border: '1px solid rgb(182, 216, 207)', borderRadius: '20px', marginTop: '2px', padding: '0px', overflowY: 'auto', overflowX: 'hidden', maxHeight: '300px', WebkitOverflowScrolling: 'touch', width: '100%', position: 'absolute', top: '100%', left: 0, zIndex: 1001 }}>
+              {currentCategoryList.map((cat, idx) => {
+                const isActive = selectedCategory === cat
+                return (
+                  <li
+                    key={cat}
+                    onClick={() => { setSelectedCategory(cat); setDropdownOpen(false) }}
+                    className={isActive ? 'active' : ''}
+                    style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      padding: '12px 15px', 
+                      margin: '0 10px', 
+                      borderBottom: idx === currentCategoryList.length - 1 ? 'none' : '1px solid #b6d8cf', 
+                      color: '#363636', 
+                      fontSize: '15px', 
+                      cursor: 'pointer',
+                      background: isActive ? '#b6d8cf' : 'transparent',
+                      transition: 'background 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.target.style.background = '#b6d8cf'}
+                    onMouseLeave={(e) => e.target.style.background = isActive ? '#b6d8cf' : 'transparent'}
+                  >
+                    {CATEGORY_LABELS[cat] || cat.replace(/_/g, ' ')}
+                  </li>
+                )
+              })}
             </ul>
           </div>
         </div>

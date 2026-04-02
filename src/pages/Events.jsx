@@ -283,6 +283,12 @@ export default function Events() {
             ))}
           </>
         )}
+
+        <div className="footnote-box" style={{ padding: '20px 10px', fontSize: '11px', color: '#888', fontStyle: 'inherit', marginTop: '20px' }}>
+          <p style={{ margin: 0 }}>
+            <i style={{ fontStyle: 'italic' }}>*Content:</i> All details are provided without guarantee. They may be outdated, based on third-party sources, or affected by translation and processing. Please verify everything directly with the venue. AI-generated content may be inaccurate. Content can be removed upon request.
+          </p>
+        </div>
       </div >
     </>
   )

@@ -303,8 +303,11 @@ export default function Resources() {
                   let link = entry[linkKey] || null
                   if (link && !link.startsWith('http') && !link.startsWith('mailto:')) link = `https://${link}`
 
-                  const descKey = Object.keys(entry).find(k => ['description', 'long_text', 'text'].some(word => k.toLowerCase().includes(word)))
+                   const descKey = Object.keys(entry).find(k => ['description', 'long_text', 'text'].some(word => k.toLowerCase().includes(word)))
                   const description = entry[descKey] || ''
+
+                  const shortKey = Object.keys(entry).find(k => k.toLowerCase().includes('short_summary'))
+                  const shortSummary = entry[shortKey] || ''
 
                   return (
                     <div key={i} className="table-row-group" style={{ borderBottom: '1px solid #d1d3d4' }}>
@@ -319,10 +322,15 @@ export default function Resources() {
                               <polyline points="6 9 12 15 18 9"></polyline>
                             </svg>
                           </div>
-                          <div style={{ flex: '2', fontWeight: '570', color: '#1E7A62' }}>
-                            {link ? (
-                              <a href={link} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>{title}</a>
-                            ) : title}
+                          <div style={{ flex: '2', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <div style={{ fontWeight: '570', color: '#1E7A62' }}>
+                              {link ? (
+                                <a href={link} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>{title}</a>
+                              ) : title}
+                            </div>
+                            {shortSummary && (
+                              <div style={{ fontSize: '14px', color: '#685769', fontWeight: 300, lineHeight: '1.4' }}>{shortSummary}</div>
+                            )}
                           </div>
                           <div style={{ flex: '1.5', color: '#685769' }}>{host}</div>
                           <div style={{ flex: '1', color: '#685769' }}>{topic}</div>
@@ -355,6 +363,13 @@ export default function Resources() {
                               </div>
                               <div style={{ fontSize: '16px', color: '#685769', fontWeight: 400 }}>{host}</div>
                             </div>
+                            
+                            {shortSummary && (
+                              <div style={{ fontSize: '15.5px', color: '#5E5E5E', lineHeight: '1.5', marginBottom: '15px', fontWeight: 300 }}>
+                                {shortSummary}
+                              </div>
+                            )}
+
                             {isExpanded && description && (
                               <div className="expanded-content" style={{ marginBottom: '20px', color: '#252525', fontSize: '16px', lineHeight: '1.6', fontWeight: 300 }}>
                                 <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{description}</p>

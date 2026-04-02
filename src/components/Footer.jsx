@@ -6,10 +6,10 @@ export default function Footer() {
         <span>
           Impressum (gemäß § 5 TMG)<br />
           Verantwortlich für diese Website: <br />
-          Jonathan Meyer <br />
+          Jan-Luca Ahlemeyer <br />
           Munich in Arts and Culture <br />
-          Helene-Mayer-Ring 10 <br />
-          80809 München <br />
+          Dientzenhoferstraße 20 <br />
+          80937 München <br />
           E-Mail: munichinartsandculture@gmail.com
         </span>
       </div>

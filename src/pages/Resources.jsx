@@ -253,14 +253,128 @@ export default function Resources() {
         {error && <p style={{ color: 'red', marginTop: '20px' }}>{error}</p>}
 
         {!loading && !error && (
-          <ul className="blog">
-            {sortedEntries.length === 0 && isDataReady ? (
-              <li><p>No resources found for this category.</p></li>
-            ) : (
-              sortedEntries.map((entry, i) => {
-                const isExpanded = expandedRow === i
-                const isTimeExpanded = expandedTimeRow === i
+          <>
+            {selectedCategory === 'Funding' && sortedEntries.length > 0 && (
+              <div className="table-header desktop-only" style={{
+                display: 'flex',
+                borderBottom: '1px solid #c7c7c7',
+                padding: '12px 0 12px 10px',
+                color: '#6B6B6B',
+                fontSize: '18px',
+                fontFamily: 'Inter',
+                marginBottom: '5px'
+              }}>
+                <div style={{ flex: '0 0 40px' }}></div>
+                <div style={{ flex: '2' }}>Name</div>
+                <div style={{ flex: '1.5' }}>Provider</div>
+                <div style={{ flex: '1' }}>Category</div>
+                <div style={{ flex: '1' }}>Deadline</div>
+              </div>
+            )}
+            <ul className="blog">
+              {sortedEntries.length === 0 && isDataReady ? (
+                <li><p>No resources found for this category.</p></li>
+              ) : (
+                sortedEntries.map((entry, i) => {
+                  const isExpanded = expandedRow === i
+                  const isTimeExpanded = expandedTimeRow === i
 
+                // Special design for "Funding" category (ArtSpaces style)
+                if (selectedCategory === 'Funding') {
+                  const titleKey = Object.keys(entry).find(k => ['name', 'title'].includes(k.toLowerCase()))
+                  const title = entry[titleKey] || 'Unnamed Funding'
+                  
+                  const hostKey = Object.keys(entry).find(k => ['host', 'anbieter'].some(word => k.toLowerCase().includes(word)))
+                  const host = entry[hostKey] || ''
+                  
+                  const deadlineKey = Object.keys(entry).find(k => k.toLowerCase().includes('deadline'))
+                  const deadline = entry[deadlineKey] || 'NA'
+                  
+                  const topicKey = Object.keys(entry).find(k => ['topic', 'category', 'type'].some(word => k.toLowerCase().includes(word) && k !== 'main_category'))
+                  const topic = entry[topicKey] || 'General'
+
+                  const linkKey = Object.keys(entry).find(k => ['link', 'url'].includes(k.toLowerCase()))
+                  let link = entry[linkKey] || null
+                  if (link && !link.startsWith('http') && !link.startsWith('mailto:')) link = `https://${link}`
+
+                  const descKey = Object.keys(entry).find(k => ['description', 'long_text', 'text'].some(word => k.toLowerCase().includes(word)))
+                  const description = entry[descKey] || ''
+
+                  return (
+                    <div key={i} className="table-row-group" style={{ borderBottom: '1px solid #d1d3d4' }}>
+                      {/* --- DESKTOP VIEW --- */}
+                      <div className="desktop-only">
+                        <div className="table-row" style={{ display: 'flex', padding: '18px 0 18px 10px', alignItems: 'center', color: '#363636', fontSize: '17px' }}>
+                          <div
+                            onClick={() => setExpandedRow(isExpanded ? null : i)}
+                            style={{ flex: '0 0 40px', display: 'flex', alignItems: 'center', cursor: 'pointer', padding: '10px 0' }}
+                          >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}>
+                              <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                          </div>
+                          <div style={{ flex: '2', fontWeight: '570', color: '#1E7A62' }}>
+                            {link ? (
+                              <a href={link} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>{title}</a>
+                            ) : title}
+                          </div>
+                          <div style={{ flex: '1.5', color: '#685769' }}>{host}</div>
+                          <div style={{ flex: '1', color: '#685769' }}>{topic}</div>
+                          <div style={{ flex: '1', color: '#685769' }}>{deadline}</div>
+                        </div>
+                        {isExpanded && description && (
+                          <div className="expanded-content" style={{ padding: '0 20px 24px 50px', color: '#252525', fontSize: '17px', lineHeight: '1.6', fontWeight: 300 }}>
+                            <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{description}</p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* --- MOBILE VIEW --- */}
+                      <div className="mobile-only" style={{ padding: '20px 0', flexDirection: 'column' }}>
+                        <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                          <div
+                            onClick={() => setExpandedRow(isExpanded ? null : i)}
+                            style={{ flex: '0 0 32px', display: 'flex', alignItems: 'center', cursor: 'pointer', marginTop: '2px' }}
+                          >
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease', color: '#363636' }}>
+                              <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                          </div>
+                          <div style={{ flex: '1', display: 'flex', flexDirection: 'column' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px', marginBottom: '15px' }}>
+                              <div style={{ fontWeight: '600', fontSize: '23px', color: '#252525', letterSpacing: '-0.01em', lineHeight: '1.2' }}>
+                                {link ? (
+                                  <a href={link} target="_blank" rel="noopener noreferrer" style={{ color: '#252525', textDecoration: 'none' }}>{title}</a>
+                                ) : title}
+                              </div>
+                              <div style={{ fontSize: '16px', color: '#685769', fontWeight: 400 }}>{host}</div>
+                            </div>
+                            {isExpanded && description && (
+                              <div className="expanded-content" style={{ marginBottom: '20px', color: '#252525', fontSize: '16px', lineHeight: '1.6', fontWeight: 300 }}>
+                                <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{description}</p>
+                              </div>
+                            )}
+                            <div style={{ display: 'flex', flexWrap: 'nowrap', gap: '10px' }}>
+                              <div style={{ flex: '1 1 0' }}>
+                                <div style={{ fontSize: '13px', color: '#888', marginBottom: '4px' }}>topic</div>
+                                <div style={{ fontSize: '16px', color: '#252525', fontWeight: '400' }}>{topic}</div>
+                              </div>
+                              <div style={{ flex: '1 1 0' }}>
+                                <div style={{ fontSize: '13px', color: '#888', marginBottom: '4px' }}>deadline</div>
+                                <div style={{ fontSize: '16px', color: '#252525', fontWeight: '400' }}>{deadline}</div>
+                              </div>
+                              <div style={{ flex: '1 1 0' }}>
+                                {/* Optional third column if needed */}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
+
+                // Special design for "Tools" and related categories
                 const isSpecialMediaCategory = selectedCategory.toLowerCase().includes("soundsystem") ||
                   selectedCategory.toLowerCase().includes("dj") ||
                   selectedCategory.toLowerCase().includes("lights") ||
@@ -512,7 +626,8 @@ export default function Resources() {
                 )
               })
             )}
-          </ul>
+            </ul>
+          </>
         )}
 
         {(selectedCategory.toLowerCase().includes('tools') || selectedCategory.toLowerCase().includes('merch')) && (

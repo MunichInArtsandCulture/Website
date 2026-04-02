@@ -59,6 +59,7 @@ const modeBtn = (active) => ({
   borderRadius: '20px',
   transition: 'all 0.2s ease',
   width: '180px',
+  fontWeight: 400
 })
 
 const getOrdinalSuffix = (day) => {
@@ -106,6 +107,13 @@ export default function Jobs() {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [btnHover, setBtnHover] = useState(false)
   const dropdownRef = useRef(null)
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   // Open Calls "show more" state
   const [expandedSummaries, setExpandedSummaries] = useState({})
@@ -186,26 +194,42 @@ export default function Jobs() {
       <div className="title-box">
         {/* Desktop: pill tab buttons */}
         <div className="date-selector desktop-only" style={{ marginBottom: '2rem', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-          {currentCategoryList.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              style={{
-                padding: '10px 20px',
-                fontSize: '16px',
-                fontFamily: 'Inter',
-                border: '1px solid #b6d8cf',
-                background: selectedCategory === cat ? '#1E7A62' : 'white',
-                color: selectedCategory === cat ? 'white' : '#363636',
-                cursor: 'pointer',
-                borderRadius: '20px',
-                transition: 'all 0.2s ease',
-                width: 'auto'
-              }}
-            >
-              {CATEGORY_LABELS[cat] || cat.replace(/_/g, ' ')}
-            </button>
-          ))}
+          {currentCategoryList.map(cat => {
+            const isActive = selectedCategory === cat
+            return (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = '#1E7A62'
+                    e.currentTarget.style.color = 'white'
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = 'white'
+                    e.currentTarget.style.color = '#363636'
+                  }
+                }}
+                style={{
+                  padding: '10px 20px',
+                  fontSize: '16px',
+                  fontFamily: 'Inter',
+                  border: '1px solid #b6d8cf',
+                  background: isActive ? '#1E7A62' : 'white',
+                  color: isActive ? 'white' : '#363636',
+                  cursor: 'pointer',
+                  borderRadius: '20px',
+                  transition: 'all 0.2s ease',
+                  width: 'auto',
+                  fontWeight: 400
+                }}
+              >
+                {CATEGORY_LABELS[cat] || cat.replace(/_/g, ' ')}
+              </button>
+            )
+          })}
         </div>
 
         {/* Mobile: dropdown */}
@@ -217,19 +241,34 @@ export default function Jobs() {
               style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1000, background: 'transparent' }} 
             />
           )}
-          <div className="custom-dropdown" ref={dropdownRef} style={{ zIndex: dropdownOpen ? 1001 : 999, width: '220px', position: 'relative' }}>
+          <div className="custom-dropdown" ref={dropdownRef} style={{ zIndex: dropdownOpen ? 1001 : 999, width: windowWidth <= 425 ? '100%' : 'auto', position: 'relative' }}>
             <button
               id="dropdown-button"
               className="no-triangle"
-              style={{ width: '100%', fontSize: '16px', border: '1px solid #b6d8cf', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '8px', padding: '10px 15px', background: 'white', color: '#363636', transition: 'background 0.2s ease' }}
+              style={{ 
+                width: windowWidth <= 425 ? '100%' : 'auto',
+                flex: 'initial',
+                maxWidth: windowWidth <= 425 ? 'none' : 'fit-content',
+                fontSize: '16px', 
+                border: '1px solid #b6d8cf', 
+                borderRadius: '20px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'flex-start', 
+                gap: '8px', 
+                padding: '10px 15px', 
+                background: btnHover ? '#1E7A62' : (dropdownOpen ? '#b6d8cf' : (selectedCategory !== 'All' ? '#f0f9f7' : 'white')),
+                color: btnHover ? 'white' : '#363636',
+                transition: 'all 0.2s ease' 
+              }}
               onClick={() => setDropdownOpen(!dropdownOpen)}
               onMouseEnter={() => setBtnHover(true)}
               onMouseLeave={() => setBtnHover(false)}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 12 12"><path fill="currentColor" d="M1 2.75A.75.75 0 0 1 1.75 2h8.5a.75.75 0 0 1 0 1.5h-8.5A.75.75 0 0 1 1 2.75m2 3A.75.75 0 0 1 3.75 5h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 3 5.75M5.25 8a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5z"></path></svg>
-              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{(CATEGORY_LABELS[selectedCategory] || selectedCategory).replace(/_/g, ' ')}</span>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'inherit' }}>{(CATEGORY_LABELS[selectedCategory] || selectedCategory).replace(/_/g, ' ')}</span>
             </button>
-            <ul id="dropdown-options" className={dropdownOpen ? '' : 'hidden'} style={{ background: 'white', border: '1px solid rgb(182, 216, 207)', borderRadius: '20px', marginTop: '2px', padding: '0px', overflowY: 'auto', overflowX: 'hidden', maxHeight: '300px', WebkitOverflowScrolling: 'touch', width: '100%', position: 'absolute', top: '100%', left: 0, zIndex: 1001 }}>
+            <ul id="dropdown-options" className={dropdownOpen ? '' : 'hidden'} style={{ background: 'white', border: '1px solid rgb(182, 216, 207)', borderRadius: '20px', marginTop: '2px', padding: '0px', overflowY: 'auto', overflowX: 'hidden', maxHeight: '300px', WebkitOverflowScrolling: 'touch', width: '100%', minWidth: 'max-content', position: 'absolute', top: '100%', left: 0, zIndex: 1001 }}>
               {currentCategoryList.map((cat, idx) => {
                 const isActive = selectedCategory === cat
                 return (
@@ -249,8 +288,6 @@ export default function Jobs() {
                       background: isActive ? '#b6d8cf' : 'transparent',
                       transition: 'background 0.2s'
                     }}
-                    onMouseEnter={(e) => e.target.style.background = '#b6d8cf'}
-                    onMouseLeave={(e) => e.target.style.background = isActive ? '#b6d8cf' : 'transparent'}
                   >
                     {CATEGORY_LABELS[cat] || cat.replace(/_/g, ' ')}
                   </li>

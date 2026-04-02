@@ -94,7 +94,7 @@ export default function Header() {
             width: '100vw',
             height: '100vh',
             background: 'rgba(0, 0, 0, 0.25)', // Subtle tint to show it's active
-            zIndex: 999, // Below sidebar (1000) but above everything else
+            zIndex: 4999, // Below sidebar (5000) but above everything else
           }}
         />
       )}
@@ -103,7 +103,7 @@ export default function Header() {
       <div
         ref={sidebarRef}
         className={`mobile-sidebar mobile-only ${mobileMenuOpen ? 'open' : ''}`}
-        style={{ zIndex: 1000 }} // Ensure it's above the overlay
+        style={{ zIndex: 5000 }} // Ensure it's above the overlay
       >
         <ul>
           <li className={path === '/opencalls' ? 'current' : ''}>

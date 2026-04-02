@@ -236,8 +236,6 @@ export default function ArtSpaces() {
                     setShowFreeOnly(!showFreeOnly)
                   }}
                   style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px', cursor: 'pointer', background: showFreeOnly ? '#b6d8cf' : 'transparent', transition: 'background 0.2s' }}
-                  onMouseEnter={(e) => e.target.style.background = '#b6d8cf'}
-                  onMouseLeave={(e) => e.target.style.background = showFreeOnly ? '#b6d8cf' : 'transparent'}
                 >
                   <span style={{ fontSize: '15px', color: '#363636' }}>Free only</span>
                   {showFreeOnly && <span style={{ color: '#1E7A62' }}>✓</span>}
@@ -257,23 +255,19 @@ export default function ArtSpaces() {
                     background: sortConfig.key === 'district' ? '#b6d8cf' : 'transparent',
                     transition: 'background 0.2s'
                   }}
-                  onMouseEnter={(e) => e.target.style.background = '#b6d8cf'}
-                  onMouseLeave={(e) => e.target.style.background = sortConfig.key === 'district' ? '#b6d8cf' : 'transparent'}
                 >
                   <span style={{ fontSize: '15px', color: '#363636' }}>Sort by District</span>
                   {sortConfig.key === 'district' && <span>{sortConfig.direction === 'asc' ? '▲' : '▼'}</span>}
                 </li>
 
                 {/* Filter by Type */}
-                <li style={{ padding: '8px 20px 4px 20px', fontSize: '12px', fontWeight: 600, color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                  Filter by Type
+                <li style={{ padding: '14px 20px 4px 20px', fontSize: '15px', fontWeight: 600, color: '#125643', fontFamily: 'Inter' }}>
+                  Filter by type
                 </li>
                 
                 <li 
                   onClick={() => { setFilterType(null); }}
                   style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 20px', cursor: 'pointer', background: filterType === null ? '#b6d8cf' : 'transparent', transition: 'background 0.2s' }}
-                  onMouseEnter={(e) => e.target.style.background = '#b6d8cf'}
-                  onMouseLeave={(e) => e.target.style.background = filterType === null ? '#b6d8cf' : 'transparent'}
                 >
                   <span style={{ fontSize: '15px', color: '#363636' }}>Show all</span>
                   {filterType === null && <span style={{ color: '#1E7A62' }}>✓</span>}
@@ -284,8 +278,6 @@ export default function ArtSpaces() {
                     key={type}
                     onClick={() => { setFilterType(type); }}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 20px', cursor: 'pointer', background: filterType === type ? '#b6d8cf' : 'transparent', transition: 'background 0.2s' }}
-                    onMouseEnter={(e) => e.target.style.background = '#b6d8cf'}
-                    onMouseLeave={(e) => e.target.style.background = filterType === type ? '#b6d8cf' : 'transparent'}
                   >
                     <span style={{ fontSize: '15px', color: '#363636' }}>{type}</span>
                     {filterType === type && <span style={{ color: '#1E7A62' }}>✓</span>}

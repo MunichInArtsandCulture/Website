@@ -1,14 +1,16 @@
 import { useState, useEffect, useRef } from 'react'
 import { useApiCache, DATA_SOURCES } from '../context/ApiCacheContext'
 
-const API_URL = DATA_SOURCES.RESOURCES
+const RESOURCES_URL = DATA_SOURCES.RESOURCES
+const DYNAMIC_URL = DATA_SOURCES.OPEN_CALLS
 
 const DEFAULT_CATEGORY = "Funding"
 
 export default function Resources() {
   const { getCached, fetchWithPriority } = useApiCache()
-  const [data, setData] = useState(getCached(API_URL) || null)
-  const [loading, setLoading] = useState(!getCached(API_URL))
+  const [staticData, setStaticData] = useState(getCached(RESOURCES_URL) || null)
+  const [dynamicData, setDynamicData] = useState(getCached(DYNAMIC_URL) || null)
+  const [loading, setLoading] = useState(!getCached(RESOURCES_URL) || !getCached(DYNAMIC_URL))
   const [error, setError] = useState(null)
 
   const [selectedCategory, setSelectedCategory] = useState(DEFAULT_CATEGORY)
@@ -38,28 +40,39 @@ export default function Resources() {
   }, [])
 
   useEffect(() => {
-    const cached = getCached(API_URL)
-    if (cached) {
-      setData(cached)
+    const cachedStatic = getCached(RESOURCES_URL)
+    const cachedDynamic = getCached(DYNAMIC_URL)
+    
+    if (cachedStatic) setStaticData(cachedStatic)
+    if (cachedDynamic) setDynamicData(cachedDynamic)
+    
+    if (cachedStatic && cachedDynamic) {
       setLoading(false)
       return
     }
 
     setLoading(true)
-    fetchWithPriority(API_URL, true)
+    
+    // Fetch static resources
+    fetchWithPriority(RESOURCES_URL, true)
       .then(json => {
-        if (!json) throw new Error("Could not load resources");
-        setData(json)
-        setLoading(false)
+        if (json) setStaticData(json)
       })
-      .catch(err => {
-        console.error("Fetch error:", err);
-        setError("Die Daten konnten nicht geladen werden. Bitte stelle sicher, dass die Datei resources.json (oder dein Google Sheet) erreichbar ist.")
+      .catch(err => console.error("Static fetch error:", err))
+
+    // Fetch dynamic content
+    fetchWithPriority(DYNAMIC_URL, true)
+      .then(json => {
+        if (json) setDynamicData(json)
+      })
+      .catch(err => console.error("Dynamic fetch error:", err))
+      .finally(() => {
         setLoading(false)
       })
   }, [getCached, fetchWithPriority])
 
-  const categories = data ? Object.keys(data).sort((a, b) => {
+  // Logic to show categories — we use the static ones mostly but ensure Funding is first
+  const categories = staticData ? Object.keys(staticData).sort((a, b) => {
     if (a === 'Funding') return -1
     if (b === 'Funding') return 1
     return 0
@@ -67,12 +80,21 @@ export default function Resources() {
 
   // If the selected category doesn't exist yet in the data, default to the first one available
   useEffect(() => {
-    if (data && categories.length > 0 && !categories.includes(selectedCategory)) {
-      setSelectedCategory(categories[0])
+    if (staticData && categories.length > 0 && !categories.includes(selectedCategory)) {
+      // Logic for Funding is handled separately, but we ensure it's selectable
+      if (selectedCategory !== 'Funding') {
+         setSelectedCategory(categories[0])
+      }
     }
-  }, [data, categories, selectedCategory])
+  }, [staticData, categories, selectedCategory])
 
-  const entries = data ? data[selectedCategory] || [] : []
+  // Get raw entries based on category source
+  let entries = []
+  if (selectedCategory === 'Funding') {
+    entries = dynamicData ? dynamicData.filter(e => e.main_category === 'Funding') : []
+  } else {
+    entries = staticData ? staticData[selectedCategory] || [] : []
+  }
   const isToolsCategory = selectedCategory.toLowerCase().includes("tools")
 
   // Normalize entries for sorting

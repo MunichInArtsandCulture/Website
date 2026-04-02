@@ -189,35 +189,36 @@ export default function Resources() {
                 </div>
               </button>
               <ul id="dropdown-options" className={sortDropdownOpen ? '' : 'hidden'} style={{ background: 'white', border: '1px solid rgb(182, 216, 207)', borderRadius: '20px', marginTop: '2px', padding: '0px', overflowY: 'auto', overflowX: 'hidden', maxHeight: '250px', WebkitOverflowScrolling: 'touch' }}>
-                {['_name', '_location'].flatMap((key, idx, arr) => {
-                  const label = key === '_name' ? 'Name' : 'Location'
-                  return [
-                    <li
-                      key={`${key}-asc`}
-                      onClick={() => {
-                        setSortConfig({ key, direction: 'asc' })
-                        setExpandedRow(null)
-                        setSortDropdownOpen(false)
-                      }}
-                      className={sortConfig.key === key && sortConfig.direction === 'asc' ? 'active' : ''}
-                      style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '0 10px', borderBottom: '1px solid #b6d8cf', color: '#363636', fontSize: '15px' }}
-                    >
-                      <span style={{ fontSize: '10px', color: '#444' }}>▲</span> <span>{label}</span>
-                    </li>,
-                    <li
-                      key={`${key}-desc`}
-                      onClick={() => {
-                        setSortConfig({ key, direction: 'desc' })
-                        setExpandedRow(null)
-                        setSortDropdownOpen(false)
-                      }}
-                      className={sortConfig.key === key && sortConfig.direction === 'desc' ? 'active' : ''}
-                      style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '0 10px', borderBottom: (idx === arr.length - 1) ? 'none' : '1px solid #b6d8cf', color: '#363636', fontSize: '15px' }}
-                    >
-                      <span style={{ fontSize: '10px', color: '#444' }}>▼</span> <span>{label}</span>
-                    </li>
-                  ]
-                })}
+                {[{ key: '_name', label: 'Name' }, { key: '_location', label: 'Location' }]
+                  .filter(opt => !(opt.key === '_location' && selectedCategory.toLowerCase().includes('awareness')))
+                  .flatMap(({ key, label }, idx, arr) => {
+                    return [
+                      <li 
+                        key={`${key}-asc`}
+                        onClick={() => {
+                          setSortConfig({ key, direction: 'asc' })
+                          setExpandedRow(null)
+                          setSortDropdownOpen(false)
+                        }}
+                        className={sortConfig.key === key && sortConfig.direction === 'asc' ? 'active' : ''}
+                        style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '0 10px', borderBottom: '1px solid #b6d8cf', color: '#363636', fontSize: '15px' }}
+                      >
+                        <span style={{ fontSize: '10px', color: '#444' }}>▲</span> <span>{label}</span>
+                      </li>,
+                      <li
+                        key={`${key}-desc`}
+                        onClick={() => {
+                          setSortConfig({ key, direction: 'desc' })
+                          setExpandedRow(null)
+                          setSortDropdownOpen(false)
+                        }}
+                        className={sortConfig.key === key && sortConfig.direction === 'desc' ? 'active' : ''}
+                        style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', margin: '0 10px', borderBottom: (idx === arr.length - 1) ? 'none' : '1px solid #b6d8cf', color: '#363636', fontSize: '15px' }}
+                      >
+                        <span style={{ fontSize: '10px', color: '#444' }}>▼</span> <span>{label}</span>
+                      </li>
+                    ]
+                  })}
               </ul>
             </div>
           </div>
@@ -246,53 +247,70 @@ export default function Resources() {
                   selectedCategory.toLowerCase().includes("dj") ||
                   selectedCategory.toLowerCase().includes("lights") ||
                   selectedCategory.toLowerCase().includes("awareness") ||
-                  selectedCategory.toLowerCase().includes("tools")
+                  selectedCategory.toLowerCase().includes("tools") ||
+                  selectedCategory.toLowerCase().includes("merch")
 
                 if (isSpecialMediaCategory) {
-                  const isTools = selectedCategory.toLowerCase().includes("tools")
+                  const isTools = selectedCategory.toLowerCase().includes("tools") || selectedCategory.toLowerCase().includes("merch")
+                  const isMerch = selectedCategory.toLowerCase().includes("merch")
                   const name = entry.Name || entry.name || entry.Title || entry.title || entry.Soundsystem || entry['DJ Equipment'] || entry.Equipment || 'Unnamed Resource'
                   const location = entry.Location || entry.location || entry.District || entry.district || entry.Ort || entry.ort || ''
                   const host = entry.Host || entry.host || ''
                   const specs = entry.Specs || entry.specs || entry.Equipment || entry.equipment || entry.System || entry.system || ''
                   const description = entry.Description || entry.description || entry.Decription || entry.decription || entry.About || entry.about || entry.Info || entry.info || entry.long_text || ''
                   const shortText = entry.short_text || entry.Short_text || entry.Short_Text || ''
-                  const costs = entry.Costs || entry.costs || entry.Price || entry.price || ''
+                  const costs = (entry.Costs || entry.costs || entry.Price || entry.price || '').toString()
                   const linkUrl = entry.Link || entry.link || entry.Url || entry.url || ''
                   const href = linkUrl ? (linkUrl.startsWith('http') ? linkUrl : `https://${linkUrl}`) : null
                   
-                  // Today's opening time for tools
-                  let todayTime = ''
-                  if (isTools) {
-                    const jsDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-                    const todayStr = jsDays[new Date().getDay()]
-                    
-                    const getTimeForDay = (day) => {
-                      const d = day.toLowerCase()
-                      const d2 = d.substring(0, 2)
-                      const g = d === 'mon' ? 'mo' : d === 'tue' ? 'di' : d === 'wed' ? 'mi' : d === 'thu' ? 'do' : d === 'fri' ? 'fr' : d === 'sat' ? 'sa' : 'so'
-                      const variations = [
-                        `opening_${d}`, d, day, 
-                        `opening_${d2}`, d2, day.substring(0, 2),
-                        `opening_${g}`, g, g.charAt(0).toUpperCase() + g.charAt(1),
-                        d === 'mon' ? 'monday' : d === 'tue' ? 'tuesday' : d === 'wed' ? 'wednesday' : d === 'thu' ? 'thursday' : d === 'fri' ? 'friday' : d === 'sat' ? 'saturday' : 'sunday'
-                      ]
-                      for (const v of variations) {
-                        if (entry[v] && entry[v].toString().toLowerCase() !== 'na' && entry[v].toString().trim() !== '') return entry[v]
-                      }
-                      return 'closed'
-                    }
-                    todayTime = getTimeForDay(todayStr)
+                  const mapsKey = Object.keys(entry).find(k => 
+                    k.toLowerCase() === 'loc_link' || 
+                    k.toLowerCase() === 'maps' || 
+                    k.toLowerCase().includes('google maps') || 
+                    k.toLowerCase() === 'map_link' ||
+                    k.toLowerCase() === 'address'
+                  )
+                  let mapsLink = mapsKey ? entry[mapsKey] : ''
+                  if (mapsLink && !mapsLink.toString().startsWith('http') && mapsLink.toString().trim() !== '') {
+                    mapsLink = `https://${mapsLink}`
                   }
+                  if (!mapsLink && location) {
+                    mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + ' ' + location)}`
+                  }
+                  
+                  // Opening time logic
+                  const getTimeForDay = (day) => {
+                    const d = day.toLowerCase()
+                    const d2 = d.substring(0, 2)
+                    const g = d === 'mon' ? 'mo' : d === 'tue' ? 'di' : d === 'wed' ? 'mi' : d === 'thu' ? 'do' : d === 'fri' ? 'fr' : d === 'sat' ? 'sa' : 'so'
+                    const variations = [
+                      `opening_${d}`, d, day, 
+                      `opening_${d2}`, d2, day.substring(0, 2),
+                      `opening_${g}`, g, g.charAt(0).toUpperCase() + g.charAt(1),
+                      d === 'mon' ? 'monday' : d === 'tue' ? 'tuesday' : d === 'wed' ? 'wednesday' : d === 'thu' ? 'thursday' : d === 'fri' ? 'friday' : d === 'sat' ? 'saturday' : 'sunday'
+                    ]
+                    for (const v of variations) {
+                      if (entry[v] && entry[v].toString().toLowerCase() !== 'na' && entry[v].toString().trim() !== '') return entry[v].toString()
+                    }
+                    return 'closed'
+                  }
+                  
+                  const jsDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+                  const todayStr = jsDays[new Date().getDay()]
+                  const todayTime = getTimeForDay(todayStr)
 
                   return (
-                    <li key={i} style={{ padding: '24px 0', borderTop: 'none', borderBottom: '1.6px solid #c7c7c7', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                      <div style={{ cursor: 'pointer', paddingRight: '12px', paddingTop: '2px' }} onClick={() => setExpandedRow(isExpanded ? null : i)}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3F3F3F" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease', flexShrink: 0 }}>
+                    <li key={i} style={{ padding: '20px 0', borderTop: 'none', borderBottom: '1.6px solid #e0e0e0', display: 'flex', alignItems: 'flex-start', gap: '4px' }}>
+                      {/* Accordion Arrow Far Left */}
+                      <div style={{ cursor: 'pointer', paddingRight: '12px', paddingTop: '6px' }} onClick={() => setExpandedRow(isExpanded ? null : i)}>
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#685769" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease', flexShrink: 0 }}>
                           <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                       </div>
-                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                        <div style={{ fontWeight: 700, fontSize: '24px', fontFamily: 'Inter', color: '#3F3F3F', marginBottom: '2px', letterSpacing: '-0.02em', cursor: href ? 'auto' : 'pointer' }} onClick={() => { if (!href) setExpandedRow(isExpanded ? null : i) }}>
+
+                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: isTools ? '120px' : 'auto' }}>
+                        {/* Title (Name) */}
+                        <div style={{ fontWeight: 800, fontSize: '26px', fontFamily: 'Inter', color: '#252525', marginBottom: '2px', letterSpacing: '-0.02em', cursor: href ? 'auto' : 'pointer' }} onClick={() => { if (!href) setExpandedRow(isExpanded ? null : i) }}>
                           {href ? (
                             <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }} onClick={(e) => e.stopPropagation()}>
                               {name}
@@ -300,79 +318,117 @@ export default function Resources() {
                           ) : name}
                         </div>
                         
+                        {/* Host / Location */}
                         {(host || location) && (
-                          <div style={{ fontFamily: 'Inter', fontWeight: 650, fontSize: '16px', color: '#6D6D6D', marginBottom: '2px' }}>
-                            {host}{host && location ? ' • ' : ''}{location}
-                          </div>
-                        )}
-
-                        {shortText && (
-                          <div
-                            onClick={() => setExpandedRow(isExpanded ? null : i)}
-                            style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '16px', color: '#707070', lineHeight: '1.4', letterSpacing: '-0.3px', cursor: 'pointer', marginBottom: isTools ? '4px' : (isExpanded ? '16px' : '8px') }}
-                          >
-                            {shortText}
-                          </div>
-                        )}
-
-                        {isTools && (
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center', fontFamily: 'Inter', fontSize: '16px', fontWeight: 650, color: '#685769', marginBottom: isExpanded ? '16px' : '4px' }}>
-                            <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 23C5.925 23 1 18.075 1 12S5.925 1 12 1s11 4.925 11 11s-4.925 11-11 11m1-17.5h-2v6.914l4 4L16.414 15L13 11.586z" />
-                              </svg>
-                              <span>{todayTime}</span>
-                            </div>
-                            {costs && costs.trim().toUpperCase() !== 'NA' && (
-                              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 17 24" fill="currentColor">
-                                  <path d="m16.64 20.097l.597 2.71a.5.5 0 0 1-.053.385l.001-.002a.54.54 0 0 1-.286.246l-.004.001l-.086.017a.8.8 0 0 1-.174.059l-.005.001q-.11.026-.273.08t-.366.094q-.205.042-.434.086t-.511.086t-.571.08t-.622.051q-.333.017-.656.017a11.3 11.3 0 0 1-7.002-2.246l.03.021a11.04 11.04 0 0 1-4.039-5.914l-.018-.077H.549a.553.553 0 0 1-.546-.545V13.32a.553.553 0 0 1 .545-.546h1.125q-.034-.971.017-1.79H.527a.525.525 0 0 1-.525-.525v-.022v.001v-1.964c0-.29.235-.525.525-.525h.022h-.001h1.67a11.16 11.16 0 0 1 4.118-5.738l.033-.022A11.26 11.26 0 0 1 13.199 0h-.007h.066c1.151 0 2.268.143 3.335.412l-.094-.02c.142.046.26.136.339.254l.001.002a.56.56 0 0 1 .05.413l.001-.004l-.733 2.71a.5.5 0 0 1-.238.331l-.002.001a.49.49 0 0 1-.412.041l.003.001l-.068-.017q-.068-.017-.196-.042l-.298-.06l-.383-.06l-.443-.051l-.494-.042l-.503-.017l-.1-.001c-1.393 0-2.69.407-3.78 1.109l.028-.017A6.8 6.8 0 0 0 6.728 7.9l-.017.043h7.978a.56.56 0 0 1 .546.651v-.003l-.409 1.943a.5.5 0 0 1-.548.443h.002h-8.32a15 15 0 0 0 .002 1.832l-.002-.043h7.831c.17 0 .321.08.419.204l.001.001a.55.55 0 0 1 .102.464l.001-.004l-.409 1.909a.55.55 0 0 1-.527.443H6.784c1.036 2.558 3.5 4.33 6.378 4.33h.069h-.003q.307 0 .614-.026t.571-.06t.503-.08t.418-.086l.315-.08l.205-.051l.086-.034a.5.5 0 0 1 .445.036l-.002-.001c.134.077.23.208.258.362z" />
-                                </svg>
-                                <span>{costs.replace(/€|EUR|€/gi, '').trim()}</span>
-                              </div>
-                            )}
-                          </div>
-                        )}
-
-                        {!isExpanded && description && description.trim().toUpperCase() !== 'NA' && !isTools && (
-                          <div
-                            onClick={() => setExpandedRow(i)}
-                            style={{ 
-                              fontFamily: 'Inter', 
-                              fontWeight: 400, 
-                              fontSize: '15.5px', 
-                              color: '#9E9E9E', 
-                              lineHeight: '1.45', 
-                              cursor: 'pointer', 
-                              marginTop: (host || location || shortText) ? '2px' : '0px',
-                              letterSpacing: '-0.3px'
-                            }}
-                          >
-                            {description.length > 80 ? `${description.substring(0, 80).trim()} ...` : description}
-                          </div>
-                        )}
-
-                        {isExpanded && (
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                            {description && (
-                              <div
-                                onClick={() => setExpandedRow(null)}
-                                style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '16px', color: '#3F3F3F', lineHeight: '1.6', letterSpacing: '-0.01em', cursor: 'pointer' }}
+                          <div style={{ fontFamily: 'Inter', fontWeight: 550, fontSize: '17.5px', color: '#685769', marginBottom: '6px' }}>
+                            {host}{host && location ? ' • ' : ''}
+                            {mapsLink ? (
+                              <a 
+                                href={mapsLink} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                style={{ color: 'inherit', textDecoration: 'none', borderBottom: '1px solid transparent', transition: 'border-bottom 0.2s' }}
+                                onMouseEnter={(e) => e.target.style.borderBottom = '1px solid #685769'}
+                                onMouseLeave={(e) => e.target.style.borderBottom = '1px solid transparent'}
+                                onClick={(e) => e.stopPropagation()}
                               >
-                                <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{description}</p>
-                              </div>
-                            )}
-                            {specs && (
-                              <div style={{ marginTop: description ? '0px' : '0px' }}>
-                                <ul style={{ margin: 0, paddingLeft: '20px', listStyleType: 'disc', fontFamily: 'Inter', fontWeight: 400, fontSize: '16px', color: '#685769', lineHeight: '1.5' }}>
-                                  {specs.split('\n').filter(s => s.trim() !== '').map((spec, idx) => {
-                                    let text = spec.trim()
-                                    if (text.startsWith('-') || text.startsWith('•') || text.startsWith('*')) text = text.substring(1).trim()
-                                    return <li key={idx} style={{ paddingBottom: '4px', paddingTop: 0, borderTop: 'none', background: 'transparent' }}>{text}</li>
-                                  })}
+                                {location}
+                              </a>
+                            ) : location}
+                          </div>
+                        )}
+
+                        {/* Description Section / Preview */}
+                        <div 
+                          onClick={() => setExpandedRow(isExpanded ? null : i)}
+                          style={{ 
+                            fontFamily: 'Inter', 
+                            fontWeight: 400, 
+                            fontSize: '17px', 
+                            color: '#707070', 
+                            lineHeight: '1.4', 
+                            letterSpacing: '-0.3px', 
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {isExpanded ? (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                              <p style={{ margin: 0, whiteSpace: 'pre-wrap', color: '#3F3F3F' }}>{description || shortText}</p>
+                              {specs && !isTools && (
+                                <ul style={{ margin: 0, paddingLeft: '20px', listStyleType: 'disc', color: '#685769', listStylePosition: 'outside' }}>
+                                  {specs.split('\n').filter(s => s.trim() !== '').map((spec, idx) => (
+                                    <li key={idx} style={{ paddingBottom: '4px', border: 'none', background: 'transparent', paddingTop: 0 }}>
+                                      {spec.trim().replace(/^[-•*]\s*/, '')}
+                                    </li>
+                                  ))}
                                 </ul>
-                              </div>
-                            )}
+                              )}
+                            </div>
+                          ) : (
+                            <p style={{ margin: 0 }}>
+                              {isTools && shortText.includes('\n') 
+                                ? shortText.split('\n')[0].trim() 
+                                : (shortText || (description ? description.substring(0, 100) + '...' : ''))
+                              }
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Bottom Section: Hours & Costs Toggle Row */}
+                        {isTools && (
+                          <div style={{ marginTop: 'auto', paddingTop: '8px' }}>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', rowGap: '12px' }}>
+                              
+                              {/* Opening Hours Column (Fixed width for consistent price alignment) */}
+                              {!isMerch && (
+                                <div style={{ flex: '0 0 240px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                  <div 
+                                    onClick={() => setExpandedTimeRow(isTimeExpanded ? null : i)}
+                                    style={{ cursor: 'pointer', userSelect: 'none', display: 'flex', gap: '8px', alignItems: 'center', fontFamily: 'Inter', fontSize: '18px', fontWeight: 600, color: '#685769', whiteSpace: 'nowrap', letterSpacing: '-0.5px' }}
+                                  >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                      <path d="M12 23C5.925 23 1 18.075 1 12S5.925 1 12 1s11 4.925 11 11s-4.925 11-11 11m1-17.5h-2v6.914l4 4L16.414 15L13 11.586z" />
+                                    </svg>
+                                    <span>{todayStr} {todayTime}</span>
+                                  </div>
+
+                                  {/* Expanded Time Block (In between Toggle and Price) */}
+                                  {isTimeExpanded && (
+                                    <div 
+                                      onClick={() => setExpandedTimeRow(null)}
+                                      style={{ display: 'flex', flexDirection: 'column', gap: '5px', paddingLeft: '26px', cursor: 'pointer' }}
+                                    >
+                                      {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => {
+                                        const time = getTimeForDay(day)
+                                        const isThisDay = day === todayStr
+                                        return (
+                                          <div key={day} style={{ display: 'flex', gap: '20px', fontFamily: 'Inter', fontSize: '18px', color: isThisDay ? '#1E7A62' : '#685769', fontWeight: isThisDay ? 700 : 400, letterSpacing: '-0.5px' }}>
+                                            <span style={{ width: '40px' }}>{day}</span>
+                                            <span style={{ whiteSpace: 'pre-line' }}>{time}</span>
+                                          </div>
+                                        )
+                                      })}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Costs Column (Starts at 240px/Drops below Hours block if no space) */}
+                              {costs && costs.trim().toUpperCase() !== 'NA' && (
+                                <div style={{ flex: '0 0 auto', display: 'flex', gap: '8px', alignItems: 'center', fontFamily: 'Inter', fontSize: '18px', fontWeight: 600, color: '#685769', letterSpacing: '-0.5px', paddingTop: '1px' }}>
+                                  <span style={{ fontSize: '20px', fontWeight: 750 }}>€</span>
+                                  <span style={{ whiteSpace: 'nowrap' }}>{costs.replace(/€|EUR|€/gi, '').trim()}</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Costs fallback for non-tools */}
+                        {!isTools && costs && costs.trim().toUpperCase() !== 'NA' && (
+                          <div style={{ marginTop: '12px', display: 'flex', gap: '8px', alignItems: 'center', fontFamily: 'Inter', fontSize: '17px', fontWeight: 750, color: '#685769' }}>
+                            <span style={{ fontSize: '20px', fontWeight: 800 }}>€</span>
+                            <span>{costs.replace(/€|EUR|€/gi, '').trim()}</span>
                           </div>
                         )}
                       </div>

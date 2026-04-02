@@ -53,22 +53,13 @@ export default function Resources() {
 
     setLoading(true)
     
-    // Fetch static resources
-    fetchWithPriority(RESOURCES_URL, true)
-      .then(json => {
-        if (json) setStaticData(json)
-      })
-      .catch(err => console.error("Static fetch error:", err))
-
-    // Fetch dynamic content
-    fetchWithPriority(DYNAMIC_URL, true)
-      .then(json => {
-        if (json) setDynamicData(json)
-      })
-      .catch(err => console.error("Dynamic fetch error:", err))
-      .finally(() => {
-        setLoading(false)
-      })
+    // Fetch both sources and wait for both to settle before hiding the loader
+    Promise.allSettled([
+      fetchWithPriority(RESOURCES_URL, true).then(json => { if (json) setStaticData(json) }),
+      fetchWithPriority(DYNAMIC_URL, true).then(json => { if (json) setDynamicData(json) })
+    ]).finally(() => {
+      setLoading(false)
+    })
   }, [getCached, fetchWithPriority])
 
   // Logic to show categories — we use the static ones mostly but ensure Funding is first
@@ -89,12 +80,12 @@ export default function Resources() {
   }, [staticData, categories, selectedCategory])
 
   // Get raw entries based on category source
-  let entries = []
-  if (selectedCategory === 'Funding') {
-    entries = dynamicData ? dynamicData.filter(e => e.main_category === 'Funding') : []
-  } else {
-    entries = staticData ? staticData[selectedCategory] || [] : []
-  }
+  const entries = selectedCategory === 'Funding' 
+    ? (dynamicData ? dynamicData.filter(e => e.main_category === 'Funding') : [])
+    : (staticData ? staticData[selectedCategory] || [] : [])
+    
+  // Safety check to prevent "No resources found" from flashing during state transitions
+  const isDataReady = selectedCategory === 'Funding' ? dynamicData !== null : staticData !== null
   const isToolsCategory = selectedCategory.toLowerCase().includes("tools")
 
   // Normalize entries for sorting
@@ -258,7 +249,7 @@ export default function Resources() {
 
         {!loading && !error && (
           <ul className="blog">
-            {sortedEntries.length === 0 ? (
+            {sortedEntries.length === 0 && isDataReady ? (
               <li><p>No resources found for this category.</p></li>
             ) : (
               sortedEntries.map((entry, i) => {
@@ -399,7 +390,7 @@ export default function Resources() {
                         {/* Bottom Section: Hours & Costs Toggle Row */}
                         {isTools && (
                           <div style={{ marginTop: 'auto', paddingTop: '8px' }}>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', rowGap: '12px' }}>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start' }}>
                               
                               {/* Opening Hours Column (Fixed width for consistent price alignment) */}
                               {!isMerch && (
@@ -424,7 +415,7 @@ export default function Resources() {
                                         const time = getTimeForDay(day)
                                         const isThisDay = day === todayStr
                                         return (
-                                          <div key={day} style={{ display: 'flex', gap: '20px', fontFamily: 'Inter', fontSize: '18px', color: isThisDay ? '#1E7A62' : '#685769', fontWeight: isThisDay ? 700 : 400, letterSpacing: '-0.5px' }}>
+                                          <div key={day} style={{ display: 'flex', gap: '10px', fontFamily: 'Inter', fontSize: '18px', color: isThisDay ? '#1E7A62' : '#685769', fontWeight: isThisDay ? 700 : 400, letterSpacing: '-0.5px' }}>
                                             <span style={{ width: '40px' }}>{day}</span>
                                             <span style={{ whiteSpace: 'pre-line' }}>{time}</span>
                                           </div>

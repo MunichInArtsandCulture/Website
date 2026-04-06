@@ -1,18 +1,25 @@
+import { useLocation } from 'react-router-dom';
+
 export default function Footer() {
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+
   return (
     <div id="footer" style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', justifyContent: 'space-between', alignItems: 'flex-start', padding: '20px 0' }}>
       
-      <div style={{ width: 'auto', float: 'none', flex: '1', minWidth: '220px' }}>
-        <span>
-          Impressum (gemäß § 5 TMG)<br />
-          Verantwortlich für diese Website: <br />
-          Jan-Luca Ahlemeyer <br />
-          Munich in Arts and Culture <br />
-          Dientzenhoferstraße 20 <br />
-          80937 München <br />
-          E-Mail: munichinartsandculture@gmail.com
-        </span>
-      </div>
+      {isHomePage && (
+        <div style={{ width: 'auto', float: 'none', flex: '1', minWidth: '220px' }}>
+          <span>
+            Impressum (gemäß § 5 TMG)<br />
+            Verantwortlich für diese Website: <br />
+            Jan-Luca Ahlemeyer <br />
+            Munich in Arts and Culture <br />
+            Dientzenhoferstraße 20 <br />
+            80937 München <br />
+            E-Mail: munichinartsandculture@gmail.com
+          </span>
+        </div>
+      )}
 
       <div style={{ width: 'auto', float: 'none', flex: '2', minWidth: '280px' }}>
         <p style={{ margin: 0 }}>
@@ -29,3 +36,4 @@ export default function Footer() {
     </div>
   );
 }
+

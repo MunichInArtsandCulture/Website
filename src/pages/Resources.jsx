@@ -135,8 +135,8 @@ export default function Resources() {
   // The 'id' must match the sheet name in the Google Spreadsheet.
   const CATEGORIES = [
     { id: 'Funding', label: 'Funding' },
-    { id: 'Tools/Workspaces', label: 'Tools/Makerspaces' },
-    { id: 'Soundsystems', label: 'Soundsystems' },
+    { id: 'Tools/Workspaces', label: 'Tools & Craft' },
+    { id: 'Soundsystems', label: 'Sound Systems' },
     { id: 'DJ Equipment', label: 'DJ Equipment' },
     { id: 'Lights', label: 'Lights' },
     { id: 'Merch production', label: 'Merch production' },
@@ -550,20 +550,7 @@ export default function Resources() {
                     const linkUrl = entry.Link || entry.link || entry.Url || entry.url || ''
                     const href = linkUrl ? (linkUrl.startsWith('http') ? linkUrl : `https://${linkUrl}`) : null
 
-                    const mapsKey = Object.keys(entry).find(k =>
-                      k.toLowerCase() === 'loc_link' ||
-                      k.toLowerCase() === 'maps' ||
-                      k.toLowerCase().includes('google maps') ||
-                      k.toLowerCase() === 'map_link' ||
-                      k.toLowerCase() === 'address'
-                    )
-                    let mapsLink = mapsKey ? entry[mapsKey] : ''
-                    if (mapsLink && !mapsLink.toString().startsWith('http') && mapsLink.toString().trim() !== '') {
-                      mapsLink = `https://${mapsLink}`
-                    }
-                    if (!mapsLink && location) {
-                      mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + ' ' + location)}`
-                    }
+
 
                     // Opening time logic
                     const getTimeForDay = (day) => {
@@ -577,14 +564,19 @@ export default function Resources() {
                         d === 'mon' ? 'monday' : d === 'tue' ? 'tuesday' : d === 'wed' ? 'wednesday' : d === 'thu' ? 'thursday' : d === 'fri' ? 'friday' : d === 'sat' ? 'saturday' : 'sunday'
                       ]
                       for (const v of variations) {
-                        if (entry[v] && entry[v].toString().toLowerCase() !== 'na' && entry[v].toString().trim() !== '') return entry[v].toString()
+                        const val = entry[v] ? entry[v].toString().trim() : null
+                        if (val && val !== '') return val
                       }
-                      return 'closed'
+                      return null
                     }
 
                     const jsDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
                     const todayStr = jsDays[new Date().getDay()]
-                    const todayTime = getTimeForDay(todayStr)
+                    const rawTodayTime = getTimeForDay(todayStr)
+                    const todayTime = (rawTodayTime && rawTodayTime.toLowerCase() === 'na') ? 'NA' : (rawTodayTime || 'closed')
+
+                    // Check if there is ANY valid time data for any day (including NA)
+                    const hasAnyTimeData = jsDays.some(d => getTimeForDay(d) !== null)
 
                     return (
                       <li key={i} style={{ padding: '20px 0', borderTop: 'none', borderBottom: '1.6px solid #e0e0e0', display: 'flex', alignItems: 'flex-start', gap: '4px' }}>
@@ -609,19 +601,7 @@ export default function Resources() {
                           {(host || location) && (
                             <div style={{ fontFamily: 'Inter', fontWeight: 550, fontSize: '17.5px', color: '#685769', marginBottom: '6px' }}>
                               {host}{host && location ? ' • ' : ''}
-                              {mapsLink ? (
-                                <a
-                                  href={mapsLink}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  style={{ color: 'inherit', textDecoration: 'none', borderBottom: '1px solid transparent', transition: 'border-bottom 0.2s' }}
-                                  onMouseEnter={(e) => e.target.style.borderBottom = '1px solid #685769'}
-                                  onMouseLeave={(e) => e.target.style.borderBottom = '1px solid transparent'}
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  {location}
-                                </a>
-                              ) : location}
+                              {location}
                             </div>
                           )}
 
@@ -667,7 +647,7 @@ export default function Resources() {
                               <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', columnGap: '30px' }}>
 
                                 {/* Opening Hours Column (Fixed width for consistent price alignment) */}
-                                {!isMerch && (
+                                {!isMerch && hasAnyTimeData && (
                                   <div style={{ flex: '0 0 240px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                     <div
                                       onClick={() => setExpandedTimeRow(isTimeExpanded ? null : i)}
@@ -686,7 +666,8 @@ export default function Resources() {
                                         style={{ display: 'flex', flexDirection: 'column', gap: '5px', paddingLeft: '26px', cursor: 'pointer' }}
                                       >
                                         {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => {
-                                          const time = getTimeForDay(day)
+                                          const rawTime = getTimeForDay(day)
+                                          const time = (rawTime && rawTime.toLowerCase() === 'na') ? 'NA' : (rawTime || 'closed')
                                           const isThisDay = day === todayStr
                                           return (
                                             <div key={day} style={{ display: 'flex', gap: '10px', fontFamily: 'Inter', fontSize: '18px', color: isThisDay ? '#1E7A62' : '#685769', fontWeight: isThisDay ? 700 : 400, letterSpacing: '-0.5px' }}>

@@ -56,7 +56,7 @@ export function ApiCacheProvider({ children }) {
       const response = await fetch(url, { signal: controllers.current[url].signal })
       if (!response.ok) throw new Error("Fetch failed")
       const data = await response.json()
-      
+
       setCached(url, data)
       controllers.current[url] = null
       return data

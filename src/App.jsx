@@ -9,6 +9,7 @@ import ArtSpaces from './pages/ArtSpaces'
 import Jobs from './pages/Jobs'
 import Resources from './pages/Resources'
 import HowToArt from './pages/HowToArt'
+import PrivacyPolicy from './pages/PrivacyPolicy'
 
 export default function App() {
   const { startBackgroundPreload } = useApiCache()
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/opencalls" element={<HowToArt />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
         </Routes>
       </div>
       <Footer />

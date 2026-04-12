@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useApiCache } from './context/ApiCacheContext'
 import Header from './components/Header'
@@ -13,11 +13,17 @@ import PrivacyPolicy from './pages/PrivacyPolicy'
 
 export default function App() {
   const { startBackgroundPreload } = useApiCache()
+  const location = useLocation()
 
   useEffect(() => {
+    // Do not start preload if the user specifically enters via the Privacy Policy
+    if (location.pathname === '/privacy') {
+      return
+    }
+    
     // Start preloading the queue in background after initial render
     startBackgroundPreload()
-  }, [startBackgroundPreload])
+  }, [startBackgroundPreload, location.pathname])
 
   return (
     <>

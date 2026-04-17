@@ -29,6 +29,19 @@ export default function Resources() {
   const sortDropdownRef = useRef(null)
   const [isSortHovered, setIsSortHovered] = useState(false)
   const [isFundingHovered, setIsFundingHovered] = useState(false)
+  
+  // Helper to allow breaking after slashes
+  const formatTextWithBreaks = (text) => {
+    if (typeof text !== 'string') return text
+    if (!text.includes('/')) return text
+    const parts = text.split('/')
+    return parts.map((part, i) => (
+      <span key={i}>
+        {part}
+        {i < parts.length - 1 && <>/<wbr /></>}
+      </span>
+    ))
+  }
 
   // Reset expanded rows when category changes
   useEffect(() => {
@@ -592,16 +605,16 @@ export default function Resources() {
                           <div style={{ fontWeight: 800, fontSize: '26px', fontFamily: 'Inter', color: '#252525', marginBottom: '2px', letterSpacing: '-0.02em', cursor: href ? 'auto' : 'pointer' }} onClick={() => { if (!href) setExpandedRow(isExpanded ? null : i) }}>
                             {href ? (
                               <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }} onClick={(e) => e.stopPropagation()}>
-                                {name}
+                                {formatTextWithBreaks(name)}
                               </a>
-                            ) : name}
+                            ) : formatTextWithBreaks(name)}
                           </div>
 
                           {/* Host / Location */}
                           {(host || location) && (
                             <div style={{ fontFamily: 'Inter', fontWeight: 550, fontSize: '17.5px', color: '#685769', marginBottom: '6px' }}>
-                              {host}{host && location ? ' • ' : ''}
-                              {location}
+                              {formatTextWithBreaks(host)}{host && location ? ' • ' : ''}
+                              {formatTextWithBreaks(location)}
                             </div>
                           )}
 
@@ -620,12 +633,12 @@ export default function Resources() {
                           >
                             {isExpanded ? (
                               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                                <p style={{ margin: 0, whiteSpace: 'pre-wrap', color: '#3F3F3F' }}>{description || shortText}</p>
+                                <p style={{ margin: 0, whiteSpace: 'pre-wrap', color: '#3F3F3F' }}>{formatTextWithBreaks(description || shortText)}</p>
                                 {specs && !isTools && (
                                   <ul style={{ margin: 0, paddingLeft: '20px', listStyleType: 'disc', color: '#685769', listStylePosition: 'outside' }}>
                                     {specs.split('\n').filter(s => s.trim() !== '').map((spec, idx) => (
                                       <li key={idx} style={{ paddingBottom: '4px', border: 'none', background: 'transparent', paddingTop: 0 }}>
-                                        {spec.trim().replace(/^[-•*]\s*/, '')}
+                                        {formatTextWithBreaks(spec.trim().replace(/^[-•*]\s*/, ''))}
                                       </li>
                                     ))}
                                   </ul>
@@ -634,8 +647,8 @@ export default function Resources() {
                             ) : (
                               <p style={{ margin: 0 }}>
                                 {isTools && shortText.includes('\n')
-                                  ? shortText.split('\n')[0].trim()
-                                  : (shortText || (description ? description.substring(0, 100) + '...' : ''))
+                                  ? formatTextWithBreaks(shortText.split('\n')[0].trim())
+                                  : (formatTextWithBreaks(shortText || (description ? description.substring(0, 100) + '...' : '')))
                                 }
                               </p>
                             )}
@@ -648,22 +661,22 @@ export default function Resources() {
 
                                 {/* Opening Hours Column (Fixed width for consistent price alignment) */}
                                 {!isMerch && hasAnyTimeData && (
-                                  <div style={{ flex: '0 0 240px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                  <div style={{ flex: '0 0 240px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                                     <div
                                       onClick={() => setExpandedTimeRow(isTimeExpanded ? null : i)}
-                                      style={{ cursor: 'pointer', userSelect: 'none', display: 'flex', gap: '8px', alignItems: 'center', fontFamily: 'Inter', fontSize: '18px', fontWeight: 600, color: '#685769', whiteSpace: 'nowrap', letterSpacing: '-0.5px' }}
+                                      style={{ cursor: 'pointer', userSelect: 'none', display: 'flex', gap: '8px', alignItems: 'center', fontFamily: 'Inter', fontSize: '18px', fontWeight: 600, color: '#685769', letterSpacing: '-0.5px' }}
                                     >
                                       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M12 23C5.925 23 1 18.075 1 12S5.925 1 12 1s11 4.925 11 11s-4.925 11-11 11m1-17.5h-2v6.914l4 4L16.414 15L13 11.586z" />
                                       </svg>
-                                      <span>{todayStr} {todayTime}</span>
+                                      <span>{todayStr} {formatTextWithBreaks(todayTime)}</span>
                                     </div>
 
                                     {/* Expanded Time Block (In between Toggle and Price) */}
                                     {isTimeExpanded && (
                                       <div
                                         onClick={() => setExpandedTimeRow(null)}
-                                        style={{ display: 'flex', flexDirection: 'column', gap: '5px', paddingLeft: '26px', cursor: 'pointer' }}
+                                        style={{ display: 'flex', flexDirection: 'column', gap: '5px', paddingLeft: '26px', cursor: 'pointer', marginBottom: '15px' }}
                                       >
                                         {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => {
                                           const rawTime = getTimeForDay(day)
@@ -672,7 +685,7 @@ export default function Resources() {
                                           return (
                                             <div key={day} style={{ display: 'flex', gap: '10px', fontFamily: 'Inter', fontSize: '18px', color: isThisDay ? '#1E7A62' : '#685769', fontWeight: isThisDay ? 700 : 400, letterSpacing: '-0.5px' }}>
                                               <span style={{ width: '40px' }}>{day}</span>
-                                              <span style={{ whiteSpace: 'pre-line' }}>{time}</span>
+                                              <span style={{ whiteSpace: 'pre-line' }}>{formatTextWithBreaks(time)}</span>
                                             </div>
                                           )
                                         })}

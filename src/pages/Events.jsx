@@ -159,7 +159,8 @@ export default function Events() {
 
     const dayEvents = allEvents ? allEvents.filter(e => {
       if (!e.Datum) return false
-      const normA = e.Datum.toString().replace(/\D/g, '')
+      const eventDateStr = formatDateForComparison(e.Datum)
+      const normA = eventDateStr.replace(/\D/g, '')
       return normA === targetNorm || normA.includes(targetNorm)
     }) : []
 

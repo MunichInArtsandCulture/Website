@@ -241,7 +241,7 @@ export default function Events() {
                     {group.events.map((event, i) => (
                       <li key={i}>
                         <h3>
-                          <a href={event.Links ? event.Links.split(" | ")[0] : '#'} target="_blank" rel="noopener noreferrer">
+                          <a href={(event.Link || event.Links) ? (event.Link || event.Links).split(" | ")[0] : '#'} target="_blank" rel="noopener noreferrer">
                             {stripEmojis(event.Titel)}
                           </a>
                         </h3>

@@ -162,6 +162,10 @@ export default function Events() {
       const eventDateStr = formatDateForComparison(e.Datum)
       const normA = eventDateStr.replace(/\D/g, '')
       return normA === targetNorm || normA.includes(targetNorm)
+    }).sort((a, b) => {
+      const timeA = stripEmojis((a.Uhrzeit || '').toString());
+      const timeB = stripEmojis((b.Uhrzeit || '').toString());
+      return timeA.localeCompare(timeB);
     }) : []
 
     const cleaned = dateStr.replace(/\.$/, '')

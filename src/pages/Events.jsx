@@ -44,6 +44,30 @@ const FLATPICKR_OPTIONS = {
   onValueUpdate: handleValueUpdate
 }
 
+const NO_EVENT_MESSAGES = [
+  { header: "Hier könnte Ihre Werbung stehen", sub: "No event found for this date" },
+  { header: "Oppssieeee", sub: "No event found for this date" },
+  { header: "This is kinda awkward", sub: "No event found for this date" },
+  { header: "404", sub: "No event found for this date" },
+  { header: "Plot twist: nothing is happening", sub: "No event found for this date" },
+  { header: "All quiet on the Munich front", sub: "No event found for this date" },
+  { header: "Even the art is sleeping today", sub: "No event found for this date" },
+  { header: "Nothing here, but you look great!", sub: "No event found for this date" },
+  { header: "A blank canvas of a day", sub: "No event found for this date" },
+  { header: "Maybe today is the day to create your own art?", sub: "No event found for this date" },
+  { header: "Curator's day off", sub: "No event found for this date" },
+  { header: "The stage is empty... for now", sub: "No event found for this date" }
+]
+
+function getNoEventMessage(dateStr) {
+  let hash = 0;
+  for (let i = 0; i < dateStr.length; i++) {
+    hash = dateStr.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % NO_EVENT_MESSAGES.length;
+  return NO_EVENT_MESSAGES[index];
+}
+
 export default function Events() {
   const { getCached, fetchWithPriority } = useApiCache()
   const [allEvents, setAllEvents] = useState(getCached(API_URL) || null)
@@ -231,12 +255,8 @@ export default function Events() {
                   <ul className="blog">
                     <li style={{ borderTop: 'none', paddingTop: '10px' }}>
                       <p className="event-description" style={{ lineHeight: '30px', margin: 0 }}>
-                        No events found :( <br />
-                        You can check the{' '}
-                        <a href="https://docs.google.com/document/d/1xT5Ovg8pouKkpwHXKdU45J9vlyqEYD__ZGuKZErmhTU/" target="_blank" rel="noopener noreferrer">
-                          Database
-                        </a>{' '}
-                        just in case.
+                        {getNoEventMessage(group.dateStr).header} <br />
+                        {getNoEventMessage(group.dateStr).sub}
                       </p>
                     </li>
                   </ul>
